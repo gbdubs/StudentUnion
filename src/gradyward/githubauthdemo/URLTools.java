@@ -24,7 +24,7 @@ public class URLTools {
 	public static String makeRequestParams(Map<String, String> map){
 		String result = "";
 		for (String key : map.keySet()){
-			if (!key.equals("url")){
+			if (!key.equals("url") && !key.equals("method")){
 				result += key+"="+map.get(key)+"&";
 			}
 		}
