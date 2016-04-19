@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns="http://java.sun.com/xml/ns/javaee"
+xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+
+	<servlet>
+		<servlet-name>GithubStepOneServlet</servlet-name>
+		<servlet-class>gradyward.githubauthdemo.GithubStepOneServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GithubStepOneServlet</servlet-name>
+		<url-pattern>/github-step-one</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>GithubStepTwoServlet</servlet-name>
+		<servlet-class>gradyward.githubauthdemo.GithubStepTwoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GithubStepTwoServlet</servlet-name>
+		<url-pattern>/github-step-two</url-pattern>
+	</servlet-mapping>
+	
+</web-app>
