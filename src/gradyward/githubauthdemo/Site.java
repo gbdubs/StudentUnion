@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.OnSave;
 
 @Entity
 public class Site {
-
+	static Objectify ofy = ObjectifyWrapper.ofy();
+	
 	@Id String siteId;
 	String githubBaseUrl;
 	String githubAuthenticationToken;

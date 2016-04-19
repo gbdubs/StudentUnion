@@ -24,4 +24,48 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/github-step-two</url-pattern>
 	</servlet-mapping>
 	
+	
+	<servlet>
+		<servlet-name>LandingServlet</servlet-name>
+		<servlet-class>gradyward.githubauthdemo.LandingServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LandingServlet</servlet-name>
+		<url-pattern>/landing</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>LandingServlet</servlet-name>
+		<url-pattern>/home</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>GithubStepTwoServlet</servlet-name>
+		<servlet-class>gradyward.githubauthdemo.GithubStepTwoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GithubStepTwoServlet</servlet-name>
+		<url-pattern>/github-step-two</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>CreateSiteServlet</servlet-name>
+		<servlet-class>gradyward.githubauthdemo.CreateSiteServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CreateSiteServlet</servlet-name>
+		<url-pattern>/create-site</url-pattern>
+	</servlet-mapping>
+	
+	
+	<filter>
+	    <filter-name>ObjectifyFilter</filter-name>
+	    <filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>ObjectifyFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 </web-app>

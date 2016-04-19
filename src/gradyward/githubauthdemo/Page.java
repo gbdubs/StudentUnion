@@ -2,12 +2,13 @@ package gradyward.githubauthdemo;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.OnSave;
 
 @Entity
 public class Page {
+	static Objectify ofy = ObjectifyWrapper.ofy();
 
 	@Id String pageId;
 	String pageName;
@@ -25,12 +26,5 @@ public class Page {
 			p.content = "<h1>NEW PAGE</h1>";
 		}
 		return p;
-	}
-	
-	@OnSave void savePageToGithub() { 
-		
-		
-		
-		
 	}
 }
