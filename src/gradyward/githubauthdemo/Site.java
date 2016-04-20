@@ -49,10 +49,5 @@ public class Site {
 	
 	@OnSave void checkToSeeIfRepoExists(){
 		String authToken = TradeSecrets.currentToken;
-		
-		if (!repoExists){
-			GithubAPI.createNewRepo(authToken, siteName);
-			repoExists = true;
-		}
 	}
 }
