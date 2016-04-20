@@ -13,6 +13,25 @@ import java.util.Map;
 
 public class GithubAPI {
 
+	
+	public static boolean verifyAuthTokenValid(String authToken){
+		return false;
+	}
+	
+	public static boolean createNewRepository(String authToken, String repoName){
+		return false;
+	}
+	
+	public static boolean deleteRepository(String authToken, String repoName){
+		return false;
+	}
+	
+	public static boolean changeDefaultBranchToGHPages(String authToken, String repoName){
+		return false;
+	}
+		
+	
+	
 	public static String createNewRepo(String authToken, String repoName){
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("url", "www.github.com/user/repos");
