@@ -77,6 +77,24 @@ public class GithubAPI {
 		return null;
 	}
 	
+	
+	  /* * * * * * * * * * * * * * */
+	 /* GET AN EXISTING PAGE TEXT */
+    /* * * * * * * * * * * * * * */
+	public static String getFileText(String repoName, String filePath) throws IOException {
+		try{
+			ContentsService cs = new ContentsService(ghc());
+		
+			List<RepositoryContents> result = cs.getContents(RepositoryId.create(Secrets.GithubUsername, repoName), filePath, "gh-pages");
+			for (RepositoryContents rc : result){
+				return rc.getContent();
+			}
+		} catch (RequestException re){
+			return null;
+		}
+		return null;
+	}
+	
 	  /* * * * * * * * */
 	 /* UPDATE A PAGE */
 	/* * * * * * * * */
