@@ -1,7 +1,33 @@
 window.addEventListener('load', function() {
 	var editor;
+	
 	editor = ContentTools.EditorApp.get();
+	
 	editor.init('*[data-editable]', 'data-name');
+	
+	ContentTools.StylePalette.add([
+		new ContentTools.Style('Card',  'card', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - XS', 'pad-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - S', 'pad-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - M', 'pad-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - L', 'pad-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - XL', 'pad-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - Black', 'txt-brandeis-black', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - White', 'txt-brandeis-white', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - Grey', 'txt-brandeis-grey',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - Light Blue', 'txt-brandeis-blue-0',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - Normal Blue', 'txt-brandeis-blue-1',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - Dark Blue', 'txt-brandeis-blue-2', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Text - Yellow', 'txt-brandeis-yellow',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - Black', 'bg-brandeis-black', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - White', 'bg-brandeis-white', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - Grey', 'bg-brandeis-grey',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - Light Blue', 'bg-brandeis-blue-0',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - Normal Blue', 'bg-brandeis-blue-1',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - Dark Blue', 'bg-brandeis-blue-2', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Background - Yellow', 'bg-brandeis-yellow',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+	]);
+	
 
     // Listen for saved events
     editor.addEventListener('saved', function (ev) {

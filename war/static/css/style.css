@@ -656,6 +656,30 @@ footer.footer-canopy{
 }
 
 /*************************
+* PADDING                *
+*************************/
+
+.pad-5{
+	padding: 5px;
+}
+
+.pad-10{
+	padding: 10px;
+}
+
+.pad-15{
+	padding: 15px;
+}
+
+.pad-20{
+	padding: 20px;
+}
+
+.pad-25{
+	padding: 25px;
+}
+
+/*************************
 * MISC                   *
 *************************/
 
