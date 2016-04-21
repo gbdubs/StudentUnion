@@ -1,4 +1,4 @@
-package gradyward.githubauthdemo;
+package gradyward.deprecated;
 
 import java.util.Map;
 

@@ -1,4 +1,6 @@
-package gradyward.githubauthdemo;
+package gradyward.deprecated;
+
+import gradyward.studentunion.Secrets;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -24,15 +26,15 @@ public class GithubStepTwoServlet extends HttpServlet{
 		String code = req.getParameter("code");
 		
 		// Verify that the state matches the other token
-		if (!claimedState.equals(TradeSecrets.currentState)){
+		if (!claimedState.equals(Secrets.currentState)){
 			throw new RuntimeException("IMPROPPER ACCESS! STATE VARIABLES DID NOT MATCH.");
 		}
 
 		// Set up HTTP Request to Github Step 2
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("url", "https://github.com/login/oauth/access_token");
-		params.put("client_id", TradeSecrets.clientId);
-		params.put("client_secret", TradeSecrets.clientSecret);
+		params.put("client_id", Secrets.clientId);
+		params.put("client_secret", Secrets.clientSecret);
 		params.put("code", code);
 		
 		// Run the HTTP Request 
@@ -44,7 +46,7 @@ public class GithubStepTwoServlet extends HttpServlet{
 		if (token != null){
 			
 			// Do something with the token
-			TradeSecrets.currentToken = token;
+			Secrets.currentToken = token;
 			
 			// Redirect to a new page
 			resp.sendRedirect("/github-auth-success");

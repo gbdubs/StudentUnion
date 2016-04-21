@@ -1,4 +1,6 @@
-package gradyward.githubauthdemo;
+package gradyward.deprecated;
+
+import gradyward.studentunion.Secrets;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,12 +19,12 @@ public class GithubStepOneServlet extends HttpServlet {
 		String state = UUID.randomUUID().toString();
 		
 		// Do something with the Secret.
-		TradeSecrets.currentState = state;
+		Secrets.currentState = state;
 		
 		// Set up HTTP Redirect to Github.
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("url", "https://github.com/login/oauth/authorize");
-		params.put("client_id", TradeSecrets.clientId);
+		params.put("client_id", Secrets.clientId);
 		params.put("scope", "repo");
 		params.put("state", state);
 		

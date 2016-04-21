@@ -1,4 +1,4 @@
-package gradyward.githubauthdemo;
+package gradyward.studentunion;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -32,13 +32,9 @@ public class User {
 		}
 		return null;
 	}
-	
+
 	public static String loginUrl(String returnTo){
-		return us.createLoginURL(returnTo);
-	}
-	
-	public static String loginUrl(){
-		return us.createLoginURL("/");
+		return us.createLoginURL("/new-login?goto="+returnTo);
 	}
 	
 	public static String logoutUrl(){

@@ -1,4 +1,6 @@
-package gradyward.githubauthdemo;
+package gradyward.studentunion;
+
+import gradyward.studentunion.ElectionsServlet.ElectionsDatum;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -8,9 +10,8 @@ import com.googlecode.objectify.ObjectifyService;
 public class ObjectifyWrapper {
     
 	static {
-		ObjectifyService.register(Page.class);
-		ObjectifyService.register(Site.class);
-		ObjectifyService.register(Human.class);
+		ObjectifyService.register(ElectionsDatum.class);
+		ObjectifyService.register(Person.class);
     }
 
     public static Objectify ofy() {
