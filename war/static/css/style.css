@@ -1,0 +1,689 @@
+/* Custom Stylesheet */
+/**
+ * Use this file to override Materialize files so you can update
+ * the core Materialize files in the future
+ *
+ * Made By MaterializeCSS.com
+ */
+
+body{
+    text-align: center;
+}
+
+div.container{
+    width: 85%;
+}
+
+/*****************************
+ * Colors                    *
+ *****************************/
+
+
+
+.bg-brandeis-blue-0{
+    background: #003F87 !important;
+}
+
+.bg-brandeis-blue-1{
+    /*background: #1156ae !important; */
+    background: #3169C4 !important;
+}
+
+.bg-brandeis-blue-2{
+   /* background:  #008ED6 !important; */
+    background: #1C8ADD !important;
+}
+
+.bg-brandeis-blue-grey{
+    /* background: #2F82AD !important; */
+    background: #099EF4 !important;
+}
+
+.bg-brandeis-grey{
+    /* background: #D2DAE2 !important; */
+    background: #D7DFEC !important;
+}
+
+.bg-brandeis-white{
+    background: #F8FAFA !important;
+}
+
+.bg-brandeis-yellow{
+    background: #FFBF5F !important
+}
+
+.txt-brandeis-blue-0{
+    color: #003F87 !important;
+}
+
+.txt-brandeis-blue-1{
+    color: #1156ae !important;
+}
+
+.txt-brandeis-blue-2{
+    color: #008ED6 !important;
+}
+
+.txt-brandeis-grey{
+    color: #D2DAE2 !important;
+}
+
+.txt-brandeis-white{
+    color: #F8FAFA !important;
+}
+
+.txt-brandeis-black{
+    color: rgba(0, 0, 0, 0.870588) !important;
+}
+
+.txt-brandeis-yellow{
+    color: #FFBF5F !important
+}
+
+/**************************
+* Fonts                   *
+**************************/
+
+@font-face {
+  font-family: "BodiniFLF";
+  src: url("../font/bodiniflf/BodiniFLF-Roman.ttf") format("ttf");
+  font-weight: 400; 
+}
+
+@font-face {
+  font-family: "BodiniFLF";
+  src: url("../font/bodiniflf/BodiniFLF-Bold.ttf") format("ttf");
+  font-weight: 500; 
+}
+
+
+/***************************
+* Canopy                   *
+***************************/
+
+.canopy{
+    font-family: BodoniFLF;
+    margin: 15px;
+    height: 125px;
+    width: Calc(100% - 30px);
+    text-align: center;
+    position: relative;
+    z-index: 100;
+    max-width: 1170px;
+    display: inline-block;
+}
+
+.canopy #logo-container{
+    height: 64px;
+    position: relative;
+    margin-top: 5px;
+}
+
+.menu-seal{
+    height: Calc(100% - 15px);
+    margin: 7px 30px 7px 7px;
+    float: left;
+}
+
+.canopy ul.menu{
+    height: 52px;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+}
+
+.canopy ul.menu li,
+.canopy ul.menu li a {
+    height: 52px;
+    line-height: 52px;
+}
+
+.menu-ribbon{
+  width: 100%;
+  background: #008ED6;
+  height: 52px;
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* For nested menus */
+.canopy ul.menu li ul a {
+  line-height: 53px;
+  font-size: 15px;
+  padding: 0;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  color: inherit;
+}
+
+.canopy ul.menu li.divider{
+    height: 1px;
+}
+
+.nav-wrapper i.mdi-navigation-arrow-drop-down{
+  line-height: 52px;
+  height: 52px;
+  margin-left: 5px;
+}
+
+/* Canopy Triangles */
+
+.canopy:before,
+.canopy:after{
+    color: #0051BA;
+    content: "";
+    width: 0;
+	height: 0;
+	border-top: 10px solid;
+    position: absolute;
+    bottom: -10px;
+}
+
+.canopy:before{
+    border-left: 15px solid transparent;
+    left: 0;
+}
+
+.canopy:after{
+	border-right: 15px solid transparent;
+    right: 0;
+}
+
+/**************************
+* Alert Banner            *
+**************************/
+.canopy .alert-banner{
+    height: 0px;
+    display: none;
+    overflow: hidden;
+}
+
+.canopy.alert .alert-banner{
+    height: auto;
+    display: block;
+    overflow: visible;
+}
+
+.alert-banner{
+  padding: 1px;
+  z-index: 0;
+  position: relative;
+  cursor: pointer;    
+}
+
+.alert-banner:hover{
+    opacity: .8;
+}
+
+.canopy.alert:before, .canopy.alert:after{
+    bottom:-42px;
+}
+/**************************
+* Footer Canopy           *
+**************************/
+  
+footer.footer-canopy{
+  text-align: left;
+  margin: 0px 15px 15px 15px;
+  height: auto;
+  width: Calc(100% - 30px);
+  position: relative;
+  z-index: 100;
+  max-width: 1170px;
+  display: inline-block;
+  -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.footer-canopy:before,
+.footer-canopy:after{
+    color: #0051BA;
+    content: "";
+    width: 0;
+	height: 0;
+	border-bottom: 10px solid;
+    position: absolute;
+    top: -10px;
+}
+
+.footer-canopy:before{
+    border-left: 15px solid transparent;
+    left: 0;
+}
+
+.footer-canopy:after{
+	border-right: 15px solid transparent;
+    right: 0;
+}
+
+
+/**************************
+* Content                 *
+**************************/
+
+.content{
+    width: Calc(100% - 60px);
+    margin: -20px 30px;
+    z-index: 50;
+    max-width: 1140px;
+    display: inline-block;
+}
+
+.content.no-card{
+    width: Calc(100% - 40px);
+    max-width: 1160px;
+}
+
+/*************************
+* Personality Boxes      *
+*************************/
+
+.row.personality-boxes{
+    text-align: center;
+    margin: 30px 20px;
+}
+
+.personality-boxes .title{
+    margin: 50px;
+}
+
+.personality-box-image img{
+    height: 120px;
+    width: 120px;
+}
+
+.personality-box-image{
+    display: inline-block;
+    float: left;
+    margin: 0 10px 10px 0;
+    height: 120px;
+}
+
+.personality-box-about{
+    text-align: left;
+    margin: 0;
+}
+
+.personality-box-title{
+    margin: 0;
+    padding: 5px 0;
+}
+
+.personality-box{
+    padding: 10px;
+}
+
+
+.branch-summary{
+    padding: 10px;
+    margin: 0;
+    display: table-cell
+}
+
+.branch-summary-all-members{
+    width: 100%;
+    height: auto;
+    padding: 10px;
+}
+
+/*************************
+* Sidebar Menu           *
+*************************/
+#nav-mobile .menu-seal{
+    height: 50px;
+    margin: 7px 10px 0 0;
+}
+
+#nav-mobile .menu-header h6{
+    font-family: "BodiniFLF";
+    color: white;
+}
+#nav-mobile .menu-header h6.first{
+  padding: 14px 0 0 0;
+}
+
+@media only screen and (min-width: 1200px){
+    .canopy{
+       /* margin: 15px 17px 15px 13px;*/
+    }
+}
+
+@media only screen and (max-width: 1200px){
+    .alert.canopy:before,
+    .alert.canopy:after{
+        bottom: -40px;
+    }
+}
+
+@media only screen and (max-width: 992px){
+    .canopy{
+        height: 64px;
+    }
+    
+    .canopy #logo-container{
+        height: 64px;
+        margin-top: 0;
+        width: Calc(100% - 40px);
+        text-align: left;
+    }
+    
+    .menu-seal{
+        margin: 7px 25px 7px Calc(25% - 100px);
+    }
+    
+    .menu-ribbon{
+        display: none;
+    }
+    
+    div.container{
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 712px){
+    .menu-seal{
+        display: none;
+    }
+    
+    .canopy{
+        margin: 10px;
+        width: Calc(100% - 20px);
+    }
+    
+    .canopy:before{
+        border-left: 10px solid transparent;
+        border-top: 7px solid;
+        bottom: -7px;
+    }
+    
+    .canopy:after{
+        border-right: 10px solid transparent;
+        border-top: 7px solid;
+        bottom: -7px;
+    }
+    
+    .canopy.alert:before,
+    .canopy.alert:after{
+        bottom: -37px;
+    }
+    
+    footer.footer-canopy{
+        margin: 0 10px;
+        width: Calc(100% - 20px);
+    }
+    
+    .footer-canopy:before{
+        border-left: 10px solid transparent;
+        border-bottom: 7px solid;
+        top: -7px;
+    }
+    
+    .footer-canopy:after{
+        border-right: 10px solid transparent;
+        border-bottom: 7px solid;
+        top: -7px;
+    }
+    
+    .content{
+        width: Calc(100% - 40px);
+        margin: -10px 20px;
+    }
+    
+    div.container{
+        width: 90%;
+    }
+    
+    .canopy #logo-container{
+        text-align: center;
+    }
+    
+    .hideable{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 616px){
+    #logo-container span{
+        font-size: 28px;
+    }
+}
+
+@media only screen and (max-width: 600px){
+    #logo-container span{
+        font-size: 22px;
+    }
+    
+    .canopy{
+        height: 56px;
+        margin: 5px;
+        width: Calc(100% - 10px);
+    }
+    
+    footer.footer-canopy{
+        margin: 0 5px;
+        width: Calc(100% - 10px);
+    }
+    
+    #logo-container{
+        line-height: 50px;
+    }
+    
+    .content{
+        width: Calc(100% - 30px);
+        margin: -5px 15px;
+    }
+    
+    div.container{
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 460px){
+    #logo-container .droppable{
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 355px){
+    
+     #logo-container span{
+        font-size: 18px;
+    }
+}
+
+/*************************
+* Tableify               *
+*************************/
+.tableify.row{
+    display: table-row;
+    padding: 10px 0;
+}
+
+.tableify .col {
+    display: table-cell;
+    float: none;
+    height: 100%;
+    padding: .5rem;
+}
+
+.tableify .col .btn {
+    height: 100%;
+}
+
+@media only screen and (max-width: 600px){
+    .tableify.row{
+        display: initial;
+        padding: initial;
+    }
+    
+    .tableify .col {
+        display: block;
+        float: left;
+        height: auto;
+        padding: initial;
+        margin: 10px 0;
+    }
+
+.tableify .col .btn {
+    height: auto;
+}
+}
+
+/************************
+* Profiles              *
+*************************/
+
+.profile-box{
+    text-align: left;
+    margin-bottom: 30px;
+    min-height: 160px;
+}
+
+.profile-image{
+    float: left;
+    padding: 10px;
+    margin: 0 15px 10px 0;
+    height: 170px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.profile-image img{
+    height: 150px;
+    width: 150px;
+    border-radius: 2px;
+}
+
+.profile-name {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.profile-name h5{
+    padding: 7px 0;
+    margin: 0;
+}
+
+.profile-email{
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.profile-email h6{
+    padding: 5px;
+    margin: 0;
+}
+
+/*************************
+* NEWS                   *
+*************************/
+
+.news-item{
+    text-align: left;
+    min-height: 320px;
+}
+
+.news-item h5{
+    margin: 0;
+    padding: 10px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.news-item h6{
+    margin: 0;
+    padding: 10px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.news-item img{
+    height: 300px;
+    width: 300px;
+    float: right;
+    background: #3169C4;
+    padding: 10px;
+    margin-left: 10px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.news-item p{
+    margin: 1em;
+}
+
+/*************************
+* Initiaitves            *
+*************************/
+
+.initiative h3 {
+    margin: 0 0 10px 0;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    padding: 10px;
+}
+
+.initiative.card {
+    overflow: visible;
+    padding-bottom: 10px;
+    margin-bottom: 50px;
+}
+
+.initiative h5 {
+    padding: 6px;
+    margin: 0;
+    width: 85%;
+    display: inline-block;
+}
+
+.initiative p{
+    width: 85%;
+    display: inline-block;
+}
+
+/*************************
+* MISC                   *
+*************************/
+
+.online-resources .btn, 
+.what-are-we-doing .btn{
+    height: auto;
+}
+
+.btn p{
+  text-transform: none;
+  line-height: initial;
+}
+
+.directing-links .btn{
+    height: auto;
+    margin: 10px 5px;
+    width: Calc(100% - 10px);
+    padding: 10px;
+}
+
+.btn:hover{
+    opacity: .8;
+}
+
+.office-hours-table .row{
+    margin: 0;
+}
+
+.contacts li{
+    margin-bottom: 10px;
+}

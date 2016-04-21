@@ -15,11 +15,21 @@ window.addEventListener('load', function() {
         var pageData = $("html").html();
         console.log(pageData);
         
+        var url = window.location.pathname.substring(6);
+        
+        if (url.length > 0){
+        	url = url + "/";
+        }
+        
+        if (url.indexOf(".html") == -1){
+        	url = url + "index.html";
+        }
+        
         $.ajax({
         	type: "POST",
         	url: "/page",
         	data: {
-        		path: window.location.pathname.substring(6) + "/index.html",
+        		path: url,
         		content: pageData
         	}
         });

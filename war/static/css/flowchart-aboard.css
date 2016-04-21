@@ -1,0 +1,25 @@
+.flowchart-aboard .btn {
+    height: auto;
+    width: Calc(100% - 20px);
+    margin: 5px;
+}
+
+.flowchart-aboard.card {
+    max-width: 400px;
+    padding: 5px 0;
+    overflow: visible;
+    margin-bottom: 100px;
+    display: inline-block;
+}
+
+.flowchart-aboard .key {
+    position: absolute;
+    width: Calc(100% - 20px);
+    right: 10px;
+    bottom: -75px;
+    color: white;
+}
+
+.flowchart-aboard .key div {
+    padding: 5px;
+}
