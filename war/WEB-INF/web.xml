@@ -7,12 +7,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 
 	<servlet>
-		<servlet-name>Page</servlet-name>
-		<servlet-class>gradyward.studentunion.PageServlet</servlet-class>
+		<servlet-name>PageEditor</servlet-name>
+		<servlet-class>gradyward.studentunion.PageEditorServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>Page</servlet-name>
-		<url-pattern>/page/*</url-pattern>
+		<servlet-name>PageEditor</servlet-name>
+		<url-pattern>/edit/*</url-pattern>
 	</servlet-mapping>
 	
 	
