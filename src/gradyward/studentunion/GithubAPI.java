@@ -87,7 +87,9 @@ public class GithubAPI {
 		
 			List<RepositoryContents> result = cs.getContents(RepositoryId.create(Secrets.GithubUsername, repoName), filePath, "gh-pages");
 			for (RepositoryContents rc : result){
-				return rc.getContent();
+				String encoded = rc.getContent();
+				byte[] decoded = DatatypeConverter.parseBase64Binary(encoded);
+				return new String(decoded, "UTF-8");
 			}
 		} catch (RequestException re){
 			return null;

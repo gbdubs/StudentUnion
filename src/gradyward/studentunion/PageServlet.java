@@ -65,7 +65,6 @@ public class PageServlet extends HttpServlet {
 				replaceWith += "../";
 			}
 		}
-		System.out.println("REPLACING WITH : " + replaceWith);
 		content = content.replace("href=\"/", "href=\""+replaceWith);	
 		content = content.replace("src=\"/", "src=\""+replaceWith);	
 		return content;
