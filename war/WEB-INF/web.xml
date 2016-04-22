@@ -17,13 +17,34 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	
 	<servlet>
-		<servlet-name>NewLoginServlet</servlet-name>
-		<servlet-class>gradyward.studentunion.NewLoginServlet</servlet-class>
+		<servlet-name>LoginCallbackServlet</servlet-name>
+		<servlet-class>gradyward.studentunion.LoginCallbackServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>NewLoginServlet</servlet-name>
-		<url-pattern>/new-login</url-pattern>
+		<servlet-name>LoginCallbackServlet</servlet-name>
+		<url-pattern>/login-callback</url-pattern>
 	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>gradyward.studentunion.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>ManageUsersServlet</servlet-name>
+		<servlet-class>gradyward.studentunion.ManageUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ManageUsersServlet</servlet-name>
+		<url-pattern>/users</url-pattern>
+	</servlet-mapping>
+	
 	
 	
 	<filter>

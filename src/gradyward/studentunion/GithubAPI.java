@@ -1,5 +1,7 @@
 package gradyward.studentunion;
 
+import gradyward.studentunion.utilities.Secrets;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;

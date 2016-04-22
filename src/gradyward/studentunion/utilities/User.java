@@ -1,4 +1,4 @@
-package gradyward.studentunion;
+package gradyward.studentunion.utilities;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -32,12 +32,30 @@ public class User {
 		}
 		return null;
 	}
+	
+	public static String nickname(){
+		if (us.isUserLoggedIn()){
+			com.google.appengine.api.users.User user = us.getCurrentUser();
+			String nickname = user.getNickname();
+			if (nickname.trim().length() > 0){
+				return nickname;
+			}
+		}
+		return null;
+	}
 
 	public static String loginUrl(String returnTo){
-		return us.createLoginURL("/new-login?goto="+returnTo);
+		return us.createLoginURL("/login-callback?goto="+returnTo);
 	}
 	
 	public static String logoutUrl(){
 		return us.createLoginURL("/");
+	}
+
+	public static boolean isGoogleAdmin() {
+		if (loggedIn()){
+			return us.isUserAdmin();
+		}
+		return false;
 	}
 }

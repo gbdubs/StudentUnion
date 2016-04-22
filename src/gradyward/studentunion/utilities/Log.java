@@ -1,4 +1,4 @@
-package gradyward.studentunion;
+package gradyward.studentunion.utilities;
 
 public class Log {
 

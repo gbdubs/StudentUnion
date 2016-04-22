@@ -1,6 +1,6 @@
 package gradyward.deprecated;
 
-import gradyward.studentunion.Secrets;
+import gradyward.studentunion.utilities.Secrets;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
