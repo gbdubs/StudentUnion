@@ -655,28 +655,168 @@ footer.footer-canopy{
     display: inline-block;
 }
 
-/*************************
-* PADDING                *
-*************************/
+/*************************************
+* PADDING + MARGIN FOR MANUAL EDTING *
+*************************************/
 
-.pad-5{
-	padding: 5px;
+.pad-t-5{
+	padding-top: 5px !important;
 }
 
-.pad-10{
-	padding: 10px;
+.pad-t-10{
+	padding-top: 10px !important;
 }
 
-.pad-15{
-	padding: 15px;
+.pad-t-15{
+	padding-top: 15px !important;
 }
 
-.pad-20{
-	padding: 20px;
+.pad-t-20{
+	padding-top: 20px !important;
 }
 
-.pad-25{
-	padding: 25px;
+.pad-t-25{
+	padding-top: 25px !important;
+}
+
+.pad-b-5{
+    padding-bottom: 5px !important;
+}
+
+.pad-b-10{
+    padding-bottom: 10px !important;
+}
+
+.pad-b-15{
+    padding-bottom: 15px !important;
+}
+
+.pad-b-20{
+    padding-bottom: 20px !important;
+}
+
+.pad-b-25{
+    padding-bottom: 25px !important;
+}
+
+.pad-l-5{
+    padding-left: 5px !important;
+}
+
+.pad-l-10{
+    padding-left: 10px !important;
+}
+
+.pad-l-15{
+    padding-left: 15px !important;
+}
+
+.pad-l-20{
+    padding-left: 20px !important;
+}
+
+.pad-l-25{
+    padding-left: 25px !important;
+}
+
+.pad-r-5{
+    padding-right: 5px !important;
+}
+
+.pad-r-10{
+    padding-right: 10px !important;
+}
+
+.pad-r-15{
+    padding-right: 15px !important;
+}
+
+.pad-r-20{
+    padding-right: 20px !important;
+}
+
+.pad-r-25{
+    padding-right: 25px !important;
+}
+
+.margin-t-5{
+    margin-top: 5px !important;
+}
+
+.margin-t-10{
+    margin-top: 10px !important;
+}
+
+.margin-t-15{
+    margin-top: 15px !important;
+}
+
+.margin-t-20{
+    margin-top: 20px !important;
+}
+
+.margin-t-25{
+    margin-top: 25px !important;
+}
+
+.margin-b-5{
+    margin-bottom: 5px !important;
+}
+
+.margin-b-10{
+    margin-bottom: 10px !important;
+}
+
+.margin-b-15{
+    margin-bottom: 15px !important;
+}
+
+.margin-b-20{
+    margin-bottom: 20px !important;
+}
+
+.margin-b-25{
+    margin-bottom: 25px !important;
+}
+
+.margin-l-5{
+    margin-left: 5px !important;
+}
+
+.margin-l-10{
+    margin-left: 10px !important;
+}
+
+.margin-l-15{
+    margin-left: 15px !important;
+}
+
+.margin-l-20{
+    margin-left: 20px !important;
+}
+
+.margin-l-25{
+    margin-left: 25px !important;
+}
+
+.margin-r-5{
+    margin-right: 5px !important;
+}
+
+.margin-r-10{
+    margin-right: 10px !important;
+}
+
+.margin-r-15{
+    margin-right: 15px !important;
+}
+
+.margin-r-20{
+    margin-right: 20px !important;
+}
+
+.margin-r-25{
+    margin-right: 25px !important;
 }
 
 /*************************

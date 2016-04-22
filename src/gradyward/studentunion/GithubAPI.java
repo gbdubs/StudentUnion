@@ -9,7 +9,6 @@ import javax.xml.bind.DatatypeConverter;
 import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
-import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.ContentsService;
 
 public class GithubAPI {
@@ -63,7 +62,7 @@ public class GithubAPI {
 	  /* * * * * * * * * * * * * */
 	 /* GET AN EXISTING PAGE SHA*/
     /* * * * * * * * * * * * * */
-	public static String getFileSha(String repoName, String filePath) throws IOException {
+	public static String getFileSha(String repoName, String filePath) {
 		try{
 			ContentsService cs = new ContentsService(ghc());
 		
@@ -71,7 +70,7 @@ public class GithubAPI {
 			for (RepositoryContents rc : result){
 				return rc.getSha();
 			}
-		} catch (RequestException re){
+		} catch (IOException io){
 			return null;
 		}
 		return null;
@@ -81,7 +80,7 @@ public class GithubAPI {
 	  /* * * * * * * * * * * * * * */
 	 /* GET AN EXISTING PAGE TEXT */
     /* * * * * * * * * * * * * * */
-	public static String getFileText(String repoName, String filePath) throws IOException {
+	public static String getFileText(String repoName, String filePath) {
 		try{
 			ContentsService cs = new ContentsService(ghc());
 		
@@ -91,7 +90,7 @@ public class GithubAPI {
 				byte[] decoded = DatatypeConverter.parseBase64Binary(encoded);
 				return new String(decoded, "UTF-8");
 			}
-		} catch (RequestException re){
+		} catch (IOException re){
 			return null;
 		}
 		return null;

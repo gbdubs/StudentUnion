@@ -4,6 +4,12 @@
     $('.button-collapse').sideNav();
     
     $(".dropdown-button").dropdown();
-
-  }); // end of document ready
-})(jQuery); // end of jQuery name space
+    
+    var editorURL = "http://githubdemo-1285.appspot.com/edit";
+    
+    var pathToPage = window.location.href;
+	pathToPage.substring(pathToPage.indexOf("/", 7)+1)
+	$("#edit-now-link").attr("href", editorURL + "/" + pathToPage);
+		
+  });
+})(jQuery);

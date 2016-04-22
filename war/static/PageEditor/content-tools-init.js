@@ -7,11 +7,9 @@ window.addEventListener('load', function() {
 	
 	ContentTools.StylePalette.add([
 		new ContentTools.Style('Card',  'card', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-		new ContentTools.Style('Padding - XS', 'pad-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-		new ContentTools.Style('Padding - S', 'pad-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-		new ContentTools.Style('Padding - M', 'pad-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-		new ContentTools.Style('Padding - L', 'pad-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
-		new ContentTools.Style('Padding - XL', 'pad-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		
+		new ContentTools.Style('Button',  'btn', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		
 		new ContentTools.Style('Text - Black', 'txt-brandeis-black', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Text - White', 'txt-brandeis-white', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Text - Grey', 'txt-brandeis-grey',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
@@ -19,6 +17,7 @@ window.addEventListener('load', function() {
 		new ContentTools.Style('Text - Normal Blue', 'txt-brandeis-blue-1',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Text - Dark Blue', 'txt-brandeis-blue-2', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Text - Yellow', 'txt-brandeis-yellow',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		
 		new ContentTools.Style('Background - Black', 'bg-brandeis-black', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Background - White', 'bg-brandeis-white', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Background - Grey', 'bg-brandeis-grey',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
@@ -26,6 +25,49 @@ window.addEventListener('load', function() {
 		new ContentTools.Style('Background - Normal Blue', 'bg-brandeis-blue-1',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Background - Dark Blue', 'bg-brandeis-blue-2', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
 		new ContentTools.Style('Background - Yellow', 'bg-brandeis-yellow',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		
+		new ContentTools.Style('Padding - Top - XS', 'pad-t-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Top - S', 'pad-t-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Top - M', 'pad-t-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Top - L', 'pad-t-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Top - XL', 'pad-t-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Bottom - XS', 'pad-b-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Bottom - S', 'pad-b-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Bottom - M', 'pad-b-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Bottom - L', 'pad-b-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Bottom - XL', 'pad-b-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Left - XS', 'pad-l-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Left - S', 'pad-l-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Left - M', 'pad-l-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Left - L', 'pad-l-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Left - XL', 'pad-l-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Right - XS', 'pad-r-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Right - S', 'pad-r-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Right - M', 'pad-r-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Right - L', 'pad-r-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Padding - Right - XL', 'pad-r-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		
+		new ContentTools.Style('Margin - Top - XS', 'margin-t-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Top - S', 'margin-t-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Top - M', 'margin-t-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Top - L', 'margin-t-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Top - XL', 'margin-t-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Bottom - XS', 'margin-b-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Bottom - S', 'margin-b-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Bottom - M', 'margin-b-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Bottom - L', 'margin-b-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Bottom - XL', 'margin-b-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Left - XS', 'margin-l-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Left - S', 'margin-l-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Left - M', 'margin-l-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Left - L', 'margin-l-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Left - XL', 'margin-l-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Right - XS', 'margin-r-5',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Right - S', 'margin-r-10',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Right - M', 'margin-r-15',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Right - L', 'margin-r-20',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		new ContentTools.Style('Margin - Right - XL', 'margin-r-25',  ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']),
+		
 	]);
 	
 
