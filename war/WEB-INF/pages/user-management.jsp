@@ -7,6 +7,7 @@
         <title>Student Union Website | User Manager</title>
     </head>
     <body>
+    	Currently logged in as ${currentUser.nickname} (${currentUser.email}). <a href="${logoutUrl}">Log Out</a>
     	<div>
 			<h1> Owners</h1>
 			<ul>
@@ -14,12 +15,14 @@
 					<li>
 						<b>${owner.nickname}</b> - 
 						<a href="mailto:${owner.email}">${owner.email}</a>
-						<form action="/users" method="POST">
-							<input type="hidden" name="email" value="${owner.email}">
-							<input type="hidden" name="addOrRemove" value="remove">
-							<input type="hidden" name="adminOrOwner" value="owner">
-							<button>Delete</button>
-						</form>
+						<c:if test="${isOwner}">
+							<form action="/users" method="POST">
+								<input type="hidden" name="email" value="${owner.email}">
+								<input type="hidden" name="addOrRemove" value="remove">
+								<input type="hidden" name="adminOrOwner" value="owner">
+								<button>Delete</button>
+							</form>
+						</c:if>
 					</li>
 				</c:forEach>
 			</ul>
@@ -41,12 +44,14 @@
 					<li>
 						<b>${admin.nickname}</b> - 
 						<a href="mailto:${admin.email}">${admin.email}</a>
-						<form action="/users" method="POST">
-							<input type="hidden" name="email" value="${admin.email}">
-							<input type="hidden" name="addOrRemove" value="remove">
-							<input type="hidden" name="adminOrOwner" value="admin">
-							<button>Delete</button>
-						</form>
+						<c:if test="${isOwner}">
+							<form action="/users" method="POST">
+								<input type="hidden" name="email" value="${admin.email}">
+								<input type="hidden" name="addOrRemove" value="remove">
+								<input type="hidden" name="adminOrOwner" value="admin">
+								<button>Delete</button>
+							</form>
+						</c:if>
 					</li>
 				</c:forEach>
 			</ul>

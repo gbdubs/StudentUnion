@@ -26,6 +26,10 @@ public class ManageUsersServlet extends HttpServlet {
 			req.setAttribute("owners", owners);
 			req.setAttribute("admins", Person.getAdmins());
 			
+			// Adds a logout url
+			req.setAttribute("logoutUrl", User.logoutUrl());
+			req.setAttribute("currentUser", Person.get(User.email()));
+			
 			// Sends the request.
 			resp.setContentType("text/html");
 			RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/user-management.jsp");	
@@ -45,7 +49,6 @@ public class ManageUsersServlet extends HttpServlet {
 		String addOrRemove = req.getParameter("addOrRemove");
 		String adminOrOwner = req.getParameter("adminOrOwner");
 		String personEmail = req.getParameter("email");
-		
 		
 		if (personEmail == null || addOrRemove == null || adminOrOwner == null){
 			
@@ -74,7 +77,7 @@ public class ManageUsersServlet extends HttpServlet {
 		
 		// Redirects back to the page, now with (if the datastore updates quickly)
 		// the corrected/changed names for admins and owners.
-		doGet(req, resp);
+		resp.sendRedirect("/users");
 	}
 	
 }

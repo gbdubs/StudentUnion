@@ -26,6 +26,8 @@ public class LoginCallbackServlet extends HttpServlet{
 		Person p = Person.get(userEmail);
 		p.googleId = googleId;
 		p.nickname = User.nickname();
+		p.admin = User.isGoogleAdmin();
+		p.owner = User.isGoogleAdmin();
 		
 		// Updates their settings asynchronously.
 		ofy.save().entity(p);

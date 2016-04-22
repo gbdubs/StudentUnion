@@ -29,7 +29,7 @@ public class Person {
 	List<String> permissions;
 	
 	public boolean makeAdmin(){
-		Person personMakingRequest = get(User.id());
+		Person personMakingRequest = get(User.email());
 		if (!personMakingRequest.owner && !User.isGoogleAdmin()){
 			return false;
 		}
@@ -40,7 +40,7 @@ public class Person {
 	}
 	
 	public boolean makeNotAdmin(){
-		Person personMakingRequest = get(User.id());
+		Person personMakingRequest = get(User.email());
 		if (!personMakingRequest.owner && !User.isGoogleAdmin()){
 			return false;
 		}
@@ -52,7 +52,7 @@ public class Person {
 	}
 	
 	public boolean makeOwner(){
-		Person personMakingRequest = get(User.id());
+		Person personMakingRequest = get(User.email());
 		if (!personMakingRequest.owner && !User.isGoogleAdmin()){
 			return false;
 		}
@@ -64,7 +64,7 @@ public class Person {
 	}
 	
 	public boolean makeNotOwner(){
-		Person personMakingRequest = get(User.id());
+		Person personMakingRequest = get(User.email());
 		if (!personMakingRequest.owner && !User.isGoogleAdmin()){
 			return false;
 		}
