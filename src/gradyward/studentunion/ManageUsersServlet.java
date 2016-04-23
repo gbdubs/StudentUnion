@@ -19,12 +19,13 @@ public class ManageUsersServlet extends HttpServlet {
 		if (User.loggedIn()){
 			Person currentUser = Person.get(User.email());
 			
-			// Sets up information/forms to manage administrators.
+			// Sets up information/forms to manage people.
 			List<Person> owners = Person.getOwners();
 			boolean isOwner = User.isGoogleAdmin() || owners.contains(currentUser);
 			req.setAttribute("isOwner", isOwner);
 			req.setAttribute("owners", owners);
 			req.setAttribute("admins", Person.getAdmins());
+			req.setAttribute("candidates", Person.getCandidates());
 			
 			// Adds a logout url
 			req.setAttribute("logoutUrl", User.logoutUrl());

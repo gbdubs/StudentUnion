@@ -46,6 +46,26 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	
+	<servlet>
+		<servlet-name>ConsoleServlet</servlet-name>
+		<servlet-class>gradyward.studentunion.servlets.ConsoleServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ConsoleServlet</servlet-name>
+		<url-pattern>/console</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>SelfManagerServlet</servlet-name>
+		<servlet-class>gradyward.studentunion.servlets.SelfManagerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SelfManagerServlet</servlet-name>
+		<url-pattern>/self-manager</url-pattern>
+	</servlet-mapping>
+	
+	
 	
 	<filter>
 	    <filter-name>ObjectifyFilter</filter-name>

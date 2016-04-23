@@ -4,7 +4,6 @@ import gradyward.studentunion.utilities.Log;
 import gradyward.studentunion.utilities.ObjectifyWrapper;
 import gradyward.studentunion.utilities.User;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,8 +25,10 @@ public class Person {
 	@Index public boolean candidate;
 	@Index public boolean admin;
 	@Index public boolean owner;
-	
-	List<String> permissions;
+
+	public String imageUrl;
+	public String biography;
+	public String classYear;
 	
 	public boolean makeCandidate(){
 		Person personMakingRequest = get(User.email());
@@ -57,7 +58,6 @@ public class Person {
 			return false;
 		}
 		Log.info(String.format("MADE ADMIN: User [%s] made user [%s] an admin on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.candidate = true;
 		this.admin = true;
 		ofy.save().entity(this).now();
 		return true;
@@ -81,7 +81,6 @@ public class Person {
 			return false;
 		}
 		Log.info(String.format("MADE OWNER: User [%s] made user [%s] an owner on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.candidate = false;
 		this.admin = true;
 		this.owner = true;
 		ofy.save().entity(this).now();
@@ -94,8 +93,6 @@ public class Person {
 			return false;
 		}
 		Log.info(String.format("REMOVED OWNER: User [%s] removed user [%s] as an owner on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.candidate = false;
-		this.admin = true;
 		this.owner = false;
 		ofy.save().entity(this).now();
 		return true;
@@ -115,7 +112,9 @@ public class Person {
 			p.candidate = false;
 			p.admin = false;
 			p.owner = false;
-			p.permissions = new ArrayList<String>();
+			p.imageUrl = "/static/img/default-avatar.png";
+			p.biography = "[No Biography Provided]";
+			p.classYear = "20XX";
 		}
 		return p;
 	}
@@ -130,6 +129,11 @@ public class Person {
 		return owners;
 	}
 	
+	public static Object getCandidates() {
+		List<Person> candidates = ofy.load().type(Person.class).filter("candidate", true).list();
+		return candidates;
+	}
+	
 	public String getEmail(){
 		return this.email;
 	}
@@ -138,8 +142,16 @@ public class Person {
 		return this.nickname;
 	}
 	
-	public boolean getCandidate(){
-		return this.candidate;
+	public String getBiography(){
+		return this.biography;
+	}
+	
+	public String getImageUrl(){
+		return this.imageUrl;
+	}
+	
+	public String getClassYear(){
+		return this.classYear;
 	}
 	
 	public boolean equals(Object o){
@@ -155,5 +167,4 @@ public class Person {
 		
 		return false;
 	}
-	
 }

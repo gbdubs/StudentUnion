@@ -49,7 +49,7 @@ public class User {
 	}
 	
 	public static String logoutUrl(){
-		return us.createLoginURL("/");
+		return us.createLoginURL("/console");
 	}
 
 	public static boolean isGoogleAdmin() {
