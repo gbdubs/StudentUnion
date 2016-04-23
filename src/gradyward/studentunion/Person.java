@@ -17,16 +17,39 @@ import com.googlecode.objectify.annotation.Index;
 public class Person {
 	static Objectify ofy = ObjectifyWrapper.ofy();
 	
-	@Id String email; 
+	public @Id String email; 
 	
-	String nickname;
-	String googleId;
+	public String nickname;
+	public String googleId;
 	
-	@Index boolean blocked;
-	@Index boolean admin;
-	@Index boolean owner;
+	@Index public boolean blocked;
+	@Index public boolean candidate;
+	@Index public boolean admin;
+	@Index public boolean owner;
 	
 	List<String> permissions;
+	
+	public boolean makeCandidate(){
+		Person personMakingRequest = get(User.email());
+		if (!personMakingRequest.owner && !User.isGoogleAdmin()){
+			return false;
+		}
+		Log.info(String.format("MADE CANDIDATE: User [%s] made user [%s] a candidate on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
+		this.candidate = true;
+		ofy.save().entity(this).now();
+		return true;
+	}
+	
+	public boolean makeNotCandidate(){
+		Person personMakingRequest = get(User.email());
+		if (!personMakingRequest.owner && !User.isGoogleAdmin()){
+			return false;
+		}
+		Log.info(String.format("REMOVED CANDIDATE: User [%s] removed user [%s] as a candidate on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
+		this.candidate = false;
+		ofy.save().entity(this).now();
+		return true;
+	}
 	
 	public boolean makeAdmin(){
 		Person personMakingRequest = get(User.email());
@@ -34,6 +57,7 @@ public class Person {
 			return false;
 		}
 		Log.info(String.format("MADE ADMIN: User [%s] made user [%s] an admin on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
+		this.candidate = true;
 		this.admin = true;
 		ofy.save().entity(this).now();
 		return true;
@@ -57,6 +81,7 @@ public class Person {
 			return false;
 		}
 		Log.info(String.format("MADE OWNER: User [%s] made user [%s] an owner on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
+		this.candidate = false;
 		this.admin = true;
 		this.owner = true;
 		ofy.save().entity(this).now();
@@ -69,6 +94,7 @@ public class Person {
 			return false;
 		}
 		Log.info(String.format("REMOVED OWNER: User [%s] removed user [%s] as an owner on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
+		this.candidate = false;
 		this.admin = true;
 		this.owner = false;
 		ofy.save().entity(this).now();
@@ -86,6 +112,7 @@ public class Person {
 			p.googleId = null;
 			p.nickname = "[No Nickname]";
 			p.blocked = false;
+			p.candidate = false;
 			p.admin = false;
 			p.owner = false;
 			p.permissions = new ArrayList<String>();
@@ -109,6 +136,10 @@ public class Person {
 	
 	public String getNickname(){
 		return this.nickname;
+	}
+	
+	public boolean getCandidate(){
+		return this.candidate;
 	}
 	
 	public boolean equals(Object o){

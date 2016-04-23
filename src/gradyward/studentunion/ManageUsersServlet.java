@@ -47,10 +47,10 @@ public class ManageUsersServlet extends HttpServlet {
 		
 		// Three variables that define this API call. All are required.
 		String addOrRemove = req.getParameter("addOrRemove");
-		String adminOrOwner = req.getParameter("adminOrOwner");
+		String adminOrOwnerOrCandidate = req.getParameter("adminOrOwnerOrCandidate");
 		String personEmail = req.getParameter("email");
 		
-		if (personEmail == null || addOrRemove == null || adminOrOwner == null){
+		if (personEmail == null || addOrRemove == null || adminOrOwnerOrCandidate == null){
 			
 			// Send an error to the user if API call parameter is missing.
 			resp.getWriter().println("One or more parameters not specified. Check your API calls. (ManageUsersServlet)");
@@ -61,16 +61,20 @@ public class ManageUsersServlet extends HttpServlet {
 			// Performs the appropriate admin/owner modification based on the call
 			// (checking for permission is done inside the Person class, along with a log call)
 			if (addOrRemove.equals("add")){
-				if (adminOrOwner.equals("owner")){
+				if (adminOrOwnerOrCandidate.equals("owner")){
 					Person.get(personEmail).makeOwner();
-				} else if (adminOrOwner.equals("admin")){
+				} else if (adminOrOwnerOrCandidate.equals("admin")){
 					Person.get(personEmail).makeAdmin();
+				} else if (adminOrOwnerOrCandidate.equals("candidate")){
+					Person.get(personEmail).makeCandidate();
 				}
 			} else if (addOrRemove.equals("remove")){
-				if (adminOrOwner.equals("owner")){
+				if (adminOrOwnerOrCandidate.equals("owner")){
 					Person.get(personEmail).makeNotOwner();
-				} else if (adminOrOwner.equals("admin")){
+				} else if (adminOrOwnerOrCandidate.equals("admin")){
 					Person.get(personEmail).makeNotAdmin();
+				} else if (adminOrOwnerOrCandidate.equals("candidate")){
+					Person.get(personEmail).makeNotCandidate();
 				}
 			}
 		}
