@@ -66,6 +66,8 @@ public class SelfManagerServlet extends HttpServlet {
 				} else {
 					Log.info(String.format("User [%s] updated personal information for user [%s].\n", p.email, q.email));
 				}
+				resp.sendRedirect("/console");
+				return;
 			}
 			Log.warn(String.format("User [%s] attempted to update personal information for user [%s], but did not have sufficient permissions.\n", p.email, personEmail));
 			resp.sendRedirect("/console");

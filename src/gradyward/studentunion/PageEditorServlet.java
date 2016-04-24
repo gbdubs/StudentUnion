@@ -16,8 +16,8 @@ public class PageEditorServlet extends HttpServlet {
 	
 	private static String editingUrlPrefix = "edit";
 	
-	private static String linkToHTMLTemplate = "/static/PageEditor/template-site.html";
-	private static String linkToContentToolsInitScript = "/static/PageEditor/make-editable.js";
+	public static String linkToHTMLTemplate = "/static/PageEditor/template-site.html";
+	public static String linkToContentToolsInitScript = "/static/PageEditor/make-editable.js";
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
@@ -71,8 +71,7 @@ public class PageEditorServlet extends HttpServlet {
 		}
 	}
 	
-	
-	private String getTemplateAsString() throws IOException{
+	public String getTemplateAsString() throws IOException{
 		ServletContext context = this.getServletContext();
 		String filePath =  context.getRealPath(linkToHTMLTemplate);
 		InputStreamReader inReader = new InputStreamReader(new FileInputStream(new File(filePath)), "UTF-8");

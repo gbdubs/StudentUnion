@@ -15,7 +15,7 @@
         	}
         </style>
         
-		<h1 class="centered">Edit your Personal Information</h1>
+		<h1 class="centered">Edit Your Personal Information</h1>
 		
 		<div class="logout-button">
 			Currently logged in as ${currentUser.nickname} (${currentUser.email}). 

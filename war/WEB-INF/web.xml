@@ -54,7 +54,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>ConsoleServlet</servlet-name>
 		<url-pattern>/console</url-pattern>
 	</servlet-mapping>
-	
+	<servlet-mapping>
+		<servlet-name>ConsoleServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
 	
 	<servlet>
 		<servlet-name>SelfManagerServlet</servlet-name>
