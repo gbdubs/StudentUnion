@@ -8,7 +8,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
 		<servlet-name>PageEditor</servlet-name>
-		<servlet-class>gradyward.studentunion.PageEditorServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.adv.PageEditorServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PageEditor</servlet-name>
@@ -18,7 +18,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>LoginCallbackServlet</servlet-name>
-		<servlet-class>gradyward.studentunion.LoginCallbackServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.basic.LoginCallbackServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginCallbackServlet</servlet-name>
@@ -28,7 +28,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>gradyward.studentunion.LoginServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.basic.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
@@ -38,7 +38,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>ManageUsersServlet</servlet-name>
-		<servlet-class>gradyward.studentunion.ManageUsersServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.adv.ManageUsersServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ManageUsersServlet</servlet-name>
@@ -48,7 +48,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>ConsoleServlet</servlet-name>
-		<servlet-class>gradyward.studentunion.servlets.ConsoleServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.basic.ConsoleServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ConsoleServlet</servlet-name>
@@ -59,9 +59,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+	
 	<servlet>
 		<servlet-name>SelfManagerServlet</servlet-name>
-		<servlet-class>gradyward.studentunion.servlets.SelfManagerServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.adv.SelfManagerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SelfManagerServlet</servlet-name>
