@@ -37,7 +37,7 @@
 		</c:if>
 		<c:if test="${isOwner}">
 			<div>
-				<a class="button" href="/group-manager">Create And Delete Groups</a>
+				<a class="button" href="/group-creation">Create And Delete Groups</a>
 			</div>
 		</c:if>
 		<c:if test="${isAdmin}">
