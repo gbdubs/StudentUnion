@@ -11,24 +11,27 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 
+/**
+ * Basic Github Operations, via a number of methodologies.
+ * I couldn't figure out how to do many of these things without many tries, so this API serves to consolodate the
+ * things that were able to get me good results.
+ * For this reason, the methods are not consistent, and this should not be used as an example of how to use the
+ * github libraries that are in place to do this work better than I could.
+ * @author Grady
+ *
+ */
 public class GithubAPI {
     
 	  /* * * * * * * * * * * * * * * * * * * */
 	 /* CONNECTION/CLIENT GITHUB UTILITIES  */
     /* * * * * * * * * * * * * * * * * * * */
-	private static GitHubClient githubClient;
+	private static GitHubClient ghc;
 	
-	private static GitHubClient ghc(){
-		if (githubClient == null){
-			githubClient = new GitHubClient();
-			authenticateClient(githubClient);
-		}
-		return githubClient;
+	static{
+		ghc = new GitHubClient();
+		ghc.setCredentials(SecretsAPI.GithubUsername, SecretsAPI.GithubPassword);
 	}
 	
-	private static void authenticateClient(GitHubClient gc){
-		gc.setCredentials(SecretsAPI.GithubUsername, SecretsAPI.GithubPassword);
-	}
 
 	  /* * * * * * * * * * */
 	 /* CREATE A NEW PAGE */
@@ -55,7 +58,7 @@ public class GithubAPI {
 		
 		UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, newFileBody, "gh-pages");
 		
-		ghc().put(apiURI, data, null);
+		ghc.put(apiURI, data, null);
 		
 	}
 	
@@ -64,7 +67,7 @@ public class GithubAPI {
     /* * * * * * * * * * * * * */
 	public static String getFileSha(String repoName, String filePath) {
 		try{
-			ContentsService cs = new ContentsService(ghc());
+			ContentsService cs = new ContentsService(ghc);
 		
 			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, "gh-pages");
 			for (RepositoryContents rc : result){
@@ -82,7 +85,7 @@ public class GithubAPI {
     /* * * * * * * * * * * * * * */
 	public static String getFileText(String repoName, String filePath) {
 		try{
-			ContentsService cs = new ContentsService(ghc());
+			ContentsService cs = new ContentsService(ghc);
 		
 			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, "gh-pages");
 			for (RepositoryContents rc : result){
@@ -106,7 +109,7 @@ public class GithubAPI {
 
 		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages", getFileSha(repoName, filePath));
 
-		ghc().put(apiURI, data, null);
+		ghc.put(apiURI, data, null);
 
 	}
 	
@@ -121,7 +124,7 @@ public class GithubAPI {
 			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages", sha);
 		}
 		
-		ghc().put(apiURI, data, null);
+		ghc.put(apiURI, data, null);
 	}
 	
 	

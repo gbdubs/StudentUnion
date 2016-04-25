@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
+import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.servlet.adv.PageEditorServlet;
 
@@ -37,6 +38,11 @@ public class Group {
 	
 	static Objectify ofy = ObjectifyAPI.ofy();
 	
+	/**
+	 * Gets a group from the datastore, and returns null if none is found with given UUID.
+	 * @param uuid Group Unique Identifier (not the name)
+	 * @return A group, or null, if none is found.
+	 */
 	public static Group get(String uuid){
 		if (uuid == null){
 			return null;
@@ -44,6 +50,11 @@ public class Group {
 		return ofy.load().type(Group.class).id(uuid).now();
 	}
 	
+	/**
+	 * Creates a new group with a given name. Assigns it a UUID. (DOES NOT SAVE)
+	 * @param name The name of the new group
+	 * @return A new group entity.
+	 */
 	public static Group createNewGroup(String name){
 		Group g = new Group();
 		g.name = name;
@@ -53,10 +64,19 @@ public class Group {
 		return g;
 	}
 	
+	/**
+	 * Attempts to delete the group, if one exists.
+	 * @param uuid The UUID of the group to be deleted.
+	 */
 	public static void deleteGroup(String uuid){
 		ofy.delete().type(Group.class).id(uuid).now();
 	}
 	
+	/**
+	 * Adds Members to the group, verifies that the requester is either an owner, a googleadmin, or a leader of the group.
+	 * @param toAddEmails Emails of members to add (duplicates are fine, and ignored)
+	 * @return Whether or not any changes were made.
+	 */
 	public boolean addMembers(List<String> toAddEmails){
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
@@ -78,6 +98,11 @@ public class Group {
 		return false;
 	}
 	
+	/**
+	 * Removes members from the group. First checks that the user either an owner, a googleadmin or a leader of the group.
+	 * @param toRemoveEmails Emails of members to be removed (duplicates or non-exists are find)
+	 * @return Whether any changes were made to the group.
+	 */
 	public boolean removeMembers(List<String> toRemoveEmails){
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
@@ -99,6 +124,11 @@ public class Group {
 		return false;
 	}
 	
+	/**
+	 * Adds leaders to the group, verifies that the requester is either an owner, a googleadmin, or a leader of the group.
+	 * @param toAddEmails Emails of members to add (duplicates are fine, and ignored)
+	 * @return Whether or not any changes were made.
+	 */
 	public boolean addLeaders(List<String> toAddEmails){
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
@@ -120,6 +150,11 @@ public class Group {
 		return false;
 	}
 	
+	/**
+	 * Removes leaders from the group. First checks that the user either an owner, a googleadmin or a leader of the group.
+	 * @param toRemoveEmails Emails of leaders to be removed (duplicates or non-exists are find)
+	 * @return Whether any changes were made to the group.
+	 */
 	public boolean removeLeaders(List<String> toRemoveEmails){
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
@@ -144,11 +179,11 @@ public class Group {
 	
 	private static String HTMLTemplateContentStartTag = "<!-- CONTENT BELOW HERE --> ";
 	private static String HTMLTemplateContentEndTag = "<!-- CONTENT ABOVE HERE --> ";
-	
-	
 	public static String linkToProfileTemplate = "/static/PageEditor/profile-template.html";
 	
-	public String getHtmlTemplate(HttpServlet caller, String location){
+	// Gets the HTML template page, which is also used for page editing.
+	// Also used to get the HTML template for the profile box.
+	private String getHtmlTemplate(HttpServlet caller, String location){
 		try {
 			ServletContext context = caller.getServletContext();
 			String filePath =  context.getRealPath(location);
@@ -166,11 +201,13 @@ public class Group {
 		}
 	}
 	
-	public String instantiateMemberBox(String template, Person p){
+	// Creates a member box from a template and person (based on the specifics of the profile template.
+	private String instantiateMemberBox(String template, Person p){
 		return String.format(template, p.imageUrl, p.nickname, this.roles.get(p.email), p.email, p.biography);
 	}
 	
-	public String getMembershipPage(HttpServlet caller){
+	// Delivers the HTML for a membership page for the given group.
+	private String getHTMLForMembershipPage(HttpServlet caller){
 		String template = getHtmlTemplate(caller, PageEditorServlet.linkToHTMLTemplate);
 		String beginning = template.substring(0, template.indexOf(HTMLTemplateContentStartTag));
 		String end = template.substring(template.indexOf(HTMLTemplateContentEndTag)+HTMLTemplateContentEndTag.length());
@@ -196,12 +233,17 @@ public class Group {
 		return beginning + middle.toString() + end;
 	}
 	
+	/**
+	 * Updates the group membership page for a given group.
+	 * Must be called from a servlet.
+	 * @param caller Servlet that calls this (needed for referencing the HTML templates)
+	 */
 	public void updateMembershipPage(HttpServlet caller) {
 		try {
-			String newMembershipPageAsString = getMembershipPage(caller);
+			String newMembershipPageAsString = getHTMLForMembershipPage(caller);
 			String membershipPageUrl = this.pageUrl + "/members/index.html";
 			String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
-			GithubAPI.updateFile("website", membershipPageUrl, commitMessage, newMembershipPageAsString);
+			GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, newMembershipPageAsString);
 			Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
 		} catch (IOException ioe){
 			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));

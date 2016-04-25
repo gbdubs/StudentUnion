@@ -5,11 +5,19 @@ import subrandeis.entities.Person;
 import subrandeis.entities.Petition;
 
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 
+/**
+ * An API I wrote to solve some of the strange ways that Objectify works.
+ * Static calls make sure that we successfully register the service before we use it.
+ * A singular shared Objectify instance reduces runningtime and wasted instantiation time.
+ * @author Grady
+ *
+ */
 public class ObjectifyAPI {
     
+	private static Objectify objectify;
+	
 	static {
 		ObjectifyService.register(Person.class);
 		ObjectifyService.register(Petition.class);
@@ -18,10 +26,9 @@ public class ObjectifyAPI {
     }
 
     public static Objectify ofy() {
-        return ObjectifyService.ofy();
-    }
-
-    public static ObjectifyFactory factory() {
-        return ObjectifyService.factory();
+    	if (objectify == null){
+    		objectify = ObjectifyService.ofy();
+    	}
+        return objectify;
     }
 }

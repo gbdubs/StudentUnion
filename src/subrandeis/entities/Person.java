@@ -30,6 +30,10 @@ public class Person {
 	public String biography;
 	public String classYear;
 	
+	/**
+	 * Makes the Person a candidate (DOES SAVE)
+	 * @return whether or not save was done.
+	 */
 	public boolean makeCandidate(){
 		Person personMakingRequest = get(UserAPI.email());
 		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
@@ -41,6 +45,10 @@ public class Person {
 		return true;
 	}
 	
+	/**
+	 * Makes the Person NOT a candidate (DOES SAVE)
+	 * @return whether or not save was done.
+	 */
 	public boolean makeNotCandidate(){
 		Person personMakingRequest = get(UserAPI.email());
 		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
@@ -52,6 +60,10 @@ public class Person {
 		return true;
 	}
 	
+	/**
+	 * Makes the Person an administrator (DOES SAVE)
+	 * @return whether or not save was done.
+	 */
 	public boolean makeAdmin(){
 		Person personMakingRequest = get(UserAPI.email());
 		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
@@ -63,6 +75,10 @@ public class Person {
 		return true;
 	}
 	
+	/**
+	 * Makes the Person NOT an administrator (DOES SAVE) (also disqualifies them from ownership)
+	 * @return whether or not save was done.
+	 */
 	public boolean makeNotAdmin(){
 		Person personMakingRequest = get(UserAPI.email());
 		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
@@ -75,6 +91,10 @@ public class Person {
 		return true;
 	}
 	
+	/**
+	 * Makes the Person an Owner (DOES SAVE)
+	 * @return whether or not save was done.
+	 */
 	public boolean makeOwner(){
 		Person personMakingRequest = get(UserAPI.email());
 		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
@@ -86,7 +106,11 @@ public class Person {
 		ofy.save().entity(this).now();
 		return true;
 	}
-	
+
+	/**
+	 * Makes the Person NOT an Owner (DOES SAVE)
+	 * @return whether or not save was done.
+	 */
 	public boolean makeNotOwner(){
 		Person personMakingRequest = get(UserAPI.email());
 		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
@@ -98,6 +122,10 @@ public class Person {
 		return true;
 	}
 	
+	/**
+	 * Gets the person described by their email. Creates a new person if nobody is known with that email (DOES NOT SAVE in this case)
+	 * @return whether or not save was done.
+	 */
 	public static Person get(String email){
 		if (email == null){
 			return null;
@@ -119,17 +147,29 @@ public class Person {
 		return p;
 	}
 	
+	/**
+	 * Gets all site owners
+	 * @return all site owners
+	 */
 	public static List<Person> getOwners(){
 		List<Person> owners = ofy.load().type(Person.class).filter("owner", true).list();
 		return owners;
 	}
 	
+	/**
+	 * Gets all site administrators
+	 * @return all site administrators
+	 */
 	public static List<Person> getAdmins(){
 		List<Person> owners = ofy.load().type(Person.class).filter("admin", true).list();
 		return owners;
 	}
 	
-	public static Object getCandidates() {
+	/**
+	 * Gets all candidates
+	 * @return all candidates
+	 */
+	public static List<Person> getCandidates() {
 		List<Person> candidates = ofy.load().type(Person.class).filter("candidate", true).list();
 		return candidates;
 	}
@@ -154,6 +194,10 @@ public class Person {
 		return this.classYear;
 	}
 	
+	/**
+	 * Compares a person to an object - people are considered the same as their email addresses
+	 * @return equality based on email address
+	 */
 	public boolean equals(Object o){
 		
 		if (o instanceof String){

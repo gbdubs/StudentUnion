@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import subrandeis.api.GithubAPI;
+import subrandeis.api.SecretsAPI;
 
 @SuppressWarnings("serial")
 public class PageEditorServlet extends HttpServlet {
@@ -34,7 +35,7 @@ public class PageEditorServlet extends HttpServlet {
 		}
 		
 		// Tries to get the current page definition, if it exists. Defaults to a template if it doesn't yet exist.
-		String currentPageDef = GithubAPI.getFileText("website", filePath);
+		String currentPageDef = GithubAPI.getFileText(SecretsAPI.WebsiteRepository, filePath);
 		if (currentPageDef == null){
 			currentPageDef = getTemplateAsString();
 		}
@@ -62,7 +63,7 @@ public class PageEditorServlet extends HttpServlet {
 		// Creates the file, returns a brief description of success or failure, depending on which it was.
 		resp.setContentType("application/json");
 		try {
-			GithubAPI.createOrUpdateFile("website", pagePath, "A New Commit at "+(new Date()).toString(), content);
+			GithubAPI.createOrUpdateFile(SecretsAPI.WebsiteRepository, pagePath, "A New Commit at "+(new Date()).toString(), content);
 			resp.setStatus(200);
 			resp.getWriter().println("{\"success\":1,\"message\":\"Everything worked and the work has been saved.\",\"url\":\""+pagePath+"\"}");
 			System.out.println("           	request to edit ["+pagePath+"] WAS SUCCESSFUL");
