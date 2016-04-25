@@ -25,18 +25,19 @@ public class LoginCallbackServlet extends HttpServlet{
 		String googleId = UserAPI.id();
 		String userEmail = UserAPI.email();
 		Person p = Person.get(userEmail);
-		p.googleId = googleId;
-		p.nickname = UserAPI.nickname();
-		p.admin = UserAPI.isGoogleAdmin();
-		p.owner = UserAPI.isGoogleAdmin();
-		
-		// Updates their settings asynchronously.
-		ofy.save().entity(p);
-		
+		if (p.nickname.equals("[No Nickname]")){
+			p.googleId = googleId;
+			p.nickname = UserAPI.nickname();
+			p.admin = UserAPI.isGoogleAdmin();
+			p.owner = UserAPI.isGoogleAdmin();
+			
+			// Updates their settings asynchronously.
+			ofy.save().entity(p);
+		}
+			
 		// Then it redirects the user to the original source of the login call.
 		String redirectTo = req.getParameter("goto");
 		resp.sendRedirect(redirectTo);
-		
 	}
 	
 }

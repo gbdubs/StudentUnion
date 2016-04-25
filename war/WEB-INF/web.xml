@@ -17,6 +17,26 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	
 	<servlet>
+		<servlet-name>GroupCreationServlet</servlet-name>
+		<servlet-class>subrandeis.servlet.adv.GroupCreationServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GroupCreationServlet</servlet-name>
+		<url-pattern>/group-creation</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GroupManagerServlet</servlet-name>
+		<servlet-class>subrandeis.servlet.adv.GroupManagerServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GroupManagerServlet</servlet-name>
+		<url-pattern>/group-manager</url-pattern>
+	</servlet-mapping>
+	
+	
+	
+	<servlet>
 		<servlet-name>LoginCallbackServlet</servlet-name>
 		<servlet-class>subrandeis.servlet.basic.LoginCallbackServlet</servlet-class>
 	</servlet>

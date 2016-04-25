@@ -8,8 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.log.Log;
-
+import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Group;
@@ -30,6 +29,7 @@ public class GroupCreationServlet extends HttpServlet {
 				// Sets the atributes that are rendered.
 				req.setAttribute("currentUser", p);
 				req.setAttribute("logoutUrl", UserAPI.logoutUrl());
+				req.setAttribute("groups", Group.getAllGroups());
 				
 				// Finishes up, sends to the console page.
 				resp.setContentType("text/html");
@@ -43,7 +43,7 @@ public class GroupCreationServlet extends HttpServlet {
 			resp.getWriter().println(error);
 			return;
 		}
-		resp.sendRedirect("/login?goto=/group-creation");
+		resp.sendRedirect("/login?goto=%2Fgroup-creation");
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
@@ -60,7 +60,7 @@ public class GroupCreationServlet extends HttpServlet {
 					ofy.save().entity(g).now();
 					String success = String.format("UserAPI [%s] successfully created group with name [%s] and id [%s].", p.email, g.name, g.id);
 					Log.info(success);
-					resp.sendRedirect("/console");
+					resp.sendRedirect("/group-editor?groupId="+g.id);
 					return;
 				} else if ("delete".equals(createOrDelete)){
 					String groupId = req.getParameter("groupId");

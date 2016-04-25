@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import subrandeis.servlet.adv.PageEditorServlet;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
 public class Group {
@@ -35,8 +37,21 @@ public class Group {
 	public List<String> members;
 	public Map<String, String> roles;
 	public String pageUrl;
+	public String description;
 	
 	static Objectify ofy = ObjectifyAPI.ofy();
+	
+	@OnLoad void checkForNulls() { 
+		if (leaders == null){
+			leaders = new ArrayList<String>();
+		}
+		if (members == null){
+			members = new ArrayList<String>();
+		}
+		if (roles == null){
+			roles = new HashMap<String, String>();
+		}
+	}
 	
 	/**
 	 * Gets a group from the datastore, and returns null if none is found with given UUID.
@@ -226,8 +241,10 @@ public class Group {
 		
 		for (String s : allPeople){
 			Person p = people.get(s);
-			middle.append(instantiateMemberBox(profileTemplate, p));
-			middle.append("\n\n");
+			if (p != null && p.fromDatabase){
+				middle.append(instantiateMemberBox(profileTemplate, p));
+				middle.append("\n\n");
+			}
 		}
 		
 		return beginning + middle.toString() + end;
@@ -248,6 +265,38 @@ public class Group {
 		} catch (IOException ioe){
 			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));
 		}
+	}
+	
+	public static List<Group> getAllGroups(){
+		return ofy.load().type(Group.class).list();
+	}
+	
+	public String getId(){
+		return this.id;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+	
+	public String getDescription(){
+		return this.description;
+	}
+	
+	public List<String> getLeaders(){
+		return this.leaders;
+	}
+	
+	public List<String> getMembers(){
+		return this.members;
+	}
+	
+	public String getPageUrl(){
+		return this.pageUrl;
+	}
+	
+	public Map<String, String> getRoles(){
+		return this.roles;
 	}
 	
 }

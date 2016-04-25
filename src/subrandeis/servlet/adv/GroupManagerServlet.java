@@ -29,18 +29,34 @@ public class GroupManagerServlet extends HttpServlet{
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
 			Group g = Group.get(req.getParameter("groupId"));
-			if (g != null && (p.owner || UserAPI.isGoogleAdmin() || g.leaders.contains(p.email))){
-				
-				// Sets the atributes that are rendered.
-				req.setAttribute("group", g);
-				req.setAttribute("currentUser", p);
-				req.setAttribute("logoutUrl", UserAPI.logoutUrl());
-				
-				// Finishes up, sends to the console page.
-				resp.setContentType("text/html");
-				RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/group-manager.jsp");
-				jsp.forward(req, resp);	
-				return;
+			boolean hasPermission = p.owner || UserAPI.isGoogleAdmin();
+			if (g != null){
+				hasPermission = hasPermission || g.leaders.contains(p.email);
+				if (hasPermission){
+					// Sets the atributes that are rendered.
+					req.setAttribute("group", g);
+					req.setAttribute("currentUser", p);
+					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
+					
+					// Finishes up, sends to the console page.
+					resp.setContentType("text/html");
+					RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/group-manager.jsp");
+					jsp.forward(req, resp);	
+					return;
+				}
+			} else {
+				hasPermission = hasPermission || p.admin;
+				if (hasPermission){
+					req.setAttribute("groups", Group.getAllGroups());
+					req.setAttribute("currentUser", p);
+					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
+					
+					// Finishes up, sends to the console page.
+					resp.setContentType("text/html");
+					RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/group-manager-list.jsp");
+					jsp.forward(req, resp);	
+					return;
+				}
 			}
 			String error = "There was an error in rendering the group manager for the group requested with id [%s]. The UserAPI was [%s].";
 			error = String.format(error, req.getParameter("groupId"), UserAPI.email());
@@ -58,32 +74,34 @@ public class GroupManagerServlet extends HttpServlet{
 			resp.getWriter().println("Missing parameter [manage].\n");
 		}
 		
-		if (manage.equals("nameOrPageUrl")){
-			doNamePageUrlManagement(req, resp);
-		} else if (manage.equals("roles")){
+		if ("nameOrPageUrlOrDescription".equals(manage)){
+			doNamePageUrlDescriptionManagement(req, resp);
+		} else if ("roles".equals(manage)){
 			doRoleManagement(req, resp);
-		} else if (manage.equals("members")){
+		} else if ("members".equals(manage)){
 			doMemberManagement(req, resp);
 		} else {
 			resp.getWriter().println("Incorrect value for parameter [manage] passed.");
 		}		
 	}
 	
-	public void doNamePageUrlManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-		if (!UserAPI.loggedIn()){
-			String groupId = req.getParameter("groupId");
+	public void doNamePageUrlDescriptionManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+		String groupId = req.getParameter("groupId");
+		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
 			Group g = Group.get(groupId);
 
 			if (g != null && p != null && (UserAPI.isGoogleAdmin() || p.owner || g.leaders.contains(p.email))){
 				String name = req.getParameter("name");
-				String pageURL = req.getParameter("url");
+				String pageURL = req.getParameter("pageUrl");
+				String description = req.getParameter("description");
 				if (name != null && pageURL != null){
 					g.name = name;
 					g.pageUrl = pageURL;
+					g.description = description;
 					ofy.save().entity(g);
-					Log.info(String.format("Successfully updated the name and page URL of group [%s] to [%s] and [%s] respectively.\n", g.id, g.name, g.pageUrl));	
-					resp.sendRedirect("/group-manager");
+					Log.info(String.format("Successfully updated the name and page URL and description of group [%s] to [%s], [%s] and [%s] respectively.\n", g.id, g.name, g.pageUrl, g.description));	
+					resp.sendRedirect("/group-manager?groupId="+groupId);
 					return;
 				} 
 				resp.getWriter().println("Either the name or pageURL was not passed properly. Check your API Call.\n");
@@ -92,7 +110,7 @@ public class GroupManagerServlet extends HttpServlet{
 			Log.warn(String.format("Something is wrong in the name and page url management of the group. The incorrect call was made by uaser [%s]\n", UserAPI.email()));
 			return;
 		}
-		resp.sendRedirect("/login?goto=group-manager");
+		resp.sendRedirect("/login?goto%3D%2Fgroup-manager");
 	}
 	
 	public void doRoleManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{
@@ -129,7 +147,7 @@ public class GroupManagerServlet extends HttpServlet{
 		
 		String addOrRemove = req.getParameter("addOrRemove");
 		String leaderOrMember = req.getParameter("leaderOrMember");
-		String groupUuid = req.getParameter("uuid");
+		String groupUuid = req.getParameter("groupId");
 		String emailsAsString = req.getParameter("emails");
 		
 		if (addOrRemove != null && leaderOrMember != null && emailsAsString != null && groupUuid != null && UserAPI.loggedIn()){

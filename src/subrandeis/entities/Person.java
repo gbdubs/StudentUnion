@@ -30,6 +30,8 @@ public class Person {
 	public String biography;
 	public String classYear;
 	
+	public boolean fromDatabase;
+	
 	/**
 	 * Makes the Person a candidate (DOES SAVE)
 	 * @return whether or not save was done.
@@ -143,6 +145,9 @@ public class Person {
 			p.imageUrl = "/static/img/default-avatar.png";
 			p.biography = "[No Biography Provided]";
 			p.classYear = "20XX";
+			p.fromDatabase = false;
+		} else {
+			p.fromDatabase = true;
 		}
 		return p;
 	}
