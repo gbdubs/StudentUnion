@@ -200,6 +200,7 @@ public class Group {
 			String membershipPageUrl = this.pageUrl + "/members/index.html";
 			String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
 			GithubAPI.updateFile("website", membershipPageUrl, commitMessage, newMembershipPageAsString);
+			Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
 		} catch (IOException ioe){
 			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));
 		}
