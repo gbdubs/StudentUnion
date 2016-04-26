@@ -11,6 +11,8 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 
+import subrandeis.entities.Page;
+
 /**
  * Basic Github Operations, via a number of methodologies.
  * I couldn't figure out how to do many of these things without many tries, so this API serves to consolodate the
@@ -118,13 +120,27 @@ public class GithubAPI {
 		
 		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
 		
-		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages");
+		UpdatePageRequest data;
 
 		if (sha != null){
 			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages", sha);
+		} else {
+			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages");
 		}
 		
 		ghc.put(apiURI, data, null);
+	}
+	
+	  /* * * * * * * * */
+     /* DELETE A PAGE */
+    /* * * * * * * * */
+	public static void deleteFile(String repoName, String filePath, String commitMessage) throws IOException {
+
+		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
+
+		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, "", "gh-pages", getFileSha(repoName, filePath));
+
+		ghc.delete(apiURI, data);
 	}
 	
 	

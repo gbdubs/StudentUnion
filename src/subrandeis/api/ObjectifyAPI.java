@@ -1,6 +1,7 @@
 package subrandeis.api;
 
 import subrandeis.entities.Group;
+import subrandeis.entities.Page;
 import subrandeis.entities.Person;
 import subrandeis.entities.Petition;
 
@@ -23,6 +24,7 @@ public class ObjectifyAPI {
 		ObjectifyService.register(Petition.class);
 		ObjectifyService.register(Group.class);
 		ObjectifyService.register(Petition.PetitionSignature.class);
+		ObjectifyService.register(Page.class);
     }
 
     public static Objectify ofy() {
