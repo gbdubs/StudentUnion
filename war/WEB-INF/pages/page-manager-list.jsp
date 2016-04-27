@@ -22,7 +22,7 @@
 			<c:forEach items="${pages}" var="page">
 				<li class="page-wrapper">
 					${page}
-					<a href="/edit/${page}">Edit Now</a>
+					<a href="/edit${page}">Edit Now</a>
 					<c:if test="${isOwner}">
 						<form method="POST" action="/page-manager">
 							<input type="hidden" name="path" value="${page}"/>

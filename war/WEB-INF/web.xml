@@ -61,6 +61,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	
 	<servlet>
+		<servlet-name>WaitingForPageUpdateServlet</servlet-name>
+		<servlet-class>subrandeis.servlet.adv.WaitingForPageUpdateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WaitingForPageUpdateServlet</servlet-name>
+		<url-pattern>/waiting-for-page-update</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
 		<servlet-name>ManageUsersServlet</servlet-name>
 		<servlet-class>subrandeis.servlet.adv.ManageUsersServlet</servlet-class>
 	</servlet>

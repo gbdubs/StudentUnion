@@ -1,6 +1,11 @@
 window.addEventListener('load', function() {
 	var editor;
 	
+	console.log("Replacing last editor details");
+	$("#last-editor-date").text("[LAST EDITOR DATE]");
+	$("#last-editor-nickname").text("[LAST EDITOR NICKNAME]");
+	$("#last-editor-email").text("[LAST EDITOR EMAIL]").attr("href", "mailto:[LAST EDITOR EMAIL]");
+	
 	editor = ContentTools.EditorApp.get();
 	
 	editor.init('*[data-editable]', 'data-name');
@@ -108,7 +113,9 @@ window.addEventListener('load', function() {
 				console.log("CALLED!");
 				var resp = JSON.parse(data.responseText);
 				if (data.status == 200){
-					window.location.replace("http://subrandeis.github.io/website/"+resp.url);
+					var urlToGoTo = "http://subrandeis.github.io/website/" + resp.url;
+					urlToGoTo = urlToGoTo.replace("/", "%2F").replace(":","%3A");
+					window.location.replace("/waiting-for-page-update?urlToGoTo="+urlToGoTo);
 				} else if (data.status == 400){
 					var r = confirm("!!! ERROR FROM SERVER !!! \n\n " +resp.message + " \n\n\t- The editor will need to be reloaded to continue. \n \t- If this error keeps happening, please email grady.b.ward@gmail.com. \n\t-Is it possible that the page you are creating interferes with another page URL? \n\n\nPress OK to Reload the page and try again. \nPress CANCEL to stay on this page (which cannot edit without a reload).");
 					if (r){
