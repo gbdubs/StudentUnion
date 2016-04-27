@@ -19,12 +19,12 @@ public class Page {
 	
 	public static void createPage(String url){
 		Page p = new Page();
-		p.url = url;
+		p.url = modifyPath(url);
 		ofy.save().entity(p).now();
 	}
 	
 	public static void deletePage(String url){
-		ofy.delete().type(Page.class).id(url).now();
+		ofy.delete().type(Page.class).id(modifyPath(url)).now();
 	}
 	
 	public static List<String> getAllPages(){
@@ -35,6 +35,36 @@ public class Page {
 		}
 		Collections.sort(result);
 		return result;
+	}
+
+	public static Page get(String path) {
+		return ofy.load().type(Page.class).id(modifyPath(path)).now();
+	}
+	
+	public static String modifyPath(String path){
+		if (!path.startsWith("/")){
+			path = "/" + path;
+		}
+		if (path.endsWith("index.html")){
+			path = path.substring(0, path.indexOf("index.html"));
+		}
+		while (path.endsWith("/")){
+			path = path.substring(0, path.length() - 1);
+		}
+		return path;
+	}
+	
+	public static String makeFilePath(String path){
+		while (path.startsWith("/")){
+			path = path.substring(1);
+		}
+		if (!path.endsWith("index.html")){
+			if (!path.endsWith("/")){
+				path = path + "/";
+			}
+			path = path + "index.html";
+		}
+		return path;
 	}
 	
 }

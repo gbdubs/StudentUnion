@@ -11,7 +11,8 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 
-import subrandeis.entities.Page;
+import com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
 
 /**
  * Basic Github Operations, via a number of methodologies.
@@ -138,9 +139,13 @@ public class GithubAPI {
 
 		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
 
-		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, "", "gh-pages", getFileSha(repoName, filePath));
-
-		ghc.delete(apiURI, data);
+		String fileSha = getFileSha(repoName, filePath);
+		
+		String notFoundRedirect = "<html><body><script>window.location.replace('/404');</script></body></html>";
+		
+		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, "gh-pages", fileSha);
+		
+		ghc.put(apiURI, data, null);
 	}
 	
 	

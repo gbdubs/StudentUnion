@@ -27,7 +27,7 @@
 						<form method="POST" action="/page-manager">
 							<input type="hidden" name="path" value="${page}"/>
 							<input type="hidden" name="addOrDelete" value="delete"/>
-							<button>Submit</button>
+							<button>Delete</button>
 						</form>
 					</c:if>
 				</li>

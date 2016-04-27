@@ -61,6 +61,17 @@ public class PageEditorServlet extends HttpServlet {
 					return;
 				}
 			
+				// Tests to see if a page has been defined at this editor address.
+				Page page = Page.get(filePath);
+				if (page == null){
+					req.setAttribute("currentUser", p);
+					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
+					resp.setContentType("text/html");
+					RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/page-doesnt-exist.jsp");
+					jsp.forward(req, resp);	
+					return;
+				}
+				
 				// Tries to get the current page definition, if it exists. Defaults to a template if it doesn't yet exist.
 				String currentPageDef = GithubAPI.getFileText(SecretsAPI.WebsiteRepository, filePath);
 				if (currentPageDef == null){
@@ -97,10 +108,7 @@ public class PageEditorServlet extends HttpServlet {
 					} else if ("delete".equals(addOrDelete)){
 						Page.deletePage(path);
 						String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
-						if (path.startsWith("/")){
-							path = path.substring(1);
-						}
-						GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, path, commitMessage);
+						GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
 						Log.info(commitMessage);
 					}
 				}
