@@ -74,7 +74,7 @@ public class PageEditorServlet extends HttpServlet {
 				
 				// Tries to get the current page definition, if it exists. Defaults to a template if it doesn't yet exist.
 				String currentPageDef = GithubAPI.getFileText(SecretsAPI.WebsiteRepository, filePath);
-				if (currentPageDef == null){
+				if (currentPageDef == null || currentPageDef.contains("window.location.replace('/404');")){
 					currentPageDef = getTemplateAsString();
 				}
 				

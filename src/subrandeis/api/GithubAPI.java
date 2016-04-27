@@ -40,6 +40,10 @@ public class GithubAPI {
 
 		String path; String message; String content; String branch; String sha;
 		
+		public static UpdatePageRequest makeAlreadyEncoded(String path, String message, String content, String branch){
+			return makeAlreadyEncoded(path, message, content, branch, "");
+		}
+		
 		public static UpdatePageRequest make(String path, String message, String content, String branch){
 			return make(path, message, content, branch, "");
 		}
@@ -50,6 +54,13 @@ public class GithubAPI {
 			npr.content =  DatatypeConverter.printBase64Binary (content.getBytes(StandardCharsets.UTF_8)); 
 			return npr;
 		}
+		
+		public static UpdatePageRequest makeAlreadyEncoded(String path, String message, String content, String branch, String sha){
+			UpdatePageRequest npr = new UpdatePageRequest();
+			npr.path = path; npr.message = message; npr.branch = branch; npr.sha = sha;
+			npr.content = content;
+			return npr;
+		}
 	}
 	
 	public static void createNewFile(String repoName, String newFilePath, String commitMessage, String newFileBody) throws IOException {
@@ -57,6 +68,16 @@ public class GithubAPI {
 		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
 		
 		UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, newFileBody, "gh-pages");
+		
+		ghc.put(apiURI, data, null);
+		
+	}
+	
+	public static void createNewFileAlreadyEncoded(String repoName, String newFilePath, String commitMessage, String newFileBody) throws IOException {
+		
+		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
+		
+		UpdatePageRequest data = UpdatePageRequest.makeAlreadyEncoded(newFilePath, commitMessage, newFileBody, "gh-pages");
 		
 		ghc.put(apiURI, data, null);
 		

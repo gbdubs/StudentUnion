@@ -115,19 +115,20 @@ public class GroupManagerServlet extends HttpServlet{
 	
 	public void doRoleManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		
-		if (!UserAPI.loggedIn()){
+		if (UserAPI.loggedIn()){
 		
 			String groupId = req.getParameter("groupId");
 			Person p = Person.get(UserAPI.email());
 			Group g = Group.get(groupId);
 
 			if (g != null && p != null && (UserAPI.isGoogleAdmin() || p.owner || g.leaders.contains(p.email))){
-				int roleIndex = 1;
+				int roleIndex = 0;
 				Map<String, String> roles = new HashMap<String, String>();
 				while (req.getParameter("role" + roleIndex) != null){
 					String emailX = req.getParameter("email" + roleIndex);
 					String roleX = req.getParameter("role" + roleIndex);
 					roles.put(emailX, roleX);
+					roleIndex++;
 				}
 				g.roles = roles;
 				ofy.save().entity(g);

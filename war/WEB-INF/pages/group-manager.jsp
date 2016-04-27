@@ -88,6 +88,7 @@
 		<h2>Manage Roles</h2>
 		<form action="/group-manager" method="POST">
 			<input type="hidden" name="manage" value="roles"/>
+			<input type="hidden" value="${group.id}" name="groupId"/>
 			<ul>
 				<c:forEach items="${group.leaders}" var="leader" varStatus="loop">
 					<li>
@@ -95,12 +96,13 @@
 						${leader} - 
 						<input type="text" name="role${loop.index}" value="${group.roles[leader]}"/>
 					</li>
+					<c:set var="lastIndex" value="${loop.index + 1}"/>
 				</c:forEach>
 				<c:forEach items="${group.members}" var="member" varStatus="loop">
 					<li>
-						<input type="hidden" name="email${loop.index}" value="${member}"/>
+						<input type="hidden" name="email${loop.index + lastIndex}" value="${member}"/>
 						${member} - 
-						<input type="text" name="role${loop.index}" value="${group.roles[member]}"/>
+						<input type="text" name="role${loop.index + lastIndex}" value="${group.roles[member]}"/>
 					</li>
 				</c:forEach>
 			</ul>

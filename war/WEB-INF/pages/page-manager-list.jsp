@@ -33,8 +33,8 @@
 				</li>
 			</c:forEach>
 		</ul>
-		<h2>Create Page</h2>
 		<c:if test="${isOwner}">
+			<h2>Create Page</h2>
 			<form method="POST" action="/page-manager">
 				<input type="text" name="path" placeholder="/new/page/name"/>
 				<input type="hidden" name="addOrDelete" value="add"/>
