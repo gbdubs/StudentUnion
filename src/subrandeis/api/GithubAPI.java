@@ -11,9 +11,6 @@ import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.Gson;
-
 /**
  * Basic Github Operations, via a number of methodologies.
  * I couldn't figure out how to do many of these things without many tries, so this API serves to consolodate the
@@ -146,7 +143,5 @@ public class GithubAPI {
 		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, "gh-pages", fileSha);
 		
 		ghc.put(apiURI, data, null);
-	}
-	
-	
+	}	
 }
