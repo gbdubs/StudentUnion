@@ -216,4 +216,17 @@ public class Person {
 		
 		return false;
 	}
+	
+	/**
+	 * Decideds whether or not a person is a Brandeis Student.
+	 * Currently this is only determined by whether or not they have a Brandeis.edu Email address.
+	 * We will try to come up with a more sophisticated way of doing this later.
+	 * However, since votes are public, we assume that outsiders will be deterred from voting unless
+	 * they are current students
+	 * @return Whether or not the person is a Brandeis Student
+	 */
+	public boolean isBrandeisStudent(){
+		return email.contains("@brandeis.edu");
+	}
+	
 }

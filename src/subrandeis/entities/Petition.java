@@ -50,9 +50,22 @@ public class Petition {
 		}
 	}
 	
-	public void sign(String personEmail, int vote){
-		PetitionSignature.castVote(this.petitionId, personEmail, vote);
+	public static void signFor(String petitionId, String personEmail){
+		PetitionSignature.castVote(petitionId, personEmail, 1);
 	}
+	
+	public static void signAgainst(String petitionId, String personEmail){
+		PetitionSignature.castVote(petitionId, personEmail, -1);
+	}
+	
+	public static void signUndo(String petitionId, String personEmail){
+		PetitionSignature.castVote(petitionId, personEmail, 0);
+	}
+	
+	public static void sign(String petitionId, String personEmail, int vote){
+		PetitionSignature.castVote(petitionId, personEmail, vote);
+	}
+	
 	
 	public List<String> getFor(){
 		return PetitionSignature.getEmails(this.petitionId, 1);
@@ -62,14 +75,42 @@ public class Petition {
 		return PetitionSignature.getEmails(this.petitionId, -1);
 	}
 	
+	public static Petition get(String petitionId){
+		if (petitionId == null || petitionId.length() < 1){
+			return null;
+		}
+		return ofy.load().type(Petition.class).id(petitionId).now();
+	}
+	
 	@Id public String petitionId;
 	@Index public long timestamp;
 	public String name;
 	public String description;
 	public String creatorEmail;
+	public String creatorName;
 	public String createdAt;
 	
 	@Index public boolean flagged;
 	public boolean deleted;
+	
+	public String getName(){
+		return name;
+	}
+	
+	public String getDescription(){
+		return description;
+	}
+	
+	public String getCreatorEmail(){
+		return creatorEmail;
+	}
+	
+	public String getCreatorName(){
+		return creatorName;
+	}
+	
+	public String getCreatedAt(){
+		return createdAt;
+	}
 
 }
