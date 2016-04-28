@@ -17,7 +17,8 @@ h2 {
     max-width: 100%;
 }
 
-// Left align
+.content-tools-editable img.align-left,
+.content-tools-editable video.align-left,
 [data-editable] image.align-left,
 [data-editable] [data-ce-tag=img].align-left,
 [data-editable] img.align-left,
@@ -27,7 +28,8 @@ h2 {
     margin-right: 0.5em;
 }
 
-// Right align
+.content-tools-editable img.align-right,
+.content-tools-editable video.align-right,
 [data-editable] image.align-right,
 [data-editable] [data-ce-tag=img].align-right,
 [data-editable] img.align-right,

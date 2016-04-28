@@ -851,3 +851,7 @@ footer.footer-canopy{
 .contacts li{
     margin-bottom: 10px;
 }
+
+.ct-control.ct-control--icon {
+    display: none !important;
+}
