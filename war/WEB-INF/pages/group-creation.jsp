@@ -1,6 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
     <head>
@@ -8,14 +7,18 @@
     </head>
     
     <body>
-        <style>
-            body {
-                font-family: sans-serif;
-        	}
-        </style>
-        
-		<h1 class="centered">Student Union Website Editor Group Creation</h1>
-		
+        <p>
+    		Currently logged in as ${currentUser.nickname} (${currentUser.email}). 
+    	</p>
+    	<p>
+    		Click here to <a href="${logoutUrl}">Log Out</a> or to <a href="/console">return to the console</a>.
+    	</p>
+    	
+    	<br>
+    	<br>
+    	
+    	<h1>Brandeis Student Union Website : Group Creation and Deletion</h1>
+    	
 		<p>
 			Groups are the way that the Student Union is organized.
 			You can have a group for the full Student Union, you could have one for student union members from
@@ -31,38 +34,57 @@
 			Roles are functions of the group, not of the person.
 			Therefore, the same person can have two different roles in two different groups.
 		</p>
+		<p>
+			On this page, you can create or delete groups.
+			Only Owners have this ability.  Be careful with it! When a group is deleted, 
+			it cannot be un-deleted.
+			You can have as many groups as you would like, so don't feel you need to be
+			stingy with them.
+		</p>
 		
-		<div class="logout-button">
-			Currently logged in as ${currentUser.nickname} (${currentUser.email}). 
-			<a href="${logoutUrl}">Log Out</a>
-		</div>
-		
+		<br>
+				
 		<h2>Create New Group</h2>
 		
-		<p>You can create a new group on this page. To do so, simply enter the name for the proposed group, and you will be taken to a group editor for that group.</p>
+		<p>
+			You can create a new group on this page. 
+			To do so, simply enter the name for the proposed group, and you will be taken to a group editor for that group.
+		</p>
+		
 		<form method="POST" action="/group-creation">
 			<input type="hidden" name="createOrDelete" value="create"/>
 			<input type="text" name="groupName" placeholder="New Group Name Here"/>
 			<button>Submit</button>
 		</form>
 		
-		<h2>Delete Existing Group</h2>
+		<br>
+		<br>
 		
-		<p>You can also delete an existing group. Be careful, this action cannot be undone.</p>
+		<h2>Manage/Delete Existing Group</h2>
 		
+		<p>
+			You can also delete an existing group. Be careful, this action cannot be undone.
+		</p>
+		
+		<ul>
 		<c:forEach items="${groups}" var="group">
-			<div class="group-delete-wrapper">
-				${group.name}
+			<li>
+				${group.name} - <a href="/group-manager?groupId=${group.id}">Manage This Group</a>
 				<form method="POST" action="/group-creation">
 					<input type="hidden" name="createOrDelete" value="delete"/>
 					<input type="hidden" name="groupId" value="${group.id}"/>
-					<button>Delete</button>
+					<button>Delete This Group</button>
 				</form>
-				<a href="/group-manager?groupId=${group.id}">Manage</a>
-			</div>
+			</li>
 		</c:forEach>
-		       
-        <p class="footer">Built by Grady Ward '16, for questions or concerns, reach out to <a href="mailto:grady.b.ward@gmail.com">grady.b.ward@gmail.com</a>.</p>
+		</ul>
+		
+		<br>
+		<br>
+		    
+        <p>
+        	Built by Grady Ward '16, for questions or concerns, reach out to <a href="mailto:grady.b.ward@gmail.com">grady.b.ward@gmail.com</a>.
+        </p>
         
     </body>
 </html>

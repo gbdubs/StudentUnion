@@ -1,6 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <html>
     <head>
@@ -9,9 +8,13 @@
     </head>
     
     <body>
-        <style> body {font-family: sans-serif;}</style>
         
-		<h1 class="centered">Waiting for the Github Server to Update...</h1>
+		<h1>Waiting for the Github Server to Update...</h1>
+		<h4>
+			This can take anywhere from 10 seconds to 1 minute.
+			After 1 minute, just try to go to the page manually by clicking 
+			<a href="${urlToGoTo}">this link</a>.
+		</h4>
 		
 		<div style="display:none;" id="sub-page">
 		
@@ -19,16 +22,14 @@
 		
 		<script>
 			$(function(){
-			
+				
+				// Disable caching of AJAX responses
 				$.ajaxSetup ({
-					// Disable caching of AJAX responses
 					cache: false
 				});
 			
 				var urlToCheck= "${urlToGoTo}";
 				
-				var urlToDefaultTo = "${urlToDefaultTo}";
-			
 				function getLastEdited(callback){
 					$("#sub-page").load(urlToCheck, 
     					function (responseText, textStatus, req) {
@@ -43,10 +44,10 @@
 				}
 			
 				var firstFound = 0;
-				var original;
+				var originalLastEdited;
 				
-				getLastEdited(function (n) {
-					original = n; 
+				getLastEdited(function (response) {
+					originalLastEdited = response; 
 					firstFound = 1;
 				});
 				
@@ -56,8 +57,8 @@
 					console.log("TRIAL #" + trial++);
 					getLastEdited(function (n){
 						if (firstFound) {
-							if (n == original){
-								console.log ("Same.");
+							if (n == originalLastEdited){
+								console.log ("Same as original, Server has not yet updated.");
 							} else {
 								console.log("CHANGED!");
 								clearInterval(interval);
