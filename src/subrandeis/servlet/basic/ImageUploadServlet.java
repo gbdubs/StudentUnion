@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.log.Log;
-
 import subrandeis.api.GithubAPI;
+import subrandeis.api.Log;
 import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Person;

@@ -76,6 +76,7 @@ public class Group {
 		g.id = UUID.randomUUID().toString();
 		g.leaders = new ArrayList<String>();
 		g.members = new ArrayList<String>();
+		g.pageUrl = "/no/page/url/defined";
 		return g;
 	}
 	
@@ -195,6 +196,8 @@ public class Group {
 	private static String HTMLTemplateContentStartTag = "<!-- CONTENT BELOW HERE --> ";
 	private static String HTMLTemplateContentEndTag = "<!-- CONTENT ABOVE HERE --> ";
 	public static String linkToProfileTemplate = "/static/PageEditor/profile-template.html";
+	private static String linkToMemberWrapperStart = "/static/PageEditor/member-wrapper-start.html";
+	private static String linkToMemberWrapperEnd = "/static/PageEditor/member-wrapper-end.html";
 	
 	// Gets the HTML template page, which is also used for page editing.
 	// Also used to get the HTML template for the profile box.
@@ -218,14 +221,25 @@ public class Group {
 	
 	// Creates a member box from a template and person (based on the specifics of the profile template.
 	private String instantiateMemberBox(String template, Person p){
-		return String.format(template, p.imageUrl, p.nickname, this.roles.get(p.email), p.email, p.biography);
+		String role =  this.roles.get(p.email);
+		if (role == null){
+			role = "";
+		}
+		return String.format(template, p.imageUrl, p.nickname, role, p.email, p.biography);
 	}
+	
+	
 	
 	// Delivers the HTML for a membership page for the given group.
 	private String getHTMLForMembershipPage(HttpServlet caller){
 		String template = getHtmlTemplate(caller, PageEditorServlet.linkToHTMLTemplate);
 		String beginning = template.substring(0, template.indexOf(HTMLTemplateContentStartTag));
 		String end = template.substring(template.indexOf(HTMLTemplateContentEndTag)+HTMLTemplateContentEndTag.length());
+		
+		String memberWrapperStart = getHtmlTemplate(caller, linkToMemberWrapperStart);
+		memberWrapperStart = memberWrapperStart.replace("[GROUP NAME]", this.name);
+		memberWrapperStart = memberWrapperStart.replace("[GROUP URL]", this.pageUrl);
+		String memberWrapperEnd = getHtmlTemplate(caller, linkToMemberWrapperEnd);
 		
 		String profileTemplate = getHtmlTemplate(caller, linkToProfileTemplate);
 		StringBuilder middle = new StringBuilder();
@@ -247,7 +261,7 @@ public class Group {
 			}
 		}
 		
-		return beginning + middle.toString() + end;
+		return beginning + memberWrapperStart + middle.toString() + memberWrapperEnd + end;
 	}
 	
 	/**
@@ -257,11 +271,22 @@ public class Group {
 	 */
 	public void updateMembershipPage(HttpServlet caller) {
 		try {
-			String newMembershipPageAsString = getHTMLForMembershipPage(caller);
-			String membershipPageUrl = this.pageUrl + "/members/index.html";
-			String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
-			GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, newMembershipPageAsString);
-			Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
+			if (!this.pageUrl.equals("/no/page/url/defined")){
+				String membershipPageUrl = this.pageUrl + "/members/index.html";
+				while (membershipPageUrl.startsWith("/")){
+					membershipPageUrl = membershipPageUrl.substring(1);
+				}
+			
+				String almostThere = getHTMLForMembershipPage(caller);
+				almostThere = PageEditorServlet.makeContentShowLastEditorInformation(almostThere, Person.get(UserAPI.email()));
+				String newMembershipPageAsString = PageEditorServlet.makeContentHaveRelativeUrls(membershipPageUrl, almostThere);
+			
+				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
+				GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, newMembershipPageAsString);
+				Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
+			} else {
+				Log.warn(String.format("No pageURL defined for group [%s][%s], so it was not updated.", this.id, this.name));
+			}
 		} catch (IOException ioe){
 			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));
 		}

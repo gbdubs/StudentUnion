@@ -13,6 +13,7 @@ import com.googlecode.objectify.annotation.Id;
 @Entity
 public class Page {
 	
+	static String landingPageToken = "<<<LANDING>>>";
 	static Objectify ofy = ObjectifyAPI.ofy();
 	
 	@Id public String url;
@@ -31,17 +32,26 @@ public class Page {
 		List<Page> pages = ofy.load().type(Page.class).list();
 		List<String> result = new ArrayList<String>();
 		for (Page p : pages){
-			result.add(p.url);
+			if (p.url.equals(landingPageToken)){
+				result.add("/");
+			} else {
+				result.add(p.url);
+			}
 		}
 		Collections.sort(result);
 		return result;
 	}
 
 	public static Page get(String path) {
+		System.out.println(path);
+		System.out.println(modifyPath(path));
 		return ofy.load().type(Page.class).id(modifyPath(path)).now();
 	}
 	
 	public static String modifyPath(String path){
+		while(path.startsWith("//")){
+			path = path.substring(1);
+		}
 		if (!path.startsWith("/")){
 			path = "/" + path;
 		}
@@ -50,6 +60,9 @@ public class Page {
 		}
 		while (path.endsWith("/")){
 			path = path.substring(0, path.length() - 1);
+		}
+		if (path.equals("")){
+			path = landingPageToken;
 		}
 		return path;
 	}

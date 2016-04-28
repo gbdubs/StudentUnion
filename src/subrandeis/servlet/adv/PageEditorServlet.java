@@ -148,7 +148,7 @@ public class PageEditorServlet extends HttpServlet {
 		}
 	}
 	
-	private String makeContentShowLastEditorInformation(String content, Person p) {
+	public static String makeContentShowLastEditorInformation(String content, Person p) {
 		content = content.replace("[LAST EDITOR EMAIL]", p.email);
 		content = content.replace("[LAST EDITOR NICKNAME]", p.nickname);
 		DateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a");
@@ -169,7 +169,7 @@ public class PageEditorServlet extends HttpServlet {
 	    return sb.toString();
 	}
 	
-	private static String makeContentHaveRelativeUrls(String path, String content){
+	public static String makeContentHaveRelativeUrls(String path, String content){
 		String replaceWith = "";
 		for (char c : path.toCharArray()){
 			if (c == '/'){
