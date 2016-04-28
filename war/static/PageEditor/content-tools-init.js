@@ -110,7 +110,6 @@ window.addEventListener('load', function() {
 				content: pageData
 			},
 			complete: function(data) {
-				console.log("CALLED!");
 				var resp = JSON.parse(data.responseText);
 				if (data.status == 200) {
 					var urlToGoTo = "http://subrandeis.github.io/website/" + resp.url;
