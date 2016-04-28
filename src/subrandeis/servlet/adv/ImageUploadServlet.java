@@ -27,9 +27,13 @@ public class ImageUploadServlet extends HttpServlet {
 				String path = "static/img/"+newBlobId+"."+suffix;
 				String message = String.format("Image [%s] uploaded by user [%s] on [%s]", newBlobId, p.email, (new Date()).toString());
 				System.out.println("Started Upload...");
-				GithubAPI.createNewFileAlreadyEncoded("website", path, message, encodedData);
+				try {
+					GithubAPI.createNewFileAlreadyEncoded("website", path, message, encodedData);
+				} catch (java.net.SocketTimeoutException ste){
+					
+				}
 				System.out.println("Upload Complete!");
-				String whereAt = "http://subrandeis.github.io/website/" + path;
+				String whereAt = "https://raw.githubusercontent.com/subrandeis/website/gh-pages/" + path;
 				resp.getWriter().println(whereAt);
 				return;
 			}

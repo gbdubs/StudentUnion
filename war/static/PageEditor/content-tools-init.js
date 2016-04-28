@@ -127,4 +127,57 @@ window.addEventListener('load', function() {
 			}
 		});
     });
+    
+    function imageExists(imageUrl){
+		var http = new XMLHttpRequest();
+		http.open('HEAD', imageUrl, false);
+		http.send();
+		return http.status != 404;
+	}
+	
+    function imageUploader(dialog) {
+    	dialog.addEventListener('imageuploader.fileready', function (ev) {
+			
+			var trial = 1;
+			var file = ev.detail().file;
+		
+			var suffix = file.name.substring(file.name.lastIndexOf('.')+1);
+			var reader = new FileReader();
+			reader.onload = function (readerEvent){
+				var binaryString = readerEvent.target.result;
+				var inBase64 = btoa(binaryString);
+				console.log("Encoding complete.");
+				console.log("Upload started.");
+				$.ajax({
+				  url: '/image-upload',
+				  type: 'POST',
+				  data: {
+					'imageData': inBase64,
+					'suffix': suffix
+				  },
+				  success: function( imageLink ) {
+				  	var imageExistsInterval = setInterval(function(){
+						if (imageExists(imageLink)){
+							clearInterval(imageExistsInterval);
+							dialog.populate(imageLink, '100K');
+						}
+						console.log("Image exists trial... " + trial++);
+					}, 700);
+				  }
+				  
+				  
+				});
+			}
+		
+			dialog.state('uploading');
+			dialog.progress(10);
+
+			reader.readAsBinaryString(file);
+		});
+	}
+    
+    
+   
+    
+    ContentTools.IMAGE_UPLOADER = imageUploader;
 });
