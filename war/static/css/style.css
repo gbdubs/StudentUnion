@@ -739,6 +739,10 @@ footer.footer-canopy{
     padding-right: 25px !important;
 }
 
+.margin-t-0{
+    margin-top: 0px !important;
+}
+
 .margin-t-5{
     margin-top: 5px !important;
 }
@@ -757,6 +761,10 @@ footer.footer-canopy{
 
 .margin-t-25{
     margin-top: 25px !important;
+}
+
+.margin-b-0{
+    margin-bottom: 0px !important;
 }
 
 .margin-b-5{
@@ -779,6 +787,10 @@ footer.footer-canopy{
     margin-bottom: 25px !important;
 }
 
+.margin-l-0{
+    margin-left: 0px !important;
+}
+
 .margin-l-5{
     margin-left: 5px !important;
 }
@@ -797,6 +809,10 @@ footer.footer-canopy{
 
 .margin-l-25{
     margin-left: 25px !important;
+}
+
+.margin-r-0{
+    margin-right: 0px !important;
 }
 
 .margin-r-5{
@@ -854,4 +870,23 @@ footer.footer-canopy{
 
 .ct-control.ct-control--icon {
     display: none !important;
+}
+
+.align-center{
+    text-align: center;
+}
+
+input.font-30{
+    font-size: 30px;
+}
+
+input.petition-input-name{
+    width: 200px;
+    margin-bottom: 0;
+}
+
+textarea.petition-input{
+    width: Calc(100% - 10px);
+    height: 300px;
+    margin-bottom: 10px;
 }
