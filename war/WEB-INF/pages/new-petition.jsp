@@ -72,10 +72,14 @@
 			<h2 class="light">
 				<i>Your Voice. Heard.</i>
 			</h2>
-			
+			<p class="left-align">
+				Welcome to the petition creation page. To find out more about petitions, check out our 
+				<a href="/petitions">petitions page</a>. If you have further questions, please contact Student Union
+				Leaders before you submit your petition.
+			<p>
 			<p class="left-align">
 				Before you start writing your petition, please make sure that you follow our basic rules
-				associated with the use of this system.  The Student Union will take down any posts which
+				associated with the use of this system. The Student Union will take down any posts which
 				violate these rules, and reserves the right to do so for any reason.
 			<p>
 			<ol class="left-align">

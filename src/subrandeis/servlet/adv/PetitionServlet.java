@@ -1,6 +1,7 @@
 package subrandeis.servlet.adv;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,6 +112,7 @@ public class PetitionServlet extends HttpServlet {
 			jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-logged-in.jsp");
 		} else {
 			req.setAttribute("loginUrl", UserAPI.loginUrl(req.getRequestURI()));
+			req.setAttribute("logoutUrl", UserAPI.logoutUrl("/petitions"));
 			jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-logged-out.jsp");
 		}
 		
@@ -121,13 +123,11 @@ public class PetitionServlet extends HttpServlet {
 	public void doRenderPetitionList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		boolean canSeeDeleted = false;
 		boolean canSeeFlagged = false;
-		boolean loggedInBrandeisStudent = false; 
 		
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
 			canSeeDeleted = p.owner || UserAPI.isGoogleAdmin();
 			canSeeFlagged = p.admin || canSeeDeleted;
-			loggedInBrandeisStudent = p.isBrandeisStudent();
 		}
 		
 		List<Petition> allPetitions = ofy.load().type(Petition.class).order("timestamp").list();
@@ -148,10 +148,6 @@ public class PetitionServlet extends HttpServlet {
 			}
 		}
 		
-		req.setAttribute("loginUrl", UserAPI.loginUrl(req.getRequestURI()));
-		req.setAttribute("logoutUrl", UserAPI.logoutUrl());
-		req.setAttribute("loggedInBrandeisStudent", loggedInBrandeisStudent);
-		req.setAttribute("isAdministrator", canSeeFlagged);
 		req.setAttribute("petitions", accepted);
 		
 		resp.setContentType("text/html");
@@ -256,6 +252,9 @@ public class PetitionServlet extends HttpServlet {
 				return;
 			}
 		
+			Date d = new Date();
+			Timestamp ts = new Timestamp(d.getTime());
+			
 			String petitionName = req.getParameter("petitionName");
 			String petitionBody = req.getParameter("petitionBody");
 			String authorName = req.getParameter("petitionAuthorName");
@@ -267,7 +266,7 @@ public class PetitionServlet extends HttpServlet {
 			petition.creatorEmail = authorEmail;
 			petition.creatorName = authorName;
 			petition.description = petitionBody;
-			petition.timestamp = System.currentTimeMillis();
+			petition.timestamp = ts.toString();
 			petition.name = petitionName;
 			petition.petitionId = UUID.randomUUID().toString();
 			petition.flagged = false;

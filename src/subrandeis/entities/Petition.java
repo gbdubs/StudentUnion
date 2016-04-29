@@ -92,7 +92,7 @@ public class Petition {
 	}
 	
 	@Id public String petitionId;
-	@Index public long timestamp;
+	@Index public String timestamp;
 	public String name;
 	public String description;
 	public String creatorEmail;
