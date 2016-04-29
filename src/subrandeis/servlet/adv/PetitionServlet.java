@@ -130,7 +130,7 @@ public class PetitionServlet extends HttpServlet {
 			loggedInBrandeisStudent = p.isBrandeisStudent();
 		}
 		
-		List<Petition> allPetitions = ofy.load().type(Petition.class).list();
+		List<Petition> allPetitions = ofy.load().type(Petition.class).order("timestamp").list();
 		
 		List<Petition> accepted = new ArrayList<Petition>();
 		
