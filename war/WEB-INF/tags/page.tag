@@ -4,7 +4,7 @@
 <%@attribute name="js" fragment="true" %>
 <%@taglib uri="loginutils" prefix="f" %>
 
-<c:set var="staticpagelocation" value="http://subrandeis.github.io/website"/>
+<c:set var="staticpagelocation" value="http://union.brandeis.io"/>
 
 <html lang="en">
     <head id="head">

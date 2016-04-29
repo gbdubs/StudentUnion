@@ -13,10 +13,6 @@
     	pathToPage = pathToPage.replace("index.html","");
     }
     
-    if (pathToPage.indexOf("website") > -1){
-    	pathToPage = pathToPage.replace("website", "");
-    }
-    
     if (pathToPage.length > 0 && pathToPage[pathToPage.length - 1] == '/'){
     	pathToPage = pathToPage.substring(0, pathToPage.length - 1);
     }

@@ -43,8 +43,6 @@ public class Page {
 	}
 
 	public static Page get(String path) {
-		System.out.println(path);
-		System.out.println(modifyPath(path));
 		return ofy.load().type(Page.class).id(modifyPath(path)).now();
 	}
 	

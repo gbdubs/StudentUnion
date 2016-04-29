@@ -67,7 +67,7 @@ public class GithubAPI {
 		
 		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
 		
-		UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, newFileBody, "gh-pages");
+		UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, newFileBody, SecretsAPI.WebsiteRepoBranch);
 		
 		ghc.put(apiURI, data, null);
 		
@@ -77,7 +77,7 @@ public class GithubAPI {
 		
 		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
 		
-		UpdatePageRequest data = UpdatePageRequest.makeAlreadyEncoded(newFilePath, commitMessage, newFileBody, "gh-pages");
+		UpdatePageRequest data = UpdatePageRequest.makeAlreadyEncoded(newFilePath, commitMessage, newFileBody, SecretsAPI.WebsiteRepoBranch);
 		
 		ghc.put(apiURI, data, null);
 		
@@ -90,7 +90,7 @@ public class GithubAPI {
 		try{
 			ContentsService cs = new ContentsService(ghc);
 		
-			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, "gh-pages");
+			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.WebsiteRepoBranch);
 			for (RepositoryContents rc : result){
 				return rc.getSha();
 			}
@@ -108,7 +108,7 @@ public class GithubAPI {
 		try{
 			ContentsService cs = new ContentsService(ghc);
 		
-			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, "gh-pages");
+			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.WebsiteRepoBranch);
 			for (RepositoryContents rc : result){
 				String encoded = rc.getContent();
 				byte[] decoded = DatatypeConverter.parseBase64Binary(encoded);
@@ -128,7 +128,7 @@ public class GithubAPI {
 
 		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
 
-		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages", getFileSha(repoName, filePath));
+		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.WebsiteRepoBranch, getFileSha(repoName, filePath));
 
 		ghc.put(apiURI, data, null);
 
@@ -142,9 +142,9 @@ public class GithubAPI {
 		UpdatePageRequest data;
 
 		if (sha != null){
-			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages", sha);
+			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.WebsiteRepoBranch, sha);
 		} else {
-			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, "gh-pages");
+			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.WebsiteRepoBranch);
 		}
 		
 		ghc.put(apiURI, data, null);
@@ -161,7 +161,7 @@ public class GithubAPI {
 		
 		String notFoundRedirect = "<html><body><script>window.location.replace('/404');</script></body></html>";
 		
-		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, "gh-pages", fileSha);
+		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, SecretsAPI.WebsiteRepoBranch, fileSha);
 		
 		ghc.put(apiURI, data, null);
 	}	

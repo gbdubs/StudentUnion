@@ -17,8 +17,12 @@ import subrandeis.entities.Person;
 @SuppressWarnings("serial")
 public class ImageUploadServlet extends HttpServlet {
 
-	private String absoluteURLForImageUploads = "https://raw.githubusercontent.com/"+SecretsAPI.GithubUsername+"/"+SecretsAPI.WebsiteRepository+"/gh-pages/";
-	
+	private String absoluteURLForImageUploads = String.format("https://raw.githubusercontent.com/%s/%s/%s/",
+			SecretsAPI.GithubUsername,
+			SecretsAPI.WebsiteRepository,
+			SecretsAPI.WebsiteRepoBranch
+	);
+			
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException { 
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
@@ -30,7 +34,7 @@ public class ImageUploadServlet extends HttpServlet {
 				String message = String.format("Image [%s] uploaded by user [%s] on [%s].", newBlobId, p.email, (new Date()).toString());
 				Log.info("STARTED: " + message);
 				try {
-					GithubAPI.createNewFileAlreadyEncoded("website", path, message, encodedData);
+					GithubAPI.createNewFileAlreadyEncoded(SecretsAPI.WebsiteRepository, path, message, encodedData);
 				} catch (java.net.SocketTimeoutException ste){
 					Log.warn("TIMEOUT: " + message);
 				}

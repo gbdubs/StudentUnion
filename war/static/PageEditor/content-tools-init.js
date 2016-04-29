@@ -112,7 +112,7 @@ window.addEventListener('load', function() {
 			complete: function(data) {
 				var resp = JSON.parse(data.responseText);
 				if (data.status == 200) {
-					var urlToGoTo = "http://subrandeis.github.io/website/" + resp.url;
+					var urlToGoTo = "http://union.brandeis.io/" + resp.url;
 					urlToGoTo = urlToGoTo.replace("/", "%2F").replace(":", "%3A");
 					window.location.replace("/waiting-for-page-update?urlToGoTo=" + urlToGoTo);
 				} else if (data.status == 400) {
