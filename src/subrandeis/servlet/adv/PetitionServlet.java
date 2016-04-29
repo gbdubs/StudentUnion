@@ -22,7 +22,7 @@ import subrandeis.entities.Petition;
 import com.googlecode.objectify.Objectify;
 
 @SuppressWarnings("serial")
-public class PetitionVoteServlet extends HttpServlet {
+public class PetitionServlet extends HttpServlet {
 	
 	static Objectify ofy = ObjectifyAPI.ofy();
 	
@@ -30,13 +30,40 @@ public class PetitionVoteServlet extends HttpServlet {
 
 		Petition p = Petition.get(req.getParameter("petitionId"));		
 		if (p == null){
-			doRenderPetitionList(req, resp);
+			if (req.getRequestURI().contains("petitions/new") || req.getRequestURI().contains("petition/new")){
+				doRenderNewPetition(req, resp);
+			} else {
+				doRenderPetitionList(req, resp);
+			}
 		} else {
 			doRenderPetition(p, req, resp);
 		}
-		
 	}
 	
+	private void doRenderNewPetition(HttpServletRequest req,HttpServletResponse resp) throws IOException, ServletException {
+		if (!UserAPI.loggedIn()){
+			resp.sendRedirect("/login?goto="+ ("/petitions/new").replace("/", "%2F"));
+			return;
+		}
+		Person p = Person.get(UserAPI.email());
+		if (!p.isBrandeisStudent()){
+			resp.setContentType("text/html");
+			resp.getWriter().println("You are not a Brandeis Student, so you cannot create a petition. Sorry!");
+			String logoutUrl = UserAPI.logoutUrl();
+			resp.getWriter().println("If you have a Brandeis account, you can login with it by first logging out.");
+			resp.getWriter().println(String.format("<a href=\"%s\">Logout Here</a>", logoutUrl));
+			return;
+		}
+		if (p.blocked){
+			resp.getWriter().println("You have been blocked from creating petitions. Please contact a site owner if you believe that this is in error.");
+			return;
+		}
+		resp.setContentType("text/html");
+		RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/new-petition.jsp");
+		jsp.forward(req, resp);	
+		return;	
+	}
+
 	public void doRenderPetition(Petition petition, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		boolean loggedInBrandeisStudent = false;
 		boolean isAdministrator = false;
@@ -60,20 +87,33 @@ public class PetitionVoteServlet extends HttpServlet {
 		}
 		
 		List<String> peopleFor = petition.getFor();
-		List<String> peopleAgainst = petition.getFor();
+		List<String> peopleAgainst = petition.getAgainst();
 		
-		req.setAttribute("loginUrl", UserAPI.loginUrl(req.getRequestURI()));
-		req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 		req.setAttribute("loggedInBrandeisStudent", loggedInBrandeisStudent);
 		req.setAttribute("isAdministrator", isAdministrator);
-		req.setAttribute("peopleFor", peopleFor);
-		req.setAttribute("peopleAgainst", peopleAgainst);
 		req.setAttribute("peopleForNum", peopleFor.size());
 		req.setAttribute("peopleAgainstNum", peopleAgainst.size());
 		req.setAttribute("petition", petition);
 		
 		resp.setContentType("text/html");
-		RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/petition.jsp");
+		RequestDispatcher jsp;
+		if (loggedInBrandeisStudent){
+			req.setAttribute("logoutUrl", UserAPI.logoutUrl("/petitions"));
+			
+			req.setAttribute("person", person);
+			req.setAttribute("peopleFor", peopleFor);
+			req.setAttribute("peopleAgainst", peopleAgainst);
+			int vote = Petition.PetitionSignature.getVote(petition.petitionId, person.email);
+			req.setAttribute("personFor", vote == 1);
+			req.setAttribute("personAbstain", vote == 0);
+			req.setAttribute("personAgainst", vote == -1);
+			
+			jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-logged-in.jsp");
+		} else {
+			req.setAttribute("loginUrl", UserAPI.loginUrl(req.getRequestURI()));
+			jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-logged-out.jsp");
+		}
+		
 		jsp.forward(req, resp);	
 		return;	
 	}
@@ -267,7 +307,7 @@ public class PetitionVoteServlet extends HttpServlet {
 			} else if ("neutral".equals(action)){
 				Petition.signUndo(petitionId, p.email);
 			}
-			resp.getWriter().println("success");
+			resp.sendRedirect("/petition?petitionId="+petitionId);
 		} else {
 			resp.getWriter().println("You must log in to sign petitions.");
 		}

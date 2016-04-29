@@ -46,7 +46,16 @@ public class Petition {
 			ps.personEmail = personEmail;
 			ps.vote = vote;
 			ps.timestamp = (new Date()).toString();
-			ofy.save().entity(ps);
+			ofy.save().entity(ps).now();
+		}
+
+		public static int getVote(String id, String email) {
+			PetitionSignature ps = ofy.load().type(PetitionSignature.class).id(id + "+" + email).now();
+			if (ps == null){
+				return 0;
+			} else {
+				return ps.vote;
+			}
 		}
 	}
 	
@@ -92,6 +101,10 @@ public class Petition {
 	
 	@Index public boolean flagged;
 	public boolean deleted;
+	
+	public String getPetitionId(){
+		return petitionId;
+	}
 	
 	public String getName(){
 		return name;

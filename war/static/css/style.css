@@ -890,3 +890,17 @@ textarea.petition-input{
     height: 300px;
     margin-bottom: 10px;
 }
+
+.no-height{
+	height: 0 !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+}
+
+.petition-vote-btns > form{
+	display: inline-block;
+}
+
+.petition-body {
+	white-space: pre-wrap;
+}

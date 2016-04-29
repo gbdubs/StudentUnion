@@ -95,6 +95,14 @@ public class UserAPI {
 	 * @return A URL to allow the user to log out.
 	 */
 	public static String logoutUrl(){
-		return us.createLoginURL("/console");
+		return us.createLogoutURL("/console");
+	}
+	
+	/**
+	 * A Logout URL, which will redirect to the user specified page.
+	 * @return A URL to allow the user to log out.
+	 */
+	public static String logoutUrl(String returnTo){
+		return us.createLogoutURL(returnTo);
 	}
 }

@@ -113,6 +113,19 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/self-manager</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>PetitionServlet</servlet-name>
+		<servlet-class>subrandeis.servlet.adv.PetitionServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PetitionServlet</servlet-name>
+		<url-pattern>/petition/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PetitionServlet</servlet-name>
+		<url-pattern>/petitions/*</url-pattern>
+	</servlet-mapping>
+	
 	
 	
 	<filter>
