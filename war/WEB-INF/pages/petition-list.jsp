@@ -106,7 +106,12 @@
 			<c:forEach items="${petitions}" var="petition">
 				<div class="card bg-brandeis-blue-0">
 					<a href="/petition?petitionId=${petition.petitionId}">
-						<h2 class="txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						<c:if test="${petition.flagged || petition.deleted}">
+							<h2 class="txt-brandeis-yellow pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						</c:if>
+						<c:if test="${!petition.flagged && !petition.deleted}">
+							<h2 class="txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						</c:if>
 							${petition.name}
 						</h2>
 					</a>

@@ -125,5 +125,13 @@ public class Petition {
 	public String getCreatedAt(){
 		return createdAt;
 	}
+	
+	public boolean getFlagged(){
+		return flagged;
+	}
+	
+	public boolean getDeleted(){
+		return deleted;
+	}
 
 }

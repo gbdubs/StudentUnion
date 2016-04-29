@@ -226,7 +226,7 @@ public class Person {
 	 * @return Whether or not the person is a Brandeis Student
 	 */
 	public boolean isBrandeisStudent(){
-		return email.contains("@brandeis.edu");
+		return email.contains("@brandeis.edu") || UserAPI.isGoogleAdmin();
 	}
 	
 }

@@ -67,6 +67,7 @@
 	<div class="content card bg-brandeis-white">
 		<div data-editable class="section content-tools-editable">
 			
+			
 			<p class="left-align">
 				This is a student submitted petition, a way that the Student Union can engage its constituents.
 				To learn more about the petition process, or to submit your own, check out our 
@@ -88,7 +89,24 @@
 			</p>
 			<br>
 			
-			<div class="card bg-brandeis-blue-0">
+			<c:if test="${isFlagged || isDeleted}">
+				<div class="card bg-brandeis-yellow">
+			</c:if>
+			
+			<c:if test="${!isFlagged && !isDeleted}">
+				<div class="card bg-brandeis-blue-0">
+			</c:if>
+				<c:if test="${isFlagged && !isDeleted}">
+					<h2 class="txt-brandeis-black pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						This Petition Has Been Flagged
+					</h2>
+				</c:if>
+				<c:if test="${isDeleted}">
+					<h2 class="txt-brandeis-black pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						This Petition Has Been Deleted
+					</h2>
+				</c:if>
+				
 				<h2 class="txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
 					${petition.name}
 				</h2>
@@ -195,6 +213,33 @@
 					</c:if>
 				</div>
 			</div>
+			<c:if test="${!isFlagged && isAdministrator && !isDeleted}">
+				<form method="POST" action="/petition">
+					<input name="petitionId" value="${petition.petitionId}" type="hidden"/>
+					<input name="action" value="flag" type="hidden"/>
+					<button class="btn bg-brandeis-yellow margin-r-10 margin-l-10 margin-t-10 txt-brandeis-black">
+						Flag Petition
+					</button>
+				</form>
+			</c:if>
+			<c:if test="${isFlagged && isAdministrator && !isDeleted}">
+				<form method="POST" action="/petition">
+					<input name="petitionId" value="${petition.petitionId}" type="hidden"/>
+					<input name="action" value="unflag" type="hidden"/>
+					<button class="btn bg-brandeis-yellow margin-r-10 margin-l-10 margin-t-10 txt-brandeis-black">
+						Unflag Petition
+					</button>
+				</form>
+			</c:if>
+			<c:if test="${!isDeleted && isOwner}">
+				<form method="POST" action="/petition">
+					<input name="petitionId" value="${petition.petitionId}" type="hidden"/>
+					<input name="action" value="delete" type="hidden"/>
+					<button class="btn bg-brandeis-yellow margin-r-10 margin-l-10 margin-t-10 txt-brandeis-black">
+						Delete Petition
+					</button>
+				</form>
+			</c:if>
 		</div>
 	</div>
 	

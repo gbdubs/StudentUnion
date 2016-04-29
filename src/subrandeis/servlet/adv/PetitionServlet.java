@@ -90,8 +90,11 @@ public class PetitionServlet extends HttpServlet {
 		List<String> peopleFor = petition.getFor();
 		List<String> peopleAgainst = petition.getAgainst();
 		
+		req.setAttribute("isFlagged", petition.flagged);
+		req.setAttribute("isDeleted", petition.deleted);
 		req.setAttribute("loggedInBrandeisStudent", loggedInBrandeisStudent);
 		req.setAttribute("isAdministrator", isAdministrator);
+		req.setAttribute("isOwner", isOwner);
 		req.setAttribute("peopleForNum", peopleFor.size());
 		req.setAttribute("peopleAgainstNum", peopleAgainst.size());
 		req.setAttribute("petition", petition);
@@ -134,7 +137,8 @@ public class PetitionServlet extends HttpServlet {
 		
 		List<Petition> accepted = new ArrayList<Petition>();
 		
-		for (Petition p : allPetitions){
+		for (int i = allPetitions.size() - 1; i >= 0; i--){
+			Petition p = allPetitions.get(i);
 			if (p.deleted){
 				if (canSeeDeleted){
 					accepted.add(p);
@@ -185,7 +189,7 @@ public class PetitionServlet extends HttpServlet {
 				}
 				petition.flagged = false;
 				ofy.save().entity(petition).now();
-				resp.getWriter().println("success");
+				resp.sendRedirect("/petition?petitionId="+petitionId);
 				return;
 			}
 			resp.getWriter().println("You do not have sufficent permissions to un-flag a post.");
@@ -208,7 +212,7 @@ public class PetitionServlet extends HttpServlet {
 				petition.flagged = true;
 				petition.deleted = true;
 				ofy.save().entity(petition).now();
-				resp.getWriter().println("success");
+				resp.sendRedirect("/petition?petitionId="+petitionId);
 				return;
 			}
 			resp.getWriter().println("You do not have sufficent permissions to delete a post.");
@@ -229,8 +233,8 @@ public class PetitionServlet extends HttpServlet {
 					return;
 				}
 				petition.flagged = true;
-				ofy.save().entity(petition);
-				resp.getWriter().println("success");
+				ofy.save().entity(petition).now();
+				resp.sendRedirect("/petition?petitionId="+petitionId);
 				return;
 			}
 			resp.getWriter().println("You do not have sufficent permissions to flag a post.");
