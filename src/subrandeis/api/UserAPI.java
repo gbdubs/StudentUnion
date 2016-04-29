@@ -1,5 +1,7 @@
 package subrandeis.api;
 
+import subrandeis.entities.Person;
+
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
@@ -104,5 +106,19 @@ public class UserAPI {
 	 */
 	public static String logoutUrl(String returnTo){
 		return us.createLogoutURL(returnTo);
+	}
+	
+	/**
+	 * A Logout URL, which will redirect to the console (which is blanketed with a login screen when not logged in).
+	 * @return A URL to allow the user to log out.
+	 */
+	public static boolean isAdmin(){
+		if (loggedIn()){
+			Person p = Person.get(email());
+			if (p.admin || p.owner || isGoogleAdmin()){
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -2,6 +2,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@attribute name="content" fragment="true" %>
 <%@attribute name="js" fragment="true" %>
+<%@taglib uri="loginutils" prefix="f" %>
 
 <c:set var="staticpagelocation" value="http://subrandeis.github.io/website"/>
 
@@ -46,7 +47,7 @@
 			<li><a href="${staticpagelocation}/groups">Committees + Groups</a>
 			<li class="divider"></li>
 			<li><a href="${staticpagelocation}/news">News</a></li>
-			<li><a href="${staticpagelocation}/petitions">Petitions</a></li>
+			<li><a href="/petitions">Petitions</a></li>
 			<li><a href="${staticpagelocation}/elections">Elections</a></li>
 			<li><a href="${staticpagelocation}/directory">Directory</a></li>
 			<li class="divider"></li>
@@ -66,8 +67,18 @@
 					<li><a class="dropdown-button" href="#!" data-activates="about-dropdown">Organization<i class="mdi-navigation-arrow-drop-down right"></i></a></li>
 					<li><a href="${staticpagelocation}/directory">Directory</a></li>
 					<li><a href="${staticpagelocation}/news">News</a></li>
-					<li><a href="${staticpagelocation}/petitions">Petitions</a></li>
+					<li><a href="/petitions">Petitions</a></li>
 					<li><a href="${staticpagelocation}/elections">Elections</a></li>
+					<c:set var="petitionsUrl" value="/petitions" />
+					<c:if test="${f:loggedIn()}">
+						<li><a href="${f:logoutUrl(petitionsUrl)}">Log Out</a></li>
+					</c:if>
+					<c:if test="${! f:loggedIn()}">
+						<li><a href="${f:loginUrl(petitionsUrl)}">Log In</a></li>
+					</c:if>
+					<c:if test="${f:admin()}">
+						<li class="bg-brandeis-blue-1"><a href="/console">Admins</a></li>
+					</c:if>
 				</ul>
 				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
 			</div>

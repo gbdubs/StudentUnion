@@ -1,13 +1,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<html>
-    <head>
-        <title>Student Union Website Editor | Group Manager</title>
-    </head>
-    
-    <body>
+<t:page>
+	<jsp:attribute name="content">
+		<div class="content card bg-brandeis-white">
+			<div class="section">
+			
+			
         <p>
     		Currently logged in as ${currentUser.nickname} (${currentUser.email}). 
     	</p>
@@ -186,7 +186,7 @@
 			<button>Update Roles</button>
 		</form>
 		
-        <p>Built by Grady Ward '16, for questions or concerns, reach out to <a href="mailto:grady.b.ward@gmail.com">grady.b.ward@gmail.com</a>.</p>
-        
-    </body>
-</html>
+			</div>
+		</div>
+	</jsp:attribute>
+</t:page>
