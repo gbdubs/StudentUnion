@@ -64,7 +64,7 @@ public class GroupManagerServlet extends HttpServlet{
 			resp.getWriter().println(error);
 			return;
 		}
-		resp.sendRedirect("/login?goto=/group-manager");
+		resp.sendRedirect("/login-admin?goto=%2Fgroup-manager");
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException{
@@ -110,7 +110,7 @@ public class GroupManagerServlet extends HttpServlet{
 			Log.warn(String.format("Something is wrong in the name and page url management of the group. The incorrect call was made by uaser [%s]\n", UserAPI.email()));
 			return;
 		}
-		resp.sendRedirect("/login?goto%3D%2Fgroup-manager");
+		resp.sendRedirect("/login-admin?goto=%2Fgroup-manager");
 	}
 	
 	public void doRoleManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{
@@ -141,7 +141,7 @@ public class GroupManagerServlet extends HttpServlet{
 			resp.getWriter().println(warning);
 			return;
 		}
-		resp.sendRedirect("/login?goto=/group-manager");
+		resp.sendRedirect("/login-admin?goto=%2Fgroup-manager");
 	}
 	
 	public void doMemberManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{	

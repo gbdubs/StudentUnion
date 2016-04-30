@@ -43,7 +43,7 @@ public class PetitionServlet extends HttpServlet {
 	
 	private void doRenderNewPetition(HttpServletRequest req,HttpServletResponse resp) throws IOException, ServletException {
 		if (!UserAPI.loggedIn()){
-			resp.sendRedirect("/login?goto="+ ("/petitions/new").replace("/", "%2F"));
+			resp.sendRedirect("/login-admin?goto=%2Fpetitions%2Fnew");
 			return;
 		}
 		Person p = Person.get(UserAPI.email());

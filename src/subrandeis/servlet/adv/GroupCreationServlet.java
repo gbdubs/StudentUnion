@@ -43,7 +43,7 @@ public class GroupCreationServlet extends HttpServlet {
 			resp.getWriter().println(error);
 			return;
 		}
-		resp.sendRedirect("/login?goto=%2Fgroup-creation");
+		resp.sendRedirect("/login-admin?goto=%2Fgroup-creation");
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
@@ -92,7 +92,7 @@ public class GroupCreationServlet extends HttpServlet {
 				return;
 			}
 		} else {
-			resp.sendRedirect("/login?goto=/group-creation");
+			resp.sendRedirect("/login-admin?goto=%2Fgroup-creation");
 		}
 	}
 }

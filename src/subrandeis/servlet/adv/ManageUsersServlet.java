@@ -41,7 +41,7 @@ public class ManageUsersServlet extends HttpServlet {
 			
 			// If the user is not logged in, redirect them to the login page, 
 			// and set the url so they can come back here when they have logged in.
-			resp.sendRedirect("/login?goto=/users");
+			resp.sendRedirect("/login-admin?goto=%2Fusers");
 		}
 	}
 	

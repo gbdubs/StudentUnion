@@ -35,7 +35,7 @@ public class ConsoleServlet extends HttpServlet {
 			}
 			Log.warn(String.format("UserAPI [%s] attempted to access the console without permission.\n", UserAPI.email()));
 		}
-		// If no permission to see page, redirects to the login page.
-		resp.sendRedirect("/login?goto=/console");
+		// If no permission to see page, redirects to the admin login page.
+		resp.sendRedirect("/login-admin?goto=/console");
 	}
 }

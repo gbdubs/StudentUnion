@@ -38,7 +38,7 @@ public class SelfManagerServlet extends HttpServlet {
 			}
 			Log.warn(String.format("UserAPI [%s] attempted to access the self management page without permission.\n", UserAPI.email()));
 		}
-		resp.sendRedirect("/login?goto=/self-manager");
+		resp.sendRedirect("/login-admin?goto=%2Fself-manager");
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
@@ -72,7 +72,7 @@ public class SelfManagerServlet extends HttpServlet {
 			Log.warn(String.format("UserAPI [%s] attempted to update personal information for user [%s], but did not have sufficient permissions.\n", p.email, personEmail));
 			resp.sendRedirect("/console");
 		} else {
-			resp.sendRedirect("/login?goto=/self-manager");
+			resp.sendRedirect("/login-admin?goto=%2Fself-manager");
 		}
 	}
 }

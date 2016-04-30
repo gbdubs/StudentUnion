@@ -143,6 +143,7 @@
 					<a class="blue-text text-lighten-3" href="https://pages.github.com">GitHub Pages</a> and 
 					<a class="blue-text text-lighten-3" href="https://cloud.google.com/appengine/">Google App Engine</a>. 
 					<a class="blue-text text-lighten-3" href="mailto:grady.b.ward@gmail.com">Comments?</a>
+					<a class="orange-text text-lighten-3" href="/console">Site Manager</a>
 				</div>
 			</div>
 		</footer>

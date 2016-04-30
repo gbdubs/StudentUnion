@@ -88,7 +88,7 @@ public class PageEditorServlet extends HttpServlet {
 				resp.getWriter().println("You do not have sufficent permissions to edit this page. Sorry!");
 			}
 		} else {
-			resp.sendRedirect("/login?goto=" + ("/"+editingUrlPrefix+filePath.substring(0, filePath.indexOf("index.html"))).replace("/", "%2F"));
+			resp.sendRedirect("/login-admin?goto=" + ("/"+editingUrlPrefix+filePath.substring(0, filePath.indexOf("index.html"))).replace("/", "%2F"));
 		}
 	}
 	

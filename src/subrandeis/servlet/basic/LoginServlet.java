@@ -15,25 +15,46 @@ import subrandeis.entities.Person;
 public class LoginServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		if (req.getRequestURI().contains("admin")){
 		
-		// Figures out where to go next (defaults to /console if not provided)
-		String goToNext = "/console";
-		if (req.getParameter("goto") != null){
-			goToNext = req.getParameter("goto");
+			// Figures out where to go next (defaults to /console if not provided)
+			String goToNext = "/console";
+			if (req.getParameter("goto") != null){
+				goToNext = req.getParameter("goto");
+			}
+			
+			// Creates a login URL which will redirect first to /new-user then to the specified goToNext location.
+			String loginUrl = UserAPI.loginUrl(goToNext);
+			req.setAttribute("loginUrl", loginUrl);
+			
+			// Displays the owners of the site so that a person requesting access knows who to contact.
+			req.setAttribute("owners", Person.getOwners());
+			req.setAttribute("admins", Person.getAdmins());
+			req.setAttribute("candidates", Person.getCandidates());
+			
+			// Finishes up, sends to the administrator login page.
+			resp.setContentType("text/html");
+			RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/login-admin.jsp");	
+			jsp.forward(req, resp);	
+			
+		} else {
+			
+			// Assumes that the place to go next is the Petitions page
+			String goToNext = "/petitions";
+			if (req.getParameter("goto") != null){
+				goToNext = req.getParameter("goto");
+			}
+			
+			// Creates a login URL which will redirect first to /new-user then to the specified goToNext location.
+			String loginUrl = UserAPI.loginUrl(goToNext);
+			req.setAttribute("loginUrl", loginUrl);
+			
+			// Finishes up, sends to the plebian login page.
+			resp.setContentType("text/html");
+			RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/login-normal.jsp");	
+			jsp.forward(req, resp);	
+			
 		}
-		
-		// Creates a login URL which will redirect first to /new-user then to the specified goToNext location.
-		String loginUrl = UserAPI.loginUrl(goToNext);
-		req.setAttribute("loginUrl", loginUrl);
-		
-		// Displays the owners of the site so that a person requesting access knows who to contact.
-		req.setAttribute("owners", Person.getOwners());
-		
-		// Finishes up, sends to the login page.
-		resp.setContentType("text/html");
-		RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/login.jsp");	
-		jsp.forward(req, resp);	
-		
 	}
 	
 }
