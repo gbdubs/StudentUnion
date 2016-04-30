@@ -12,7 +12,7 @@
 				<h5>
 					To fix this problem, have a site owner create this page, so that you are able to edit it.
 					The list of current site owners is available at the 
-					<a href="/user-manager">user management page</a>.
+					<a href="/users">user management page</a>.
 				</h5>
 				<h5>
 					It is possible that you are trying to edit another page, check out the

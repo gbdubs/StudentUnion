@@ -103,13 +103,20 @@ public class PageEditorServlet extends HttpServlet {
 					String path = req.getParameter("path");
 					String addOrDelete = req.getParameter("addOrDelete");
 					
-					if ("add".equals(addOrDelete)){
-						Page.createPage(path);
-					} else if ("delete".equals(addOrDelete)){
-						Page.deletePage(path);
-						String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
-						GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
-						Log.info(commitMessage);
+					String badChars = path.replaceAll("[A-Za-z0-9\\/\\-]", "");
+					
+					if (badChars.length() == 0){
+						if ("add".equals(addOrDelete)){
+							Page.createPage(path);
+						} else if ("delete".equals(addOrDelete)){
+							Page.deletePage(path);
+							String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
+							GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
+							Log.info(commitMessage);
+						}
+					} else {
+						resp.getWriter().println("The following characters were not accepted: "+badChars+" they are not okay as part of a url.");
+						return;
 					}
 				}
 				resp.sendRedirect("/page-manager");

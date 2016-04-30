@@ -5,19 +5,12 @@
 <t:page>
 	<jsp:attribute name="content">
 		<div class="content card bg-brandeis-white">
-			<div class="section">
+			<div class="section left-align">
 			
-			
-				<p>
-					Currently logged in as ${currentUser.nickname} (${currentUser.email}). 
-				</p>
-				<p>
-					Click here to <a href="${logoutUrl}">Log Out</a> or to <a href="/console">return to the console</a>.
-				</p>
+				<h1 class="light center-align">Page Mangager/Editor</h1>
+				
 				<br>
-				<br>
-				<h1>Student Union Website Editor | All Pages</h1>
-		
+				
 				<p>
 					Pages are everything.
 					Below is a list of every page on the Student Union Website.
@@ -37,25 +30,41 @@
 					If you want a new page, simply request (from one of the owners) to have them create a new page
 					(which can happen immediately).
 				</p>
-			
+				
+				<br>
 		
-				<h2>All Pages</h2>
-				<ul>
-					<c:forEach items="${pages}" var="page">
-						<li>
-							${page} - <a href="/edit${page}">Edit This Page Now</a>
-							<c:if test="${isOwner}">
-								<form method="POST" action="/page-manager">
-									<input type="hidden" name="path" value="${page}"/>
-									<input type="hidden" name="addOrDelete" value="delete"/>
-									<button>Delete This Page</button>
-								</form>
-							</c:if>
-							<br>
-						</li>
-					</c:forEach>
-				</ul>
+				<h2>Edit Pages</h2>
+				<p>
+					Click on the URL of the page you want to edit to be taken to that page to edit it.
+				</p>
+				
+				<c:forEach items="${pages}" var="page">
+					<h5><a href="/edit${page}">${page}</a></h5>
+				</c:forEach>
+			
+				<br>
+				
 				<c:if test="${isOwner}">
+					<br>
+					<h2>Delete Pages</h2>
+					<ul>
+						<c:forEach items="${pages}" var="page">
+							<li>
+								<h5><a href="/edit${page}">${page}</a></h5>
+								<c:if test="${isOwner}">
+									<form method="POST" action="/page-manager">
+										<input type="hidden" name="path" value="${page}"/>
+										<input type="hidden" name="addOrDelete" value="delete"/>
+										<button class="btn bg-brandeis-yellow txt-brandeis-black">Delete This Page</button>
+									</form>
+								</c:if>
+								<br>
+							</li>
+						</c:forEach>
+					</ul>
+					
+					<br>
+				
 					<h2>Create New Page</h2>
 					<p>
 						You can create a new page here by specifying a URL Pattern that you would like the page to go to.
@@ -63,23 +72,23 @@
 						All URL patterns should start with a backslash, and should not contain file suffixes (i.e. should not end in .docx, .pdf, .html, etc).
 						Some valid URL Patterns:
 					</p>
-					<ul>
+					<ol>
 						<li>/new/page/goes/here</li>
 						<li>/treasury/allocation-rules</li>
 						<li>/documents/constitution</li>
-					</ul>
+					</ol>
 					<p>
 						Some Invalid URL Patterns:
 					</p>
-					<ul>
+					<ol>
 						<li>new/page/goes/here</li>
 						<li>/treasury/allocation-rules#1</li>
 						<li>/documents/constitution.pdf</li>
-					</ul>
+					</ol>
 					<form method="POST" action="/page-manager">
 						<input type="text" name="path" placeholder="/new/page/name"/>
 						<input type="hidden" name="addOrDelete" value="add"/>
-						<button>Create a New Page</button>
+						<button class="btn bg-brandeis-blue-2">Create a New Page</button>
 					</form>
 				</c:if>
 		

@@ -19,7 +19,6 @@ public class WaitingForPageUpdateServlet extends HttpServlet {
 		}
 		req.setAttribute("urlToGoTo", url);
 		
-		
 		// Finishes up, sends to the console page.
 		resp.setContentType("text/html");
 		RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/waiting.jsp");
