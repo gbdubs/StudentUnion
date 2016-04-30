@@ -46,25 +46,7 @@
 				
 				<c:if test="${isOwner}">
 					<br>
-					<h2>Delete Pages</h2>
-					<ul>
-						<c:forEach items="${pages}" var="page">
-							<li>
-								<h5><a href="/edit${page}">${page}</a></h5>
-								<c:if test="${isOwner}">
-									<form method="POST" action="/page-manager">
-										<input type="hidden" name="path" value="${page}"/>
-										<input type="hidden" name="addOrDelete" value="delete"/>
-										<button class="btn bg-brandeis-yellow txt-brandeis-black">Delete This Page</button>
-									</form>
-								</c:if>
-								<br>
-							</li>
-						</c:forEach>
-					</ul>
 					
-					<br>
-				
 					<h2>Create New Page</h2>
 					<p>
 						You can create a new page here by specifying a URL Pattern that you would like the page to go to.
@@ -90,6 +72,26 @@
 						<input type="hidden" name="addOrDelete" value="add"/>
 						<button class="btn bg-brandeis-blue-2">Create a New Page</button>
 					</form>
+					
+					<br>
+					
+					<h2>Delete Pages</h2>
+					<ul>
+						<c:forEach items="${pages}" var="page">
+							<li>
+								<h5><a href="/edit${page}">${page}</a></h5>
+								<c:if test="${isOwner}">
+									<form method="POST" action="/page-manager">
+										<input type="hidden" name="path" value="${page}"/>
+										<input type="hidden" name="addOrDelete" value="delete"/>
+										<button class="btn bg-brandeis-yellow txt-brandeis-black">Delete This Page</button>
+									</form>
+								</c:if>
+								<br>
+							</li>
+						</c:forEach>
+					</ul>
+					
 				</c:if>
 		
 			</div>

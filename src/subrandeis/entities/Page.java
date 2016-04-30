@@ -66,14 +66,14 @@ public class Page {
 	}
 	
 	public static String makeFilePath(String path){
-		while (path.startsWith("/")){
-			path = path.substring(1);
-		}
 		if (!path.endsWith("index.html")){
 			if (!path.endsWith("/")){
 				path = path + "/";
 			}
 			path = path + "index.html";
+		}
+		while (path.startsWith("/")){
+			path = path.substring(1);
 		}
 		return path;
 	}

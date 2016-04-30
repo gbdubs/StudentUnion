@@ -109,6 +109,8 @@ public class PageEditorServlet extends HttpServlet {
 						if ("add".equals(addOrDelete)){
 							Page.createPage(path);
 						} else if ("delete".equals(addOrDelete)){
+							System.out.println(path);
+							System.out.println(Page.makeFilePath(path));
 							Page.deletePage(path);
 							String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
 							GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
