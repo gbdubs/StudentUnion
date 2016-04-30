@@ -80,11 +80,32 @@ public class GroupManagerServlet extends HttpServlet{
 			doRoleManagement(req, resp);
 		} else if ("members".equals(manage)){
 			doMemberManagement(req, resp);
+		} else if ("updatePage".equals(manage)){
+			doPageUpdate(req, resp);
 		} else {
 			resp.getWriter().println("Incorrect value for parameter [manage] passed.");
 		}		
 	}
 	
+	private void doPageUpdate(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		String groupId = req.getParameter("groupId");
+		if (UserAPI.loggedIn()){
+			Person p = Person.get(UserAPI.email());
+			Group g = Group.get(groupId);
+			if (g != null && p != null && (UserAPI.isGoogleAdmin() || p.owner || g.leaders.contains(p.email) || g.members.contains(p.email))){
+				g.updateMembershipPage(this);
+				Log.info(String.format("User [%s] successfully triggered an update of the group [%s][%s].", p.email, g.name, g.id));	
+				resp.sendRedirect("/group-manager?groupId="+groupId);
+				return;
+			}
+			String response = String.format("Something is wrong in the name and page url management of the group. The incorrect call was made by uaser [%s]\n", UserAPI.email());
+			Log.warn(response);
+			resp.getWriter().println(response);
+			return;
+		}
+		resp.sendRedirect("/login-admin?goto=%2Fgroup-manager");
+	}
+
 	public void doNamePageUrlDescriptionManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{
 		String groupId = req.getParameter("groupId");
 		if (UserAPI.loggedIn()){
@@ -180,6 +201,7 @@ public class GroupManagerServlet extends HttpServlet{
 				if (changed){
 					g.updateMembershipPage(this);
 				}
+				
 				resp.sendRedirect("/group-manager");
 				return;
 			}

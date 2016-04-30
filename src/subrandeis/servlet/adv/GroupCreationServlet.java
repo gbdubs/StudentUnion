@@ -58,6 +58,7 @@ public class GroupCreationServlet extends HttpServlet {
 					}
 					Group g = Group.createNewGroup(newGroupName);
 					ofy.save().entity(g).now();
+					g.updateMembershipPage(this);
 					String success = String.format("UserAPI [%s] successfully created group with name [%s] and id [%s].", p.email, g.name, g.id);
 					Log.info(success);
 					resp.sendRedirect("/group-editor?groupId="+g.id);

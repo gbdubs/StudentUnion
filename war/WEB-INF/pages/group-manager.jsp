@@ -10,6 +10,12 @@
 		
 				<h1 class="light center-align">Group Settings for "${group.name}"</h1>
 		
+				<form action="/group-manager" method="POST">
+					<input name="manage" value="updatePage" type="hidden">
+					<input type="hidden" value="${group.id}" name="groupId"/>
+					<button class="btn btn-large bg-brandeis-yellow txt-brandeis-black">Update Group Page(s)</button>
+				</form>
+		
 				<br>
 		
 				<p>

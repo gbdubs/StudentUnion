@@ -255,7 +255,10 @@ public class Group {
 		
 		for (String s : allPeople){
 			Person p = people.get(s);
-			if (p != null && p.fromDatabase){
+			if (p == null){
+				p = Person.get(s);
+			}
+			if (p != null){ //&& p.fromDatabase){
 				middle.append(instantiateMemberBox(profileTemplate, p));
 				middle.append("\n\n");
 			}
@@ -272,6 +275,13 @@ public class Group {
 	public void updateMembershipPage(HttpServlet caller) {
 		try {
 			if (!this.pageUrl.equals("/no/page/url/defined")){
+				if (Page.get(pageUrl) == null){
+					Page.createPage(pageUrl);
+				}
+				if (Page.get(pageUrl+"/members") == null){
+					Page.createPage(pageUrl + "/members");
+				}
+				
 				String membershipPageUrl = this.pageUrl + "/members/index.html";
 				while (membershipPageUrl.startsWith("/")){
 					membershipPageUrl = membershipPageUrl.substring(1);
@@ -283,6 +293,7 @@ public class Group {
 			
 				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
 				GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, newMembershipPageAsString);
+				
 				Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
 			} else {
 				Log.warn(String.format("No pageURL defined for group [%s][%s], so it was not updated.", this.id, this.name));
