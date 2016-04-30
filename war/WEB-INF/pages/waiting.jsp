@@ -24,14 +24,14 @@
 			$(function(){
 				
 				// Disable caching of AJAX responses
-				$.ajaxSetup ({
-					cache: false
-				});
+				// $.ajaxSetup ({
+				//	cache: false
+				// });
 			
 				var urlToCheck= "${urlToGoTo}";
 				
 				function getLastEdited(callback){
-					$("#sub-page").load(urlToCheck, 
+					$("#sub-page").load(urlToCheck+"?_timestamp="+new Date().getTime(), 
     					function (responseText, textStatus, req) {
         					if (textStatus == "error") {
           						callback("Page Not Found");

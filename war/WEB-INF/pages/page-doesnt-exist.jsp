@@ -5,26 +5,29 @@
 <t:page>
 	<jsp:attribute name="content">
 		<div class="content card bg-brandeis-white">
-			<div class="section">
+			<div class="section left-align">
 			
-			
-				<p>
-					Currently logged in as ${currentUser.nickname} (${currentUser.email}). 
-				</p>
-				<p>
-					Click here to <a href="${logoutUrl}">Log Out</a> or to <a href="/console">return to the console</a>.
-				</p>
-				<br>
+				<h2 class="center-align">The page you were trying to edit has not yet been created.</h2>
 		
-				<h1>The page you are trying to edit has not yet been created.</h1>
-		
-				<h2>To fix this problem, have a site owner create this page, so that you are able to edit it.</h2>
-		
-				<h3>You can either <a href="/page-manager">Return to Page Manager/Editor</a> to learn about the way pages are set up, or to edit a different page</h3>
-				<h3>or, if you are a site owner</h3>
-				<h3>You can create the page at the <a href="/page-manager">Page Creation Page</a>.</h3>
-		
-
+				<h5>
+					To fix this problem, have a site owner create this page, so that you are able to edit it.
+					The list of current site owners is available at the 
+					<a href="/user-manager">user management page</a>.
+				</h5>
+				<h5>
+					It is possible that you are trying to edit another page, check out the
+					<a href="/page-manager">page list</a> 
+					to look through the full list of student union pages that you can edit.
+				</h5>
+				<h5>
+					If you are a site owner, you can create the page by going to the 
+					<a href="/page-manager">page manager</a> and going to the bottom of the
+					page.
+				</h5>
+				<h5>
+					Please contact Grady Ward if this problem persists.
+				</h5>
+				
 			</div>
 		</div>
 	</jsp:attribute>

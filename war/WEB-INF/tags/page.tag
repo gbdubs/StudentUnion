@@ -5,6 +5,9 @@
 <%@taglib uri="loginutils" prefix="f" %>
 
 <c:set var="staticpagelocation" value="http://union.brandeis.io"/>
+<c:set var="afterLogoutAdmin" value="/login-admin" />
+<c:set var="afterLogoutRegular" value="/petitions" />
+<c:set var="afterLogin" value="/petitions" />
 
 <html lang="en">
     <head id="head">
@@ -53,6 +56,21 @@
 			<li class="divider"></li>
 			<li><a href="${staticpagelocation}/documents">Constitution</a></li>
 			<li><a href="${staticpagelocation}/documents">Bylaws</a></li>
+			<li class="divider"></li>
+			<c:if test="${f:loggedIn()}">
+				<c:if test="${f:admin()}">
+					<li><a href="${f:logoutUrl(afterLogoutAdmin)}">Log Out</a></li>
+				</c:if>
+				<c:if test="${! f:admin()}">
+					<li><a href="${f:logoutUrl(afterLogoutRegular)}">Log Out</a></li>
+				</c:if>
+			</c:if>
+			<c:if test="${! f:loggedIn()}">
+				<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
+			</c:if>
+			<c:if test="${f:admin()}">
+				<li class="txt-brandeis-blue-1"><a href="/console">Site Manager</a></li>
+			</c:if>
 			
 		</ul>
 		<nav class="bg-brandeis-blue-0 canopy" role="navigation">
@@ -69,15 +87,19 @@
 					<li><a href="${staticpagelocation}/news">News</a></li>
 					<li><a href="/petitions">Petitions</a></li>
 					<li><a href="${staticpagelocation}/elections">Elections</a></li>
-					<c:set var="petitionsUrl" value="/petitions" />
 					<c:if test="${f:loggedIn()}">
-						<li><a href="${f:logoutUrl(petitionsUrl)}">Log Out</a></li>
+						<c:if test="${f:admin()}">
+							<li><a href="${f:logoutUrl(afterLogoutAdmin)}">Log Out</a></li>
+						</c:if>
+						<c:if test="${! f:admin()}">
+							<li><a href="${f:logoutUrl(afterLogoutRegular)}">Log Out</a></li>
+						</c:if>
 					</c:if>
 					<c:if test="${! f:loggedIn()}">
-						<li><a href="${f:loginUrl(petitionsUrl)}">Log In</a></li>
+						<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
 					</c:if>
 					<c:if test="${f:admin()}">
-						<li class="bg-brandeis-blue-1"><a href="/console">Admins</a></li>
+						<li class="bg-brandeis-blue-1"><a href="/console">Site Manager</a></li>
 					</c:if>
 				</ul>
 				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
