@@ -49,6 +49,7 @@ public class PageEditorServlet extends HttpServlet {
 			if (p.admin || p.owner || UserAPI.isGoogleAdmin()){
 				
 				if (url.contains("/page-manager")){
+					req.setAttribute("editablePages", Page.getAllEditablePages());
 					req.setAttribute("pages", Page.getAllPages());
 					req.setAttribute("currentUser", p);
 					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
@@ -63,7 +64,7 @@ public class PageEditorServlet extends HttpServlet {
 			
 				// Tests to see if a page has been defined at this editor address.
 				Page page = Page.get(filePath);
-				if (page == null){
+				if (page == null || !page.editable){
 					req.setAttribute("currentUser", p);
 					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 					resp.setContentType("text/html");
@@ -107,15 +108,14 @@ public class PageEditorServlet extends HttpServlet {
 					
 					if (badChars.length() == 0){
 						if ("add".equals(addOrDelete)){
-							Page.createPage(path);
+							Page.createPage(path, true);
 						} else if ("delete".equals(addOrDelete)){
-							System.out.println(path);
-							System.out.println(Page.makeFilePath(path));
 							Page.deletePage(path);
 							String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
 							GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
 							Log.info(commitMessage);
 						}
+						Page.updateDirectoryPage(this);
 					} else {
 						resp.getWriter().println("The following characters were not accepted: "+badChars+" they are not okay as part of a url.");
 						return;
@@ -133,6 +133,16 @@ public class PageEditorServlet extends HttpServlet {
 				
 				// Logs the request
 				Log.info("Recieved a request to edit ["+pagePath+"] from user ["+p.email+"]\n");
+				
+				// Verifies that this page can exist!
+				Page page = Page.get(pagePath);
+				if (page == null || !page.editable){
+					resp.setStatus(400);
+					resp.getWriter().println("{\"success\":0,\"message\":\""+"This page has not been approved to exist by a site owner, or it is already existing and is not editable."+"\"}");
+					Log.error("           	request to edit ["+pagePath+"] FAILED!: " + "This page has not been approved to exist by a site owner, or it is already existing and is not editable.");
+					return;
+				}
+				
 				
 				// Adjusts the content to create relative urls, given how far down the directory tree the new file is.
 				content = makeContentHaveRelativeUrls(pagePath, content);

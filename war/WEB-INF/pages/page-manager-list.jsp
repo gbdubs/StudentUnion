@@ -38,7 +38,7 @@
 					Click on the URL of the page you want to edit to be taken to that page to edit it.
 				</p>
 				
-				<c:forEach items="${pages}" var="page">
+				<c:forEach items="${editablePages}" var="page">
 					<h5><a href="/edit${page}">${page}</a></h5>
 				</c:forEach>
 			

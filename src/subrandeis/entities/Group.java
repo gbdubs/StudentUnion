@@ -193,15 +193,15 @@ public class Group {
 	}
 	
 	
-	private static String HTMLTemplateContentStartTag = "<!-- CONTENT BELOW HERE --> ";
-	private static String HTMLTemplateContentEndTag = "<!-- CONTENT ABOVE HERE --> ";
+	public static String HTMLTemplateContentStartTag = "<!-- CONTENT BELOW HERE --> ";
+	public static String HTMLTemplateContentEndTag = "<!-- CONTENT ABOVE HERE --> ";
 	public static String linkToProfileTemplate = "/static/PageEditor/profile-template.html";
-	private static String linkToMemberWrapperStart = "/static/PageEditor/member-wrapper-start.html";
-	private static String linkToMemberWrapperEnd = "/static/PageEditor/member-wrapper-end.html";
+	public static String linkToMemberWrapperStart = "/static/PageEditor/member-wrapper-start.html";
+	public static String linkToMemberWrapperEnd = "/static/PageEditor/member-wrapper-end.html";
 	
 	// Gets the HTML template page, which is also used for page editing.
 	// Also used to get the HTML template for the profile box.
-	private String getHtmlTemplate(HttpServlet caller, String location){
+	public static String getHtmlTemplate(HttpServlet caller, String location){
 		try {
 			ServletContext context = caller.getServletContext();
 			String filePath =  context.getRealPath(location);
@@ -276,10 +276,10 @@ public class Group {
 		try {
 			if (!this.pageUrl.equals("/no/page/url/defined")){
 				if (Page.get(pageUrl) == null){
-					Page.createPage(pageUrl);
+					Page.createPage(pageUrl, true);
 				}
 				if (Page.get(pageUrl+"/members") == null){
-					Page.createPage(pageUrl + "/members");
+					Page.createPage(pageUrl + "/members", false);
 				}
 				
 				String membershipPageUrl = this.pageUrl + "/members/index.html";
