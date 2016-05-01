@@ -131,6 +131,25 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	
+	<servlet>
+		<servlet-name>NewsServlet</servlet-name>
+		<servlet-class>subrandeis.servlet.adv.NewsServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NewsServlet</servlet-name>
+		<url-pattern>/news</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>JSPRenderServlet</servlet-name>
+		<servlet-class>subrandeis.servlet.basic.JSPRenderServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JSPRenderServlet</servlet-name>
+		<url-pattern>/jsp-render-servlet</url-pattern>
+	</servlet-mapping>
+	
 	
 	<filter>
 	    <filter-name>ObjectifyFilter</filter-name>

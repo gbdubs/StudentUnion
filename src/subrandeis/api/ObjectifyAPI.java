@@ -4,6 +4,7 @@ import subrandeis.entities.Group;
 import subrandeis.entities.Page;
 import subrandeis.entities.Person;
 import subrandeis.entities.Petition;
+import subrandeis.entities.Story;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -20,11 +21,12 @@ public class ObjectifyAPI {
 	private static Objectify objectify;
 	
 	static {
+		ObjectifyService.register(Group.class);
+		ObjectifyService.register(Page.class);
 		ObjectifyService.register(Person.class);
 		ObjectifyService.register(Petition.class);
-		ObjectifyService.register(Group.class);
 		ObjectifyService.register(Petition.PetitionSignature.class);
-		ObjectifyService.register(Page.class);
+		ObjectifyService.register(Story.class);
     }
 
     public static Objectify ofy() {
@@ -33,4 +35,5 @@ public class ObjectifyAPI {
     	}
         return objectify;
     }
+    
 }
