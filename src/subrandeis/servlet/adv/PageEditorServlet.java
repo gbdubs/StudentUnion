@@ -1,15 +1,10 @@
 package subrandeis.servlet.adv;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,15 +16,13 @@ import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Page;
 import subrandeis.entities.Person;
+import subrandeis.servlet.basic.JSPRenderServlet;
 
 @SuppressWarnings("serial")
 public class PageEditorServlet extends HttpServlet {
 	
 	private static String editingUrlPrefix = "edit";
-	
-	public static String linkToHTMLTemplate = "/static/PageEditor/template-site.html";
-	public static String linkToContentToolsInitScript = "/static/PageEditor/make-editable.js";
-	
+
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		
 		// Gets the file path that is trying to be edited via the url pattern
@@ -73,17 +66,29 @@ public class PageEditorServlet extends HttpServlet {
 					return;
 				}
 				
+				String htmlContent;
 				// Tries to get the current page definition, if it exists. Defaults to a template if it doesn't yet exist.
-				String currentPageDef = GithubAPI.getFileText(SecretsAPI.WebsiteRepository, filePath);
-				if (currentPageDef == null || currentPageDef.contains("window.location.replace('/404');")){
-					currentPageDef = getTemplateAsString();
+				String rawHtml = GithubAPI.getFileText(SecretsAPI.WebsiteRepository, filePath);
+				if (rawHtml == null || rawHtml.contains(GithubAPI.deletedPageHint)){
+					htmlContent = getTutorialPage();
+				} else {
+					String startTag = "<!-- CONTENT BELOW HERE -->";
+					String endTag = "<!-- CONTENT ABOVE HERE -->";
+					int startIndex = rawHtml.indexOf(startTag) + startTag.length();
+					int endIndex = rawHtml.indexOf(endTag);
+					htmlContent = rawHtml.substring(startIndex, endIndex);
 				}
 				
 				// Places in a script which will instantiate an editor at the end of the body.
-				currentPageDef = currentPageDef.replace("</body>", "<script data-editingonly src=\""+linkToContentToolsInitScript+"\"></script></body>");
-				
-				// Returns the file to the user.
-				resp.getWriter().println(currentPageDef);
+				req.setAttribute("javascriptContent", getPageEditorJavascript());
+				req.setAttribute("cssContent", getPageEditorCss());
+				req.setAttribute("htmlContent", htmlContent);
+
+				// Finishes up, sends to the console page.
+				resp.setContentType("text/html");
+				RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/page-editor.jsp");
+				jsp.forward(req, resp);	
+				return;
 				
 			} else {
 				resp.getWriter().println("You do not have sufficent permissions to edit this page. Sorry!");
@@ -93,7 +98,40 @@ public class PageEditorServlet extends HttpServlet {
 		}
 	}
 	
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private String getTutorialPage() {
+		return  
+				"				<h1 class=\"text-right\">Welcome to <b>your</b> new page!</h1>\n" + 
+				"				<h2 class=\"text-right\"><i>To start editing, click on the pencil in the upper left hand corner of the screen</i></h2>\n" + 
+				"				<p class=\"text-center\">Use the draggable toolbox to edit the simple properties like <i>Italics</i>, <b>Bold</b>, <a href=\"#\">links</a>, and text alignment.</p>\n" + 
+				"				<p  class=\"text-left\">Using that toolbox you can also create tables, lists, and much much more!</p>\n" + 
+				"				<p  class=\"text-left\">You can insert pictures and pideos by using a link to the image/video. Videos have to come from Youtube or Vimeo. Images can be uploaded wherever, but I would recommend doing it through <a href=\"http://www.imgur.com\">imgur</a>.</p>\n" + 
+				"				<p  class=\"text-left\">Finally, you can add styles to your elements using the style frame (change the background, padding, margin, and text color).\n" + 
+				"				You can do this by selecting an element (by clicking on it) and then at the bottom of the screen, click on the right-most little button.\n" + 
+				"				That will take you into an editor where you can toggle different style choices.\n" + 
+				"				There are a lot of choices, but the main ones are:</p>\n" + 
+				"				<ol class=\"text-left\">\n" + 
+				"					<li><b>Card</b> - Make an element seem like it is a piece of paper, with rounded corners and a slight shaddow around it.</li>\n" + 
+				"					<li><b>Button</b> - Buttons look similar to card, but will change color and seem to raise up when they are hovered over.</li>\n" + 
+				"					<li><b>Text Color</b> - You can choose from seven font colors, but only one per element.</li>\n" + 
+				"					<li><b>Background Color</b> - Note that only some colors are allowed to make sure that the site remains beautiful.</li>\n" + 
+				"					<li><b>Padding</b> - Change the amount of space in between the text and the outside edge of the element. This allows you to space out elements differently on the page.</li>\n" + 
+				"					<li><b>Margin</b> - Change the amount of space required between elements. This (also) allows you to space out elements differently on the page.</li>\n" + 
+				"				</ol>\n" + 
+				"				<p>If you want to insert a more advanced element, like divs, code blocks, or javascript, you can do so by selecting the place you would like to put it,\n" + 
+				"				then going to the style frame (as described above), and going to the code editor.</p>\n";
+	}
+	
+	private String getPageEditorCss(){
+		return "<link data-editingonly rel=\"stylesheet\" type=\"text/css\" href=\"/static/ContentTools/build/content-tools.min.css\">\n";
+	}
+	
+	private String getPageEditorJavascript(){
+		return 
+				"<script data-editingonly src=\"/static/ContentTools/build/content-tools.js\"></script>\n"+
+				"<script data-editingonly src=\"/static/PageEditor/content-tools-init.js\"></script>";
+	}
+
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		
 		if (UserAPI.loggedIn()){
 		
@@ -143,60 +181,27 @@ public class PageEditorServlet extends HttpServlet {
 					return;
 				}
 				
-				
-				// Adjusts the content to create relative urls, given how far down the directory tree the new file is.
-				content = makeContentHaveRelativeUrls(pagePath, content);
-				
-				// Adds in data to reflect who the last person to make the change was, and when it was made.
-				content = makeContentShowLastEditorInformation(content, p);
+				// Renders the complete HTML given the content.
+				req.setAttribute("production", true);
+				req.setAttribute("lastEditorEmail", p.email);
+				req.setAttribute("lastEditorName", p.nickname);
+				String now = (new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a")).format(new Date());
+				req.setAttribute("lastEditorDate", now);
+				req.setAttribute("htmlContent", content);
+				String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/page-editor.jsp", req, resp);
 				
 				// Creates the file, returns a brief description of success or failure, depending on which it was.
 				resp.setContentType("application/json");
 				try {
-					GithubAPI.createOrUpdateFile(SecretsAPI.WebsiteRepository, pagePath, "A New Commit at "+(new Date()).toString(), content);
+					GithubAPI.createOrUpdateFile(SecretsAPI.WebsiteRepository, pagePath, "A New Commit at "+(new Date()).toString(), completeHtml);
 					
 					resp.setStatus(200);
-					resp.getWriter().println("{\"success\":1,\"message\":\"Everything worked and the work has been saved.\",\"url\":\""+pagePath+"\"}");
 					Log.info("           	request to edit ["+pagePath+"] WAS SUCCESSFUL\n");
 				} catch (IOException ex){
 					resp.setStatus(400);
-					resp.getWriter().println("{\"success\":0,\"message\":\""+ex.getMessage()+"\"}");
 					Log.error("           	request to edit ["+pagePath+"] FAILED!: " + ex.getMessage());
 				}
 			}
 		}
-	}
-	
-	public static String makeContentShowLastEditorInformation(String content, Person p) {
-		content = content.replace("[LAST EDITOR EMAIL]", p.email);
-		content = content.replace("[LAST EDITOR NICKNAME]", p.nickname);
-		DateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a");
-		content = content.replace("[LAST EDITOR DATE]", df.format(new Date()));
-		return content;
-	}
-
-	public String getTemplateAsString() throws IOException{
-		ServletContext context = this.getServletContext();
-		String filePath =  context.getRealPath(linkToHTMLTemplate);
-		InputStreamReader inReader = new InputStreamReader(new FileInputStream(new File(filePath)), "UTF-8");
-		StringBuffer sb = new StringBuffer();
-	    int charToAdd = 0;
-		while ((charToAdd = inReader.read()) != -1) {
-	        sb.append((char) charToAdd);
-	    }
-	    inReader.close();
-	    return sb.toString();
-	}
-	
-	public static String makeContentHaveRelativeUrls(String path, String content){
-		String replaceWith = "";
-		for (char c : path.toCharArray()){
-			if (c == '/'){
-				replaceWith += "../";
-			}
-		}
-		content = content.replace("href=\"/", "href=\""+replaceWith);	
-		content = content.replace("src=\"/", "src=\""+replaceWith);	
-		return content;
 	}
 }

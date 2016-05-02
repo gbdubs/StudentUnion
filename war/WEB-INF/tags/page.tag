@@ -2,17 +2,20 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@attribute name="content" fragment="true" %>
 <%@attribute name="js" fragment="true" %>
+<%@attribute name="css" fragment="true" %>
 <%@taglib uri="loginutils" prefix="f" %>
 
 <c:if test="${production == null}">
 	<c:set var="production" value="false"/>
 </c:if>
 
+<c:set var="resourcelocation" value="http://union.brandeis.io"/>
 <c:set var="staticpagelocation" value="http://union.brandeis.io"/>
 <c:if test="${production}">
 	<c:set var="webapplocation" value="http://admin.brandeis.io"/>
 </c:if>
 <c:if test="${!production}">
+ 	<c:set var="resourcelocation" value=""/>
 	<c:set var="webapplocation" value=""/>
 </c:if>
 
@@ -25,9 +28,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
 		<title>Brandeis University Student Union</title>
-		<link href="/static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-		<link href="/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-		<link href="/static/css/content-tools-properties.css" type="text/css" rel="stylesheet">
+		<link href="${resourceLocation}/static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<link href="${resourceLocation}/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<link href="${resourceLocation}/static/css/content-tools-properties.css" type="text/css" rel="stylesheet">
+		<jsp:invoke fragment="css"/>
     </head>
     <body id="body" class="bg-brandeis-grey" data-name="menu">
 		<ul id="about-dropdown" class="dropdown-content txt-brandeis-blue-0">
@@ -45,7 +49,7 @@
 		<ul id="nav-mobile" class="side-nav">
 			<li class="bg-brandeis-blue-0">
 				<a class="menu-header" href="${staticpagelocation}/">
-					<img class="menu-seal" src="/static/img/edited-seal.png"/>
+					<img class="menu-seal" src="${resourceLocation}/static/img/edited-seal.png"/>
 					<h6 class="first txt-brandeis-white">Brandeis University</h6>
 					<h6 class="txt-brandeis-white">Student Union</h6>
 				</a>
@@ -94,7 +98,7 @@
 			<div class="menu-ribbon"></div>
 			<div class="nav-wrapper container">
 				<a id="logo-container" href="${staticpagelocation}/" class="brand-logo">
-					<img class="menu-seal" src="/static/img/edited-seal.png"/>
+					<img class="menu-seal" src="${resourceLocation}/static/img/edited-seal.png"/>
 					<span>Brandeis <span class="droppable">University </span>Student Union</span>
 				</a>
 				<ul class="menu hide-on-med-and-down">
@@ -168,9 +172,9 @@
 				</div>
 			</div>
 			<c:if test="${production}">
-				<div class="footer-copyright bg-brandeis-blue-1 txt-brandeis-white">
+				<div class="footer-copyright bg-brandeis-blue-2 txt-brandeis-white">
 					<div id="last-edited" class="container">
-						This page was last edited on <span id="last-editor-date">[LAST EDITOR DATE]</span>, by <span id="last-editor-nickname">[LAST EDITOR NICKNAME]</span> (<a class="blue-text text-lighten-3" href="mailto:[LAST EDITOR EMAIL]" id="last-editor-email">[LAST EDITOR EMAIL]</a>).
+						This page was last edited on <span id="last-editor-date">${lastEditorDate}</span>, by <span id="last-editor-nickname">${lastEditorName}</span> (<a class="blue-text text-lighten-3" href="mailto:${lastEditorEmail}" id="last-editor-email">${lastEditorEmail}</a>).
 						<a class="orange-text text-lighten-3" href="#" id="edit-now-link">Edit Now</a>.      
 					</div>
 				</div>
@@ -187,9 +191,9 @@
 				</div>
 			</div>
 		</footer>
-		<script src="/static/js/jquery.min.js"></script>
-		<script src="/static/js/materialize.js"></script>
-		<script src="/static/js/init.js"></script>
+		<script src="${resourceLocation}/static/js/jquery.min.js"></script>
+		<script src="${resourceLocation}/static/js/materialize.js"></script>
+		<script src="${resourceLocation}/static/js/init.js"></script>
 		
 		<jsp:invoke fragment="js"/>
     </body>

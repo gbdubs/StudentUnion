@@ -5,7 +5,7 @@
     
     $(".dropdown-button").dropdown();
     
-    var editorURL = "http://brandeis-student-union.appspot.com/edit";
+    var editorURL = "http://admin.brandeis.io/edit";
     
     var pathToPage = window.location.pathname;
     

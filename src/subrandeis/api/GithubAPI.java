@@ -150,6 +150,8 @@ public class GithubAPI {
 		ghc.put(apiURI, data, null);
 	}
 	
+	public static final String deletedPageHint = "THISPAGEHASBEENDELETED893457983475983475";
+	
 	  /* * * * * * * * */
      /* DELETE A PAGE */
     /* * * * * * * * */
@@ -159,7 +161,7 @@ public class GithubAPI {
 
 		String fileSha = getFileSha(repoName, filePath);
 		
-		String notFoundRedirect = "<html><body><script>window.location.replace('/404');</script></body></html>";
+		String notFoundRedirect = "<html><body><div id=\""+deletedPageHint+"\"><script>window.location.replace('/404');</script></div></body></html>";
 		
 		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, SecretsAPI.WebsiteRepoBranch, fileSha);
 		

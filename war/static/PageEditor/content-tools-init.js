@@ -87,11 +87,12 @@ window.addEventListener('load', function() {
 		$(".drag-target").remove();
 		$(".ct-app").remove();
 
-		var pageData = $("html").html();
+		var pageData = $("#content-inner-wrapper").html();
 
 		$("body").append("<div class=\"waiting-screen\">Waiting</div>");
 
 		var url = window.location.pathname.substring(6);
+		var originalUrl = url;
 
 		if (url.length > 0) {
 			url = url + "/";
@@ -110,19 +111,18 @@ window.addEventListener('load', function() {
 				content: pageData
 			},
 			complete: function(data) {
-				var resp = JSON.parse(data.responseText);
 				if (data.status == 200) {
-					var urlToGoTo = "http://union.brandeis.io/" + resp.url;
+					var urlToGoTo = "http://union.brandeis.io/" + originalUrl;
 					urlToGoTo = urlToGoTo.replace("/", "%2F").replace(":", "%3A");
 					window.location.replace("/waiting-for-page-update?urlToGoTo=" + urlToGoTo);
 				} else if (data.status == 400) {
-					var r = confirm("!!! ERROR FROM SERVER !!! \n\n " + resp.message + " \n\n\t- The editor will need to be reloaded to continue. \n \t- If this error keeps happening, please email grady.b.ward@gmail.com. \n\t-Is it possible that the page you are creating interferes with another page URL? \n\n\nPress OK to Reload the page and try again. \nPress CANCEL to stay on this page (which cannot edit without a reload).");
+					var r = confirm("!!! ERROR FROM SERVER !!! \n\n \n\n\t- The editor will need to be reloaded to continue. \n \t- If this error keeps happening, please email grady.b.ward@gmail.com. \n\t-Is it possible that the page you are creating interferes with another page URL? \n\n\nPress OK to Reload the page and try again. \nPress CANCEL to stay on this page (which cannot edit without a reload).");
 					if (r) {
 						location.reload();
 					}
 					$(".waiting-screen").remove();
 				}
-				console.log(resp.message);
+				console.log(data);
 			}
 		});
 	});
