@@ -4,7 +4,18 @@
 <%@attribute name="js" fragment="true" %>
 <%@taglib uri="loginutils" prefix="f" %>
 
+<c:if test="${production == null}">
+	<c:set var="production" value="false"/>
+</c:if>
+
 <c:set var="staticpagelocation" value="http://union.brandeis.io"/>
+<c:if test="${production}">
+	<c:set var="webapplocation" value="http://admin.brandeis.io"/>
+</c:if>
+<c:if test="${!production}">
+	<c:set var="webapplocation" value=""/>
+</c:if>
+
 <c:set var="afterLogoutAdmin" value="/login-admin" />
 <c:set var="afterLogoutRegular" value="/petitions" />
 <c:set var="afterLogin" value="/petitions" />
@@ -49,29 +60,35 @@
 			<li class="divider"></li>
 			<li><a href="${staticpagelocation}/groups">Committees + Groups</a>
 			<li class="divider"></li>
-			<li><a href="${staticpagelocation}/news">News</a></li>
-			<li><a href="/petitions">Petitions</a></li>
+			<c:if test="${production || !f:loggedIn() || !f:admin()}">
+				<li><a href="${staticpagelocation}/news">News</a></li>
+			</c:if>
+			<c:if test="${!production && f:loggedIn() && f:admin()}">
+				<li><a href="${webapplocation}/news">News</a></li>
+			</c:if>
+			<li><a href="${webapplocation}/petitions">Petitions</a></li>
 			<li><a href="${staticpagelocation}/elections">Elections</a></li>
 			<li><a href="${staticpagelocation}/directory">Directory</a></li>
 			<li class="divider"></li>
 			<li><a href="${staticpagelocation}/documents">Constitution</a></li>
 			<li><a href="${staticpagelocation}/documents">Bylaws</a></li>
 			<li class="divider"></li>
-			<c:if test="${f:loggedIn()}">
+			<c:if test="${!production}"> 
+				<c:if test="${f:loggedIn()}">
+					<c:if test="${f:admin()}">
+						<li><a href="${f:logoutUrl(afterLogoutAdmin)}">Log Out</a></li>
+					</c:if>
+					<c:if test="${! f:admin()}">
+						<li><a href="${f:logoutUrl(afterLogoutRegular)}">Log Out</a></li>
+					</c:if>
+				</c:if>
+				<c:if test="${! f:loggedIn()}">
+					<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
+				</c:if>
 				<c:if test="${f:admin()}">
-					<li><a href="${f:logoutUrl(afterLogoutAdmin)}">Log Out</a></li>
-				</c:if>
-				<c:if test="${! f:admin()}">
-					<li><a href="${f:logoutUrl(afterLogoutRegular)}">Log Out</a></li>
+					<li class="txt-brandeis-blue-1"><a href="/console">Site Manager</a></li>
 				</c:if>
 			</c:if>
-			<c:if test="${! f:loggedIn()}">
-				<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
-			</c:if>
-			<c:if test="${f:admin()}">
-				<li class="txt-brandeis-blue-1"><a href="/console">Site Manager</a></li>
-			</c:if>
-			
 		</ul>
 		<nav class="bg-brandeis-blue-0 canopy" role="navigation">
 			<div class="menu-ribbon"></div>
@@ -84,33 +101,48 @@
 					<li><a href="${staticpagelocation}/">Home</a></li>
 					<li><a class="dropdown-button" href="#!" data-activates="about-dropdown">Organization<i class="mdi-navigation-arrow-drop-down right"></i></a></li>
 					<li><a href="${staticpagelocation}/directory">Directory</a></li>
-					<li><a href="${staticpagelocation}/news">News</a></li>
-					<li><a href="/petitions">Petitions</a></li>
+					<c:if test="${production || !f:loggedIn() || !f:admin()}">
+						<li><a href="${staticpagelocation}/news">News</a></li>
+					</c:if>
+					<c:if test="${!production && f:loggedIn() && f:admin()}">
+						<li><a href="${webapplocation}/news">News</a></li>
+					</c:if>
+					<li><a href="${webapplocation}/petitions">Petitions</a></li>
 					<li><a href="${staticpagelocation}/elections">Elections</a></li>
-					<c:if test="${f:loggedIn()}">
+					<c:if test="${!production}"> 
+						<c:if test="${f:loggedIn()}">
+							<c:if test="${f:admin()}">
+								<li><a href="${f:logoutUrl(afterLogoutAdmin)}">Log Out</a></li>
+							</c:if>
+							<c:if test="${! f:admin()}">
+								<li><a href="${f:logoutUrl(afterLogoutRegular)}">Log Out</a></li>
+							</c:if>
+						</c:if>
+						<c:if test="${! f:loggedIn()}">
+							<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
+						</c:if>
 						<c:if test="${f:admin()}">
-							<li><a href="${f:logoutUrl(afterLogoutAdmin)}">Log Out</a></li>
+							<li class="txt-brandeis-blue-1"><a href="/console">Site Manager</a></li>
 						</c:if>
-						<c:if test="${! f:admin()}">
-							<li><a href="${f:logoutUrl(afterLogoutRegular)}">Log Out</a></li>
-						</c:if>
-					</c:if>
-					<c:if test="${! f:loggedIn()}">
-						<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
-					</c:if>
-					<c:if test="${f:admin()}">
-						<li class="bg-brandeis-blue-1"><a href="/console">Site Manager</a></li>
 					</c:if>
 				</ul>
 				<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
 			</div>
 		</nav>
 		
-		<!-- CONTENT BELOW HERE --> 
+		<div class="content card bg-brandeis-white">
+			<div data-editable class="section content-tools-editable left-align" id="content-inner-wrapper">
+			
+			<!-- CONTENT BELOW HERE --> 
+			
 		
-		<jsp:invoke fragment="content" />
+			<jsp:invoke fragment="content" />
 		
-		<!-- CONTENT ABOVE HERE -->    
+		
+			<!-- CONTENT ABOVE HERE -->    
+			
+			</div>
+		</div>
 		
 		<footer class="page-footer footer-canopy bg-brandeis-blue-0">
 			<div class="container">
@@ -135,6 +167,14 @@
 					</div>
 				</div>
 			</div>
+			<c:if test="${production}">
+				<div class="footer-copyright bg-brandeis-blue-1 txt-brandeis-white">
+					<div id="last-edited" class="container">
+						This page was last edited on <span id="last-editor-date">[LAST EDITOR DATE]</span>, by <span id="last-editor-nickname">[LAST EDITOR NICKNAME]</span> (<a class="blue-text text-lighten-3" href="mailto:[LAST EDITOR EMAIL]" id="last-editor-email">[LAST EDITOR EMAIL]</a>).
+						<a class="orange-text text-lighten-3" href="#" id="edit-now-link">Edit Now</a>.      
+					</div>
+				</div>
+			</c:if>
 			<div class="footer-copyright bg-brandeis-blue-1 txt-brandeis-white">
 				<div class="container">
 					Made by Grady Ward '16, using 
@@ -142,8 +182,8 @@
 					<a class="blue-text text-lighten-3" href="http://getcontenttools.com">Content Tools</a>, 
 					<a class="blue-text text-lighten-3" href="https://pages.github.com">GitHub Pages</a> and 
 					<a class="blue-text text-lighten-3" href="https://cloud.google.com/appengine/">Google App Engine</a>. 
-					<a class="blue-text text-lighten-3" href="mailto:grady.b.ward@gmail.com">Comments?</a>
-					<a class="orange-text text-lighten-3" href="/console">Site Manager</a>
+					<a class="blue-text text-lighten-3" href="${staticpagelocation}/about-the-site">About This Site</a>.
+					<a class="orange-text text-lighten-3" href="${webapplocation}/console">Site Manager</a>
 				</div>
 			</div>
 		</footer>
