@@ -12,12 +12,13 @@ import javax.servlet.http.HttpServletResponseWrapper;
 @SuppressWarnings("serial")
 public class JSPRenderServlet extends HttpServlet {
 	
-	public static final String responseKey = "jsp-response";
+	private static final String requestFileKey = "jsp-file";
+	public static final String responseContentKey = "jsp-response";
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String jspFilePath = req.getAttribute("jsp-file").toString();
+		String jspFilePath = req.getAttribute(requestFileKey).toString();
 		
 		
 		HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(resp) {
@@ -38,9 +39,21 @@ public class JSPRenderServlet extends HttpServlet {
 		
 		String content = responseWrapper.toString();
 		
-		req.setAttribute(responseKey, content);
+		req.setAttribute(responseContentKey, content);
+	}
+	
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		doGet(req, resp);
 	}
 
+	public static String render(String jspFileName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		req.setAttribute(requestFileKey, jspFileName);
+		
+		req.getRequestDispatcher("/jsp-render-servlet").forward(req, resp);
+		
+		return (String) req.getAttribute(JSPRenderServlet.responseContentKey);
+	}
+	
 }
 
 

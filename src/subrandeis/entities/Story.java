@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
@@ -40,6 +41,7 @@ public class Story implements Comparable<Story> {
 	
 	public static void create(String title, String body){
 		Story s = new Story();
+		s.storyId = UUID.randomUUID().toString();
 		s.title = title;
 		s.body = body;
 		s.edited = false;
@@ -77,7 +79,7 @@ public class Story implements Comparable<Story> {
 	}
 	
 	public static void delete(String storyId){
-		ofy.delete().type(Story.class).id(storyId);
+		ofy.delete().type(Story.class).id(storyId).now();
 	}
 	
 	@Override
@@ -89,6 +91,46 @@ public class Story implements Comparable<Story> {
 		List<Story> stories = ofy.load().type(Story.class).limit(10000).list();
 		Collections.sort(stories);
 		return stories;
+	}
+	
+	public String getStoryId(){
+		return storyId;
+	}
+	
+	public String getTitle(){
+		return title;
+	}
+	
+	public boolean getEdited(){
+		return edited;
+	}
+	
+	public String getPostedAt(){
+		return postedAt;
+	}
+	
+	public String getEditedAt(){
+		return editedAt;
+	}
+	
+	public String getAuthorName(){
+		return authorName;
+	}
+	
+	public String getAuthorEmail(){
+		return authorEmail;
+	}
+	
+	public String getLastEditorName(){
+		return lastEditorName;
+	}
+	
+	public String getLastEditorEmail(){
+		return lastEditorEmail;
+	}
+	
+	public String getBody(){
+		return body;
 	}
 
 }
