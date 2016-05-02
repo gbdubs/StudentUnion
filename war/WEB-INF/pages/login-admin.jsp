@@ -4,7 +4,7 @@
 
 <t:page>
 	<jsp:attribute name="content">
-
+	<div class="center-align">
 	
 		<h1 class="light">
 			Student Union Website Editor
@@ -17,8 +17,9 @@
 		<br>
 		<br>
 		
-		<a href="${loginUrl}" class="btn btn-large bg-brandeis-blue-1">Login Here</a></p>
-
+		
+			<a href="${loginUrl}" class="btn btn-large bg-brandeis-blue-1">Login Here</a></p>
+		
 		<br>
 
 		<h5 class="light">
@@ -75,6 +76,6 @@
 		<h5 class="light">	
 			If you are looking for the regular login (for petitions, or non-Union students) click <a href="/login">here</a>.
 		</h5>
-				
+	</div>		
 	</jsp:attribute>
 </t:page>

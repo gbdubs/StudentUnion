@@ -4,7 +4,7 @@
 
 <t:page>
 	<jsp:attribute name="content">
-			
+	<div class="center-align">
 		<h1 class="light">
 			Student Union Website Login
 		</h1>
@@ -15,7 +15,7 @@
 		
 		<br>
 		
-		<p>
+		<p class="left-align">
 			The Student Union Website uses open authentication provided by Google
 			(which is the company that Brandeis uses to power your email).
 			When you click the link below, you will be taken to a Google page to
@@ -29,22 +29,22 @@
 		<a href="${loginUrl}" class="btn btn-large bg-brandeis-blue-1">Login Here</a></p>
 		<br>
 
-		<p>
+		<p class="left-align">
 			We require a login to vote on petitions or to author them. You are still
 			free to use any other features of this site if you opt not to log in.
 		</p>
 
-		<p>
+		<p class="left-align">
 			If you have questions about open authentication, please feel free to
 			contact a member of the Student Union, who can direct you to the right
 			person to answer your question.
 		</p>
 		
-		<p>
+		<p class="left-align">
 			If you are looking for the website manager tools (for administrators and owners
 			of the site, and members of the Student Union), please click <a href="/login-admin">here</a>.
 		</p>
 
-			
+	</div>
 	</jsp:attribute>
 </t:page>

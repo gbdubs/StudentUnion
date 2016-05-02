@@ -39,16 +39,16 @@
 				</h2>
 			</c:if>
 			<c:if test="${isDeleted}">
-				<h2 class="txt-brandeis-black pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+				<h2 class="txt-brandeis-black pad-t-10 pad-l-10 pad-b-10 margin-t-0 margin-b-0">
 					This Petition Has Been Deleted
 				</h2>
 			</c:if>
 			
-			<h2 class="txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+			<h2 class="txt-brandeis-white pad-t-10 pad-l-10 pad-b-10 margin-t-0 margin-b-0">
 				${petition.name}
 			</h2>
 			<div class="card margin-r-10 margin-l-10">
-				<h6 class="bg-brandeis-blue-2 txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+				<h6 class="bg-brandeis-blue-2 txt-brandeis-white pad-t-10 pad-l-10 pad-b-10 margin-t-0 margin-b-0">
 					Written by ${petition.creatorName} (${petition.creatorEmail}) on ${petition.createdAt}
 				</h6>
 				<p class="petition-body bg-brandeis-white left-align pad-t-10 pad-b-10 pad-l-10 pad-r-10 margin-t-0">${petition.description}</p>

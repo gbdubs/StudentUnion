@@ -43,16 +43,16 @@
 			<div class="card bg-brandeis-blue-0">
 				<a href="/petition?petitionId=${petition.petitionId}">
 					<c:if test="${petition.flagged || petition.deleted}">
-						<h2 class="txt-brandeis-yellow pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						<h2 class="txt-brandeis-yellow pad-t-10 pad-b-10 pad-l-10 margin-t-0 margin-b-0">
 					</c:if>
 					<c:if test="${!petition.flagged && !petition.deleted}">
-						<h2 class="txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+						<h2 class="txt-brandeis-white pad-t-10 pad-b-10 pad-l-10 margin-t-0 margin-b-0">
 					</c:if>
 						${petition.name}
 					</h2>
 				</a>
 				<div class="card margin-r-10 margin-l-10">
-					<h6 class="bg-brandeis-blue-2 txt-brandeis-white pad-t-10 pad-b-10 margin-t-0 margin-b-0">
+					<h6 class="bg-brandeis-blue-2 txt-brandeis-white pad-t-10 pad-l-10 pad-b-10 margin-t-0 margin-b-0">
 						Written by ${petition.creatorName} (${petition.creatorEmail}) on ${petition.createdAt}
 					</h6>
 					<p class="petition-body bg-brandeis-white left-align pad-t-10 pad-b-10 pad-l-10 pad-r-10 margin-t-0">${petition.description}</p>

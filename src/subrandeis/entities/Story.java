@@ -65,7 +65,7 @@ public class Story implements Comparable<Story> {
 	public void update(String title, String body) {
 		this.title = title;
 		this.body = body;
-		this.edited = false;
+		this.edited = true;
 		
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a");

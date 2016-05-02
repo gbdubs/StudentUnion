@@ -5,24 +5,24 @@
 <t:page>
 	<jsp:attribute name="content">
 			
+		<br>
+		<br>
+		
 		<h1 class="light">Directory</h1>
 
-		<h4 class="light">
+		<h5 class="light">
 			This page lists all of the pages on the Brandeis Student Union Website. 
 			Some pages might be harder to find than others, so this page lists them all.
-		</h4>
+		</h5>
 		
 		<c:forEach items="${pages}" var="page">		
-		<br>
 			<a href="${page}">
 				<h5 class="light">
 					${page}
 				</h5>
 			</a>
-		<br>
 		</c:forEach>	
-		<br>
-		<br>
+		
 		<br>
 		<br>
 			
