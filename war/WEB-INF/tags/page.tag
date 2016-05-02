@@ -126,7 +126,7 @@
 							<li><a href="${f:loginUrl(afterLogin)}">Log In</a></li>
 						</c:if>
 						<c:if test="${f:admin()}">
-							<li class="txt-brandeis-blue-1"><a href="/console">Site Manager</a></li>
+							<li class="bg-brandeis-blue-1 txt-brandeis-white"><a href="/console">Site Manager</a></li>
 						</c:if>
 					</c:if>
 				</ul>

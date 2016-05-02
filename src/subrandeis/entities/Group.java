@@ -1,9 +1,7 @@
 package subrandeis.entities;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,8 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
@@ -22,6 +22,7 @@ import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.servlet.adv.PageEditorServlet;
+import subrandeis.servlet.basic.JSPRenderServlet;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -192,87 +193,13 @@ public class Group {
 		return false;
 	}
 	
-	
-	public static String HTMLTemplateContentStartTag = "<!-- CONTENT BELOW HERE --> ";
-	public static String HTMLTemplateContentEndTag = "<!-- CONTENT ABOVE HERE --> ";
-	public static String linkToProfileTemplate = "/static/PageEditor/profile-template.html";
-	public static String linkToMemberWrapperStart = "/static/PageEditor/member-wrapper-start.html";
-	public static String linkToMemberWrapperEnd = "/static/PageEditor/member-wrapper-end.html";
-	
-	// Gets the HTML template page, which is also used for page editing.
-	// Also used to get the HTML template for the profile box.
-	public static String getHtmlTemplate(HttpServlet caller, String location){
-		try {
-			ServletContext context = caller.getServletContext();
-			String filePath =  context.getRealPath(location);
-			InputStreamReader inReader = new InputStreamReader(new FileInputStream(new File(filePath)), "UTF-8");
-			StringBuffer sb = new StringBuffer();
-		    int charToAdd = 0;
-			while ((charToAdd = inReader.read()) != -1) {
-		        sb.append((char) charToAdd);
-		    }
-		    inReader.close();
-		    return sb.toString();
-		} catch (IOException ioe){
-			Log.error(String.format("Reading HTML Template encountered an exception in the Group Class: [%s]", ioe.getMessage()));
-			return null;
-		}
-	}
-	
-	// Creates a member box from a template and person (based on the specifics of the profile template.
-	private String instantiateMemberBox(String template, Person p){
-		String role =  this.roles.get(p.email);
-		if (role == null){
-			role = "";
-		}
-		return String.format(template, p.imageUrl, p.nickname, role, p.email, p.biography);
-	}
-	
-	
-	
-	// Delivers the HTML for a membership page for the given group.
-	private String getHTMLForMembershipPage(HttpServlet caller){
-		String template = getHtmlTemplate(caller, PageEditorServlet.linkToHTMLTemplate);
-		String beginning = template.substring(0, template.indexOf(HTMLTemplateContentStartTag));
-		String end = template.substring(template.indexOf(HTMLTemplateContentEndTag)+HTMLTemplateContentEndTag.length());
-		
-		String memberWrapperStart = getHtmlTemplate(caller, linkToMemberWrapperStart);
-		memberWrapperStart = memberWrapperStart.replace("[GROUP NAME]", this.name);
-		memberWrapperStart = memberWrapperStart.replace("[GROUP URL]", this.pageUrl);
-		String memberWrapperEnd = getHtmlTemplate(caller, linkToMemberWrapperEnd);
-		
-		String profileTemplate = getHtmlTemplate(caller, linkToProfileTemplate);
-		StringBuilder middle = new StringBuilder();
-		
-		List<String> allPeople = new ArrayList<String>(leaders);
-		for (String s : members){
-			if (!allPeople.contains(s)){
-				allPeople.add(s);
-			}
-		}
-		
-		Map<String, Person> people = ofy.load().type(Person.class).ids(allPeople);
-		
-		for (String s : allPeople){
-			Person p = people.get(s);
-			if (p == null){
-				p = Person.get(s);
-			}
-			if (p != null){ //&& p.fromDatabase){
-				middle.append(instantiateMemberBox(profileTemplate, p));
-				middle.append("\n\n");
-			}
-		}
-		
-		return beginning + memberWrapperStart + middle.toString() + memberWrapperEnd + end;
-	}
-	
 	/**
 	 * Updates the group membership page for a given group.
 	 * Must be called from a servlet.
 	 * @param caller Servlet that calls this (needed for referencing the HTML templates)
+	 * @throws ServletException 
 	 */
-	public void updateMembershipPage(HttpServlet caller) {
+	public void updateMembershipPage(HttpServlet caller, HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 		try {
 			if (!this.pageUrl.equals("/no/page/url/defined")){
 				if (Page.get(pageUrl) == null){
@@ -287,12 +214,40 @@ public class Group {
 					membershipPageUrl = membershipPageUrl.substring(1);
 				}
 			
-				String almostThere = getHTMLForMembershipPage(caller);
-				almostThere = PageEditorServlet.makeContentShowLastEditorInformation(almostThere, Person.get(UserAPI.email()));
-				String newMembershipPageAsString = PageEditorServlet.makeContentHaveRelativeUrls(membershipPageUrl, almostThere);
+				List<String> allPeople = new ArrayList<String>(leaders);
+				for (String s : members){
+					if (!allPeople.contains(s)){
+						allPeople.add(s);
+					}
+				}
+				
+				Map<String, Person> inDB = ofy.load().type(Person.class).ids(allPeople);
+				List<Person> people = new ArrayList<Person>();
+				
+				for (String s : allPeople){
+					Person p = inDB.get(s);
+					if (p == null){
+						p = Person.get(s);
+					}
+					people.add(p);
+				}
+				
+				Person p = Person.get(UserAPI.email());
+				
+				req.setAttribute("production", true);
+				req.setAttribute("lastEditorEmail", p.email);
+				req.setAttribute("lastEditorName", p.nickname);
+				req.setAttribute("roles", roles);
+				String now = (new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a")).format(new Date());
+				req.setAttribute("lastEditorDate", now);
+				req.setAttribute("group", this);
+				req.setAttribute("people", people);
+				
+				String pageHtml = JSPRenderServlet.render("/WEB-INF/pages/group-member-page.jsp", req, resp);
 			
 				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
-				GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, newMembershipPageAsString);
+				
+				GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, pageHtml);
 				
 				Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
 			} else {

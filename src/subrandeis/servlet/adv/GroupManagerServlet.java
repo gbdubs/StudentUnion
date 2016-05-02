@@ -67,7 +67,7 @@ public class GroupManagerServlet extends HttpServlet{
 		resp.sendRedirect("/login-admin?goto=%2Fgroup-manager");
 	}
 	
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
 		String manage = req.getParameter("manage");
 		
 		if (manage == null){
@@ -87,13 +87,13 @@ public class GroupManagerServlet extends HttpServlet{
 		}		
 	}
 	
-	private void doPageUpdate(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void doPageUpdate(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		String groupId = req.getParameter("groupId");
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
 			Group g = Group.get(groupId);
 			if (g != null && p != null && (UserAPI.isGoogleAdmin() || p.owner || g.leaders.contains(p.email) || g.members.contains(p.email))){
-				g.updateMembershipPage(this);
+				g.updateMembershipPage(this, req, resp);
 				Log.info(String.format("User [%s] successfully triggered an update of the group [%s][%s].", p.email, g.name, g.id));	
 				resp.sendRedirect("/group-manager?groupId="+groupId);
 				return;
@@ -165,7 +165,7 @@ public class GroupManagerServlet extends HttpServlet{
 		resp.sendRedirect("/login-admin?goto=%2Fgroup-manager");
 	}
 	
-	public void doMemberManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException{	
+	public void doMemberManagement(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{	
 		
 		String addOrRemove = req.getParameter("addOrRemove");
 		String leaderOrMember = req.getParameter("leaderOrMember");
@@ -199,7 +199,7 @@ public class GroupManagerServlet extends HttpServlet{
 				}
 				
 				if (changed){
-					g.updateMembershipPage(this);
+					g.updateMembershipPage(this, req, resp);
 				}
 				
 				resp.sendRedirect("/group-manager");

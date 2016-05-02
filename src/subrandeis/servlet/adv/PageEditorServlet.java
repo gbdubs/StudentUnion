@@ -153,7 +153,7 @@ public class PageEditorServlet extends HttpServlet {
 							GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
 							Log.info(commitMessage);
 						}
-						Page.updateDirectoryPage(this);
+						Page.updateDirectoryPage(this, req, resp);
 					} else {
 						resp.getWriter().println("The following characters were not accepted: "+badChars+" they are not okay as part of a url.");
 						return;
