@@ -868,7 +868,9 @@ footer.footer-canopy{
     margin-bottom: 10px;
 }
 
-.ct-control.ct-control--icon {
+.ct-control--rotate-ccw,
+.ct-control--rotate-cw,
+.ct-control--crop {
     display: none !important;
 }
 
