@@ -71,3 +71,19 @@ ul > li {
 .txt-smaller-plz{
     font-size: 75% !important;
 }
+
+h1.txt-smaller-plz{
+    font-size: 40px !important;
+}
+
+h2.txt-smaller-plz{
+    font-size: 30px !important;
+}
+
+h1.txt-bigger-plz{
+    font-size: 80px !important;
+}
+
+h2.txt-bigger-plz{
+    font-size: 50px !important;
+}
