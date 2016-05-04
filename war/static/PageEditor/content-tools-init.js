@@ -14,8 +14,10 @@ window.addEventListener('load', function() {
 		new ContentTools.Style('Card', 'card', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		
 		new ContentTools.Style('Thin Text', 'light', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
+		
 		new ContentTools.Style('Thinest Text', 'txt-super-light', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Boldest Text', 'txt-super-bold', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
+	
 		new ContentTools.Style('Smaller Text', 'txt-smaller-plz', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Bigger Text', 'txt-bigger-plz', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		
@@ -24,14 +26,17 @@ window.addEventListener('load', function() {
 		new ContentTools.Style('Text - Black', 'txt-brandeis-black', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Text - White', 'txt-brandeis-white', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Text - Grey', 'txt-brandeis-grey', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
+
 		new ContentTools.Style('Text - Light Blue', 'txt-brandeis-blue-2', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Text - Normal Blue', 'txt-brandeis-blue-1', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Text - Dark Blue', 'txt-brandeis-blue-0', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
+		
 		new ContentTools.Style('Text - Yellow', 'txt-brandeis-yellow', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 
 		new ContentTools.Style('Background - Black', 'bg-brandeis-black', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Background - White', 'bg-brandeis-white', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Background - Grey', 'bg-brandeis-grey', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
+
 		new ContentTools.Style('Background - Light Blue', 'bg-brandeis-blue-2', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Background - Normal Blue', 'bg-brandeis-blue-1', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
 		new ContentTools.Style('Background - Dark Blue', 'bg-brandeis-blue-0', ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ol', 'li', 'ul', 'div', 'img', 'video']),
