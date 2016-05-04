@@ -33,7 +33,7 @@
 			Current Owners:
 		</h5>
 		
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${owners}" var="owner">
 				<li>
 					<b>${owner.nickname}</b> - 
@@ -48,7 +48,7 @@
 			Current Administrators:
 		</h5>
 		
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${admins}" var="admin">
 				<li>
 					<b>${admin.nickname}</b> - 
@@ -63,7 +63,7 @@
 			Current Candidates:
 		</h5>
 		
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${candidates}" var="candidate">
 				<li>
 					<b>${candidate.nickname}</b> - 

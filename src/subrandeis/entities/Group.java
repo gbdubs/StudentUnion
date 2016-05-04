@@ -247,7 +247,7 @@ public class Group {
 			
 				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
 				
-				GithubAPI.updateFile(SecretsAPI.WebsiteRepository, membershipPageUrl, commitMessage, pageHtml);
+				GithubAPI.updateFile(SecretsAPI.GithubRepo, membershipPageUrl, commitMessage, pageHtml);
 				
 				Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
 			} else {

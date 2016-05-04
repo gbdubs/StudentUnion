@@ -34,7 +34,7 @@
 		<jsp:invoke fragment="css"/>
     </head>
     <body id="body" class="bg-brandeis-grey" data-name="menu">
-		<ul id="about-dropdown" class="dropdown-content txt-brandeis-blue-0">
+		<ul class="no-bullet-list dropdown-content txt-brandeis-blue-0" id="about-dropdown" >
 			<li><a href="${staticpagelocation}/e-board">Executive Board</a></li>
 			<li><a href="${staticpagelocation}/senate">The Senate</a></li>
 			<li><a href="${staticpagelocation}/a-board">Allocations Board</a></li>
@@ -46,7 +46,7 @@
 			<li><a href="${staticpagelocation}/documents">Constitution</a></li>
 			<li><a href="${staticpagelocation}/documents">Bylaws</a></li>
 		</ul>
-		<ul id="nav-mobile" class="side-nav">
+		<ul class="no-bullet-list side-nav" id="nav-mobile">
 			<li class="bg-brandeis-blue-0">
 				<a class="menu-header" href="${staticpagelocation}/">
 					<img class="menu-seal" src="${resourceLocation}/static/img/edited-seal.png"/>
@@ -101,7 +101,7 @@
 					<img class="menu-seal" src="${resourceLocation}/static/img/edited-seal.png"/>
 					<span>Brandeis <span class="droppable">University </span>Student Union</span>
 				</a>
-				<ul class="menu hide-on-med-and-down">
+				<ul class="no-bullet-list menu hide-on-med-and-down">
 					<li><a href="${staticpagelocation}/">Home</a></li>
 					<li><a class="dropdown-button" href="#!" data-activates="about-dropdown">Organization<i class="mdi-navigation-arrow-drop-down right"></i></a></li>
 					<li><a href="${staticpagelocation}/directory">Directory</a></li>
@@ -161,7 +161,7 @@
 					</div>
 					<div class="col m6 s12">
 						<h5 class="white-text">Stay Connected</h5>
-						<ul class="light">
+						<ul class="no-bullet-list light">
 							<li><a class="blue-text text-lighten-3" href="http://www.facebook.com/deisunion">Student Union Facebook</a></li>
 							<li><a class="blue-text text-lighten-3" href="http://www.twitter.com">Student Union Twitter</a></li>
 							<li><a class="blue-text text-lighten-3" href="https://www.brandeis.edu/now/">Brandeis Now</a></li>

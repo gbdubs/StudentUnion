@@ -60,7 +60,7 @@
 			You can also delete an existing group. Be careful, this action cannot be undone.
 		</p>
 
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${groups}" var="group">
 				<li>
 					<h5>${group.name}</h5>

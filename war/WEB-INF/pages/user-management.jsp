@@ -27,7 +27,7 @@
 			In this section, site owners can remove other site owners (or themselves) by clicking on the button next to each.
 			This action cannot be undone (though one could add the email as an owner again).
 		</p>
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${owners}" var="owner">
 				<li>
 					<h5>
@@ -78,7 +78,7 @@
 			In this section, site owners can remove administrators by clicking on the button next to each.
 			This action cannot be undone (though one could add the email as an administrator again).
 		</p>
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${admins}" var="admin">
 				<li>
 					<h5>
@@ -130,7 +130,7 @@
 			In this section, site owners can remove candidates by clicking on the button next to each.
 			This action cannot be undone (though one could add the email as a candidate again).
 		</p>
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${candidates}" var="candidate">
 				<li>
 					<h5>

@@ -117,7 +117,7 @@
 			You can have as many members as you would like.
 		</p>
 		<h4 class="light">Current Group Members</h4>
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${group.members}" var="member">
 				<li>${member}</li>
 			</c:forEach>
@@ -173,7 +173,7 @@
 		<form action="/group-manager" method="POST">
 			<input type="hidden" name="manage" value="roles"/>
 			<input type="hidden" value="${group.id}" name="groupId"/>
-			<ul>
+			<ul class="no-bullet-list">
 				<c:forEach items="${group.leaders}" var="leader" varStatus="loop">
 					<li>
 						<input type="hidden" name="email${loop.index}" value="${leader}"/>

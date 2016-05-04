@@ -145,7 +145,7 @@ public class NewsServlet extends HttpServlet{
 		);
 		
 		GithubAPI.updateFile(
-				SecretsAPI.WebsiteRepository,
+				SecretsAPI.GithubRepo,
 				"news/index.html",
 				message,
 				content

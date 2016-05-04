@@ -74,7 +74,7 @@
 			<br>
 			
 			<h2>Delete Pages</h2>
-			<ul>
+			<ul class="no-bullet-list">
 				<c:forEach items="${pages}" var="page">
 					<li>
 						<h5><a href="/edit${page}">${page}</a></h5>

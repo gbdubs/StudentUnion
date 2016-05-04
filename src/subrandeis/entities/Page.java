@@ -134,7 +134,7 @@ public class Page {
 		
 		String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", now, p.email);
 		
-		GithubAPI.updateFile(SecretsAPI.WebsiteRepository, "directory/index.html", commitMessage, completeHtml);
+		GithubAPI.updateFile(SecretsAPI.GithubRepo, "directory/index.html", commitMessage, completeHtml);
 		
 		Log.info(commitMessage);
 	}

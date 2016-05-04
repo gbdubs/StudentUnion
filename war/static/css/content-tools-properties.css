@@ -51,7 +51,7 @@ h2 {
     text-align: right;
 }
 
-ul > li {
+ul:not(.no-bullet-list) > li {
     margin-left: 20px;
     list-style: initial;
 }

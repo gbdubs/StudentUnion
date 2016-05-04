@@ -68,7 +68,7 @@ public class PageEditorServlet extends HttpServlet {
 				
 				String htmlContent;
 				// Tries to get the current page definition, if it exists. Defaults to a template if it doesn't yet exist.
-				String rawHtml = GithubAPI.getFileText(SecretsAPI.WebsiteRepository, filePath);
+				String rawHtml = GithubAPI.getFileText(SecretsAPI.GithubRepo, filePath);
 				if (rawHtml == null || rawHtml.contains(GithubAPI.deletedPageHint)){
 					htmlContent = getTutorialPage();
 				} else {
@@ -150,7 +150,7 @@ public class PageEditorServlet extends HttpServlet {
 						} else if ("delete".equals(addOrDelete)){
 							Page.deletePage(path);
 							String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
-							GithubAPI.deleteFile(SecretsAPI.WebsiteRepository, Page.makeFilePath(path), commitMessage);
+							GithubAPI.deleteFile(SecretsAPI.GithubRepo, Page.makeFilePath(path), commitMessage);
 							Log.info(commitMessage);
 						}
 						Page.updateDirectoryPage(this, req, resp);
@@ -193,7 +193,7 @@ public class PageEditorServlet extends HttpServlet {
 				// Creates the file, returns a brief description of success or failure, depending on which it was.
 				resp.setContentType("application/json");
 				try {
-					GithubAPI.createOrUpdateFile(SecretsAPI.WebsiteRepository, pagePath, "A New Commit at "+(new Date()).toString(), completeHtml);
+					GithubAPI.createOrUpdateFile(SecretsAPI.GithubRepo, pagePath, "A New Commit at "+(new Date()).toString(), completeHtml);
 					
 					resp.setStatus(200);
 					Log.info("           	request to edit ["+pagePath+"] WAS SUCCESSFUL\n");

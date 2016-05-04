@@ -32,7 +32,7 @@
 			leaders.
 		</p>
 		<br>
-		<ul>
+		<ul class="no-bullet-list">
 			<c:forEach items="${groups}" var="group">
 				<li>
 					<h5>
