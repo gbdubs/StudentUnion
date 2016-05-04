@@ -39,7 +39,6 @@ h2 {
     margin-left: 0.5em;
 }
 
-// Alignment styles for text in editable regions
 [data-editable] .text-center {
     text-align: center;
 }
@@ -50,4 +49,25 @@ h2 {
 
 [data-editable] .text-right {
     text-align: right;
+}
+
+ul > li {
+    margin-left: 20px;
+    list-style: initial;
+}
+
+.txt-super-light{
+    font-weight: 100;
+}
+
+.txt-super-bold{
+    font-weight: 800;
+}
+
+.txt-bigger-plz{
+    font-size: 125% !important;
+}
+
+.txt-smaller-plz{
+    font-size: 75% !important;
 }
