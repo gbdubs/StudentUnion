@@ -1,6 +1,8 @@
 package subrandeis.entities;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
@@ -212,6 +214,19 @@ public class Person {
 	 */
 	public boolean isBrandeisStudent(){
 		return email.contains("@brandeis.edu") || UserAPI.isGoogleAdmin();
+	}
+
+	public static List<Person> get(List<String> validEmails) {
+		Map<String, Person> map = ofy.load().type(Person.class).ids(validEmails);
+		List<Person> result = new ArrayList<Person>();
+		for (String email : validEmails){
+			if (map.get(email) != null){
+				result.add(map.get(email));
+			} else {
+				result.add(Person.get(email));
+			}
+		}
+		return result;
 	}
 	
 }

@@ -141,5 +141,34 @@ public class UserAPI {
 		}
 		return false;
 	}
+
+	public static String loginPageUrl(String returnTo, String pageName){
+		returnTo = Encoding.percent(returnTo);
+		pageName = Encoding.percent(pageName);
+		return String.format("/login?goto=%s&pagename=%s", returnTo, pageName);
+	}
+
+	public static boolean isAdmin(Person p) {
+		if (p != null){
+			if (p.admin || p.owner || isGoogleAdmin()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isCandidate() {
+		return isCandidate(Person.get());
+	}
+	
+	
+	public static boolean isCandidate(Person p) {
+		if (p != null){
+			if (p.candidate || p.admin || p.owner || isGoogleAdmin()){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }

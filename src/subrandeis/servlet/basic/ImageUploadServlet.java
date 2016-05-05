@@ -1,7 +1,6 @@
 package subrandeis.servlet.basic;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServlet;
@@ -12,37 +11,36 @@ import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
-import subrandeis.entities.Person;
 
 @SuppressWarnings("serial")
 public class ImageUploadServlet extends HttpServlet {
 
-	private String absoluteURLForImageUploads = String.format("https://raw.githubusercontent.com/%s/%s/%s/",
+	private String absoluteURLForImageUploads = String.format(
+			"https://raw.githubusercontent.com/%s/%s/%s/",
 			SecretsAPI.GithubUsername,
 			SecretsAPI.GithubProductionRepo,
 			SecretsAPI.GithubProductionBranch
 	);
 			
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException { 
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
+		if (UserAPI.isCandidate()){
 			String encodedData = req.getParameter("imageData");
 			String suffix = req.getParameter("suffix");
-			if (suffix != null && encodedData != null && (p.admin || p.owner || UserAPI.isGoogleAdmin())){
+			if (suffix != null && encodedData != null){
 				String newBlobId = UUID.randomUUID().toString();
 				String path = "static/img/"+newBlobId+"."+suffix;
-				String message = String.format("Image [%s] uploaded by user [%s] on [%s].", newBlobId, p.email, (new Date()).toString());
-				Log.info("STARTED: " + message);
-				try {
-					GithubAPI.createRawEncodedFile(SecretsAPI.GithubProductionRepo, path, message, encodedData);
-				} catch (java.net.SocketTimeoutException ste){
-					Log.warn("TIMEOUT: " + message);
-				}
-				Log.info("COMPLETE: " + message);
+				GithubAPI.createRawEncodedFile(
+						path, 
+						Log.INFO("ImageUpload: Image [%s] started upload.", newBlobId), 
+						encodedData
+				);
 				String whereAt = absoluteURLForImageUploads + path;
 				resp.getWriter().println(whereAt);
-				return;
+			} else {
+				resp.getWriter().println(Log.WARN("ImageUpload: Suffix and/or Encoded data undefined."));
 			}
+		} else {
+			resp.getWriter().println(Log.WARN("ImageUpload: Cannot upload an image without being logged in."));
 		}
 	}
 	

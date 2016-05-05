@@ -78,8 +78,12 @@ public class Story implements Comparable<Story> {
 	}
 	
 	public static void delete(String storyId){
+		Story s = ofy.load().type(Story.class).id(storyId).now();
+		if (s == null){
+			Log.INFO("NewsAPI: Attempted to delete non-existent story with UUID [%s].", storyId); 
+		}
 		Log.INFO("NewsAPI: Story Deleted with UUID [%s].", storyId); 
-		ofy.delete().type(Story.class).id(storyId).now();
+		ofy.delete().entity(s).now();
 	}
 	
 	@Override

@@ -2,23 +2,23 @@ package subrandeis.servlet.adv;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Person;
 import subrandeis.entities.Petition;
+import subrandeis.util.DateUtil;
+import subrandeis.util.ServletUtil;
 
 import com.googlecode.objectify.Objectify;
 
@@ -39,30 +39,28 @@ public class PetitionServlet extends HttpServlet {
 		} else {
 			doRenderPetition(p, req, resp);
 		}
+		
 	}
 	
 	private void doRenderNewPetition(HttpServletRequest req,HttpServletResponse resp) throws IOException, ServletException {
 		if (!UserAPI.loggedIn()){
-			resp.sendRedirect("/login-admin?goto=%2Fpetitions%2Fnew");
-			return;
+			resp.sendRedirect(UserAPI.loginPageUrl("/petitions/new", "New Petition Creation Page"));
+		} else {
+			Person p = Person.get(UserAPI.email());
+			if (!p.isBrandeisStudent()){
+				//TODO Clean this up!
+				resp.setContentType("text/html");
+				resp.getWriter().println("You are not a Brandeis Student, so you cannot create a petition. Sorry!");
+				String logoutUrl = UserAPI.logoutUrl();
+				resp.getWriter().println("If you have a Brandeis account, you can login with it by first logging out.");
+				resp.getWriter().println(String.format("<a href=\"%s\">Logout Here</a>", logoutUrl));
+			} else if (p.blocked){
+				//TODO Clean this up!
+				resp.getWriter().println("You have been blocked from creating petitions. Please contact a site owner if you believe that this is in error.");
+			} else {
+				ServletUtil.jsp("new-petition.jsp", req, resp);
+			}
 		}
-		Person p = Person.get(UserAPI.email());
-		if (!p.isBrandeisStudent()){
-			resp.setContentType("text/html");
-			resp.getWriter().println("You are not a Brandeis Student, so you cannot create a petition. Sorry!");
-			String logoutUrl = UserAPI.logoutUrl();
-			resp.getWriter().println("If you have a Brandeis account, you can login with it by first logging out.");
-			resp.getWriter().println(String.format("<a href=\"%s\">Logout Here</a>", logoutUrl));
-			return;
-		}
-		if (p.blocked){
-			resp.getWriter().println("You have been blocked from creating petitions. Please contact a site owner if you believe that this is in error.");
-			return;
-		}
-		resp.setContentType("text/html");
-		RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/new-petition.jsp");
-		jsp.forward(req, resp);	
-		return;	
 	}
 
 	public void doRenderPetition(Petition petition, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -81,8 +79,7 @@ public class PetitionServlet extends HttpServlet {
 		if (petition.flagged && !isAdministrator){
 			doRenderPetitionList(req, resp);
 			return;
-		}
-		if (petition.deleted && !isOwner){
+		} else if (petition.deleted && !isOwner){
 			doRenderPetitionList(req, resp);
 			return;
 		}
@@ -99,8 +96,6 @@ public class PetitionServlet extends HttpServlet {
 		req.setAttribute("peopleAgainstNum", peopleAgainst.size());
 		req.setAttribute("petition", petition);
 		
-		resp.setContentType("text/html");
-		RequestDispatcher jsp;
 		if (loggedInBrandeisStudent){
 			req.setAttribute("logoutUrl", UserAPI.logoutUrl("/petitions"));
 			
@@ -112,15 +107,14 @@ public class PetitionServlet extends HttpServlet {
 			req.setAttribute("personAbstain", vote == 0);
 			req.setAttribute("personAgainst", vote == -1);
 			
-			jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-logged-in.jsp");
+			ServletUtil.jsp("petition-logged-in.jsp", req, resp);
 		} else {
 			req.setAttribute("loginUrl", UserAPI.loginUrl(req.getRequestURI()));
 			req.setAttribute("logoutUrl", UserAPI.logoutUrl("/petitions"));
-			jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-logged-out.jsp");
+			
+			ServletUtil.jsp("petition-logged-out.jsp", req, resp);
 		}
 		
-		jsp.forward(req, resp);	
-		return;	
 	}
 	
 	public void doRenderPetitionList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -154,10 +148,7 @@ public class PetitionServlet extends HttpServlet {
 		
 		req.setAttribute("petitions", accepted);
 		
-		resp.setContentType("text/html");
-		RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/petition-list.jsp");
-		jsp.forward(req, resp);	
-		return;	
+		ServletUtil.jsp("petition-list.jsp", req, resp);
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
@@ -177,71 +168,56 @@ public class PetitionServlet extends HttpServlet {
 		}
 	}
 	
+	public void doFlagging(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+		String petitionId = req.getParameter("petitionId");
+		if (UserAPI.isAdmin()){
+			Petition petition = Petition.get(petitionId);
+			if (petition == null){
+				resp.getWriter().println(Log.WARN("Petition with ID [%s] couldn't be found.", petitionId));
+			} else {
+				petition.flagged = true;
+				ofy.save().entity(petition).now();
+				Log.INFO("Petition with ID [%s] was flagged.", petitionId);
+				resp.sendRedirect("/petition?petitionId="+petitionId);
+			}
+		} else {
+			resp.getWriter().println(Log.WARN("You do not have sufficent permissions to uflag petition [%s].", petitionId));
+		}
+	}
+	
 	public void doUnflagging(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p.owner || UserAPI.isGoogleAdmin()){
-				String petitionId = req.getParameter("petitionId");
-				Petition petition = Petition.get(petitionId);
-				if (petition == null){
-					resp.getWriter().println(String.format("Petition with ID [%s] couldn't be found.", petitionId));
-					return;
-				}
+		String petitionId = req.getParameter("petitionId");
+		if (UserAPI.isAdmin()){
+			Petition petition = Petition.get(petitionId);
+			if (petition == null){
+				resp.getWriter().println(Log.WARN("Petition with ID [%s] couldn't be found.", petitionId));
+			} else {
 				petition.flagged = false;
 				ofy.save().entity(petition).now();
+				Log.INFO("Petition with ID [%s] was unflagged.", petitionId);
 				resp.sendRedirect("/petition?petitionId="+petitionId);
-				return;
 			}
-			resp.getWriter().println("You do not have sufficent permissions to un-flag a post.");
-			return;
+		} else {
+			resp.getWriter().println(Log.WARN("You do not have sufficent permissions to un-flag petition [%s].", petitionId));
 		}
-		resp.getWriter().println("You must be logged in to un-flag a post.");
-		return;
 	}
 	
 	public void doDeletion(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p.owner || UserAPI.isGoogleAdmin()){
-				String petitionId = req.getParameter("petitionId");
-				Petition petition = Petition.get(petitionId);
-				if (petition == null){
-					resp.getWriter().println(String.format("Petition with ID [%s] couldn't be found.", petitionId));
-					return;
-				}
+		String petitionId = req.getParameter("petitionId");
+		if (UserAPI.isOwner()){
+			Petition petition = Petition.get(petitionId);
+			if (petition == null){
+				resp.getWriter().println(Log.WARN("Petition with ID [%s] couldn't be found.", petitionId));
+			} else {
 				petition.flagged = true;
 				petition.deleted = true;
 				ofy.save().entity(petition).now();
-				resp.sendRedirect("/petition?petitionId="+petitionId);
-				return;
+				Log.INFO("Petition with ID [%s] was deleted.", petitionId);
+				resp.sendRedirect("/petitions");
 			}
-			resp.getWriter().println("You do not have sufficent permissions to delete a post.");
-			return;
+		} else {
+			resp.getWriter().println(Log.WARN("You do not have sufficent permissions to delete petition [%s].", petitionId));
 		}
-		resp.getWriter().println("You must be logged in to delete a post.");
-		return;
-	}
-	
-	public void doFlagging(HttpServletRequest req, HttpServletResponse resp) throws IOException{
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p.admin || p.owner || UserAPI.isGoogleAdmin()){
-				String petitionId = req.getParameter("petitionId");
-				Petition petition = Petition.get(petitionId);
-				if (petition == null){
-					resp.getWriter().println(String.format("Petition with ID [%s] couldn't be found.", petitionId));
-					return;
-				}
-				petition.flagged = true;
-				ofy.save().entity(petition).now();
-				resp.sendRedirect("/petition?petitionId="+petitionId);
-				return;
-			}
-			resp.getWriter().println("You do not have sufficent permissions to flag a post.");
-			return;
-		}
-		resp.getWriter().println("You must be logged in to flag a post.");
-		return;
 	}
 	
 	public void doNewPetition(HttpServletRequest req, HttpServletResponse resp) throws IOException{
@@ -265,8 +241,7 @@ public class PetitionServlet extends HttpServlet {
 			String authorEmail = p.email;
 			
 			Petition petition = new Petition();
-			DateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a");
-			petition.createdAt = df.format(new Date());
+			petition.createdAt = DateUtil.now();
 			petition.creatorEmail = authorEmail;
 			petition.creatorName = authorName;
 			petition.description = petitionBody;
@@ -277,28 +252,29 @@ public class PetitionServlet extends HttpServlet {
 			petition.deleted = false;
 			
 			ofy.save().entity(petition).now();
+			Log.INFO("Created a new petition with name [%s] and uuid [%s].", petition.name, petition.petitionId);
 			resp.sendRedirect("/petitions?petitionId="+petition.petitionId);
-			return;
+		} else {
+			resp.getWriter().println(Log.WARN("Log in with a Brandeis Email Account to create a petition."));
 		}
-		resp.getWriter().println("Log in with a Brandeis Email Account to create a petition");
 	}
 	
 	public void doVote(HttpServletRequest req, HttpServletResponse resp) throws IOException{	
-		
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
 			if (p.blocked){
-				resp.getWriter().println("You have been banned from voting on petitions.");
+				resp.getWriter().println(Log.WARN("You have been banned from voting on petitions. To appeal this, talk to a site owner."));
 				return;
 			}
 			if (!p.isBrandeisStudent()){
 				resp.getWriter().println("Our records show that you are not a Brandeis Student. Please let our site administrators know if this is in error.");
+				Log.WARN("Non-Brandeis Student Tried to vote on petition.");
 				return;
 			}
 			String petitionId = req.getParameter("petitionId");
 			Petition petition = Petition.get(petitionId);
 			if (petitionId == null || petition == null){
-				resp.getWriter().println("Unacceptable value for petitionId given in API call.");
+				resp.getWriter().println(Log.WARN("Unacceptable value for petitionId given in API call."));
 				return;
 			}
 			

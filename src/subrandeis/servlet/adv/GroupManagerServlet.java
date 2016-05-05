@@ -156,13 +156,7 @@ public class GroupManagerServlet extends HttpServlet{
 		}		
 	}
 
-	/**
-	 * Updates the group membership page for a given group.
-	 * Must be called from a servlet.
-	 * @param caller Servlet that calls this (needed for referencing the HTML templates)
-	 * @throws ServletException 
-	 */
-	public static void updateMembershipPage(Group group, HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+	public static void updateMembershipPage(Group group, HttpServletRequest req, HttpServletResponse resp){
 		PrintWriter w = null;
 		try {
 			w = resp.getWriter();
@@ -212,7 +206,7 @@ public class GroupManagerServlet extends HttpServlet{
 			} else {
 				w.println(Log.WARN(String.format("No pageURL defined for group [%s][%s], so it was not updated.", group.id, group.name)));
 			}
-		} catch (IOException ioe){
+		} catch (IOException | ServletException ioe){
 			w.println(Log.ERROR("Error in updating membership page: [%s]", ioe.getMessage()));
 		}
 	}
