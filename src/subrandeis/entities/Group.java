@@ -36,6 +36,7 @@ public class Group implements Comparable<Group>{
 	public String pageUrl;
 	
 	public static Objectify ofy = ObjectifyAPI.ofy();
+	public static final String undefinedPageUrl = "/no/page/url/defined";
 	
 	/*
 	 * A test on the load of the Group which  
@@ -85,7 +86,7 @@ public class Group implements Comparable<Group>{
 		g.id = UUID.randomUUID().toString();
 		g.leaders = new ArrayList<String>();
 		g.members = new ArrayList<String>();
-		g.pageUrl = "/no/page/url/defined";
+		g.pageUrl = undefinedPageUrl;
 		ofy.save().entity(g).now();
 		Log.INFO("Created a new group with name [%s] and uuid [%s].", g.name, g.id);
 		return g;
@@ -246,5 +247,16 @@ public class Group implements Comparable<Group>{
 			}
 		}
 		return false;
+	}
+	
+	public List<String> getAllMembers(){
+		List<String> currentMembers = new ArrayList<String>(members);
+		for (String leader : leaders){
+			if (!currentMembers.contains(leader)){
+				currentMembers.add(leader);
+			}
+		}
+		Collections.sort(currentMembers);
+		return currentMembers;
 	}
 }

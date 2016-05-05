@@ -17,16 +17,22 @@ public class Log {
 		return s + String.format(" User = [%s] and Time = [%s].", UserAPI.email(), DateUtil.now());
 	}
 	
-	public static void ERROR(String format, String... strArgs){
-		error(addDeets(format(format, strArgs)));
+	public static String ERROR(String format, String... strArgs){
+		String message = addDeets(format(format, strArgs));
+		error(message);
+		return message;
 	}
 	
-	public static void INFO(String format, String... strArgs){
-		info(addDeets(format(format, strArgs)));
+	public static String INFO(String format, String... strArgs){
+		String message = addDeets(format(format, strArgs));
+		info(message);
+		return message;
 	}
 	
-	public static void WARN(String format, String... strArgs){
-		warn(addDeets(format(format, strArgs)));
+	public static String WARN(String format, String... strArgs){
+		String message = addDeets(format(format, strArgs));
+		warn(message);
+		return message;
 	}
 	
 	private static void error(String s){
