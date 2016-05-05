@@ -108,10 +108,6 @@ public class UserAPI {
 		return us.createLogoutURL(returnTo);
 	}
 	
-	/**
-	 * A Logout URL, which will redirect to the console (which is blanketed with a login screen when not logged in).
-	 * @return A URL to allow the user to log out.
-	 */
 	public static boolean isAdmin(){
 		if (loggedIn()){
 			Person p = Person.get(email());
@@ -121,4 +117,22 @@ public class UserAPI {
 		}
 		return false;
 	}
+	
+	public static boolean isOwner(){
+		if (loggedIn()){
+			Person p = Person.get(email());
+			return isOwner(p);
+		}
+		return false;
+	}
+	
+	public static boolean isOwner(Person p){
+		if (p != null){
+			if (p.owner || isGoogleAdmin()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

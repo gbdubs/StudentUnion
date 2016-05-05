@@ -94,24 +94,19 @@ public class Group implements Comparable<Group>{
 	 * @return Whether or not any changes were made.
 	 */
 	public boolean addMembers(List<String> toAddEmails){
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p != null && (p.owner || UserAPI.isGoogleAdmin() || leaders.contains(p.email))){
-				Set<String> emails = new HashSet<String>(this.members);
-				emails.addAll(toAddEmails);
-				List<String> newMembers = new ArrayList<String>(emails);
-				if (newMembers.size() != members.size()){
-					this.members = newMembers;
-					ofy.save().entity(this);
-					Log.info(String.format("UserAPI [%s] added [%s] as members to group [%s].\n", p.email, toAddEmails.toString(), this.name));
-					return true;
-				}
-				return false;
+		if (isLeader()){
+			Set<String> emails = new HashSet<String>(this.members);
+			emails.addAll(toAddEmails);
+			List<String> newMembers = new ArrayList<String>(emails);
+			if (newMembers.size() != members.size()){
+				this.members = newMembers;
+				ofy.save().entity(this);
+				Log.INFO(String.format("UserAPI: Added [%s] as members to group [%s].\n", toAddEmails.toString(), this.name));
+				return true;
 			}
-			Log.warn(String.format("UserAPI [%s] attempted to add [%s] as members to group [%s] but was prevented because they didn't have sufficent permissions.", p.email, toAddEmails.toString(), this.name));
 			return false;
 		}
-		return false;
+		Log.WARN(String.format("UserAPI: Attempt to add [%s] as members to group [%s] but was prevented.", UserAPI.email(), toAddEmails.toString(), this.name));
 	}
 	
 	/**
@@ -146,7 +141,7 @@ public class Group implements Comparable<Group>{
 	 * @return Whether or not any changes were made.
 	 */
 	public boolean addLeaders(List<String> toAddEmails){
-		if (UserAPI.loggedIn()){
+		
 			Person p = Person.get(UserAPI.email());
 			if (p != null && (p.owner || UserAPI.isGoogleAdmin() || leaders.contains(p.email))){
 				Set<String> emails = new HashSet<String>(this.leaders);
@@ -155,12 +150,12 @@ public class Group implements Comparable<Group>{
 				if (newLeaders.size() != leaders.size()){
 					this.leaders = newLeaders;
 					ofy.save().entity(this);
-					Log.info(String.format("UserAPI [%s] added [%s] as leaders to group [%s].\n", p.email, newLeaders.toString(), this.name));
+					Log.INFO(String.format("User API: Added [%s] as leaders to group [%s].", newLeaders.toString(), this.name));
 					return true;
 				}
 				return false;
 			}
-			Log.warn(String.format("UserAPI [%s] attempted to add [%s] as leaders to group [%s] but was prevented because they didn't have sufficent permissions.", p.email, toAddEmails.toString(), this.name));
+			Log.WARN(String.format("UserAPI: Unauthorized attempt to add [%s] as leaders to group [%s] but was prevented.", toAddEmails.toString(), this.name));
 			return false;
 		}
 		return false;
@@ -238,4 +233,19 @@ public class Group implements Comparable<Group>{
 		return name.compareTo(other.name);
 	}
 	
+	public boolean isLeader(){
+		return isLeader(Person.get());
+	}
+	
+	public boolean isLeader(Person p){
+		if (p != null){
+			if (leaders.contains(p.email)){
+				return true;
+			}
+			if (UserAPI.isOwner(p)){
+				return true;
+			}
+		}
+		return false;
+	}
 }

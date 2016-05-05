@@ -228,5 +228,9 @@ public class Person {
 	public boolean isBrandeisStudent(){
 		return email.contains("@brandeis.edu") || UserAPI.isGoogleAdmin();
 	}
+
+	public static Person get() {
+		return get(UserAPI.email());
+	}
 	
 }

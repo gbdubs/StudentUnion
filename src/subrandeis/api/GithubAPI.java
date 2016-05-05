@@ -47,64 +47,9 @@ public class GithubAPI {
 		}
 	}
 	
-	public static void createRawEncodedFile(String newFilePath, String commitMessage, String encodedBody) {
-		try {
-			String repoName = SecretsAPI.GithubProductionRepo;
-			
-			String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
-			
-			UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, encodedBody, SecretsAPI.GithubProductionBranch, "");
-			data.content = encodedBody;
-			
-			ghc.put(apiURI, data, null);
-		} catch (IOException ioe){
-			
-		}
+	public static boolean createOrUpdateFile(String filePath, String commitMessage, String newFileBody) {
+		Log.INFO("Github API: Attempting to create/update [%s]", filePath);
 		
-	}
-	
-	  /* * * * * * * * * * * * * */
-	 /* GET AN EXISTING PAGE SHA*/
-    /* * * * * * * * * * * * * */
-	public static String getFileSha(String repoName, String filePath) {
-		try{
-			ContentsService cs = new ContentsService(ghc);
-		
-			List<RepositoryContents> result = cs.getContents(
-					RepositoryId.create(SecretsAPI.GithubUsername, repoName), 
-					filePath, 
-					SecretsAPI.GithubProductionBranch
-			);
-			for (RepositoryContents rc : result){
-				return rc.getSha();
-			}
-		} catch (IOException io){
-			return null;
-		}
-		return null;
-	}
-	
-	
-	  /* * * * * * * * * * * * * * */
-	 /* GET AN EXISTING PAGE TEXT */
-    /* * * * * * * * * * * * * * */
-	public static String getFileText(String repoName, String filePath) {
-		try{
-			ContentsService cs = new ContentsService(ghc);
-		
-			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.GithubProductionBranch);
-			for (RepositoryContents rc : result){
-				String encoded = rc.getContent();
-				byte[] decoded = DatatypeConverter.parseBase64Binary(encoded);
-				return new String(decoded, "UTF-8");
-			}
-		} catch (IOException re){
-			return null;
-		}
-		return null;
-	}
-	
-	public static void createOrUpdateFile(String filePath, String commitMessage, String newFileBody) {
 		try {
 			String repoName = SecretsAPI.GithubProductionRepo;
 		
@@ -117,18 +62,85 @@ public class GithubAPI {
 			UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.GithubProductionBranch, sha);
 			
 			ghc.put(apiURI, data, null);
-		} catch (IOException ioe){
 			
+			Log.INFO("... Github API: Page Creation/Update Successful [%s]", filePath);
+			return true;
+		} catch (IOException ioe){
+			Log.ERROR("... Github API: Page Creation/Update Threw Error! [%s] [%s] [%s]", filePath, commitMessage, ioe.getMessage());
+			return false;
+		}
+	}
+
+	public static boolean createRawEncodedFile(String newFilePath, String commitMessage, String encodedBody) {
+		Log.INFO("Github API: Attempting to save new raw file for [%s]", newFilePath);
+		try {
+			String repoName = SecretsAPI.GithubProductionRepo;
+			
+			String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
+			
+			UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, encodedBody, SecretsAPI.GithubProductionBranch, "");
+			data.content = encodedBody;
+			
+			ghc.put(apiURI, data, null);
+			
+			Log.INFO("... Github API: Successfully saved new raw file for [%s]", newFilePath);
+			return true;
+		} catch (IOException ioe){
+			Log.ERROR("... Github API: Error thrown while saving raw file for [%s] [%s]", newFilePath, ioe.getMessage());
+			return false;
+		}
+		
+	}
+	
+	private static String getFileSha(String repoName, String filePath) {
+		Log.INFO("Github API: Attempting to get file SHA for [%s]", filePath);
+		try{
+			ContentsService cs = new ContentsService(ghc);
+		
+			List<RepositoryContents> result = cs.getContents(
+					RepositoryId.create(SecretsAPI.GithubUsername, repoName), 
+					filePath, 
+					SecretsAPI.GithubProductionBranch
+			);
+			for (RepositoryContents rc : result){
+				String sha = rc.getSha();
+				Log.INFO("... Github API: Successfully got file SHA for [%s]", filePath);
+				return sha;
+			}
+			Log.WARN("... Github API: Failed to find any Repository contents for file SHA for [%s]", filePath);
+			return null;
+		} catch (IOException ioe){
+			Log.ERROR("... Github API: Error thrown while getting file SHA for [%s] [%s]", filePath, ioe.getMessage());
+			return null;
+		}
+	}
+	
+	public static String getFileText(String repoName, String filePath) {
+		Log.INFO("Github API: Attempting to get file text for [%s]", filePath);
+		try{
+			ContentsService cs = new ContentsService(ghc);
+		
+			List<RepositoryContents> results = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.GithubProductionBranch);
+			for (RepositoryContents rc : results){
+				String encoded = rc.getContent();
+				byte[] decoded = DatatypeConverter.parseBase64Binary(encoded);
+				String result = new String(decoded, "UTF-8");
+				Log.INFO("... Github API: Successfully got file text for [%s]", filePath);
+				return result;
+			}
+			Log.WARN("... Github API: Failed to find any Repository contents for file text for [%s]", filePath);
+			return null;
+		} catch (IOException ioe){
+			Log.ERROR("... Github API: Error thrown while geting file text for [%s] [%s]", filePath, ioe.getMessage());
+			return null;
 		}
 	}
 	
 	public static final String deletedPageHint = "THISPAGEHASBEENDELETED893457983475983475";
 	
-	  /* * * * * * * * */
-     /* DELETE A PAGE */
-    /* * * * * * * * */
 	public static boolean deleteFile(String filePath, String commitMessage) {
-		Log.info(String.format("Github API: Attempting to delete [%s] (%s)", filePath, commitMessage));
+		Log.INFO("Github API: Attempting to delete [%s]", filePath);
+		
 		try {
 			String repoName = SecretsAPI.GithubProductionRepo;
 			
@@ -141,10 +153,10 @@ public class GithubAPI {
 			UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, SecretsAPI.GithubProductionBranch, fileSha);
 			
 			ghc.put(apiURI, data, null);
-			Log.info(String.format("... Github API Page Deletion was successful! [%s] (%s)", filePath, commitMessage));
+			Log.INFO("... Github API: Page Deletion was successful! [%s]", filePath);
 			return true;
 		} catch (IOException ioe){
-			Log.warn(String.format("... Github API Page Deletion failed with error! [%s] [%s] [%s]", filePath, commitMessage, ioe.getMessage()));
+			Log.ERROR("... Github API: Page Deletion failed with error! [%s] [%s] [%s]", filePath, commitMessage, ioe.getMessage());
 			return false;
 		}
 	}	
