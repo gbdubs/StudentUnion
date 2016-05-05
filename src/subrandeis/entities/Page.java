@@ -1,22 +1,12 @@
 package subrandeis.entities;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.SecretsAPI;
-import subrandeis.api.UserAPI;
-import subrandeis.servlet.basic.JSPRenderServlet;
-import subrandeis.util.DateUtil;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -36,10 +26,18 @@ public class Page {
 		p.url = modifyPath(url);
 		p.editable = canEdit;
 		ofy.save().entity(p).now();
+		Log.INFO("Created page with URL [%s] modified to [%s].", url, p.url);
 	}
 	
 	public static void deletePage(String url){
-		ofy.delete().type(Page.class).id(modifyPath(url)).now();
+		String modifiedPath = modifyPath(url);
+		Page p = ofy.load().type(Page.class).id(modifiedPath).now();
+		if (p == null){
+			Log.WARN("Attempt to delete non-existent page with URL [%s] modified to [%s].", url, modifiedPath);
+		} else {
+			ofy.delete().entity(p).now();
+			Log.INFO("Deleted page with URL [%s] modified to [%s].", url, modifiedPath);
+		}
 	}
 	
 	public static List<String> getAllPages(){
@@ -73,6 +71,9 @@ public class Page {
 	}
 
 	public static Page get(String path) {
+		if (path == null){
+			return null;
+		}
 		return ofy.load().type(Page.class).id(modifyPath(path)).now();
 	}
 	
@@ -110,30 +111,5 @@ public class Page {
 	
 	public boolean getEditable(){
 		return this.editable;
-	}
-	
-	public static void updateDirectoryPage(HttpServlet caller, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
-
-		List<String> pages = Page.getAllPages();
-		pages.add("/petitions");
-		pages.add("/login-admin");
-		pages.add("/login");
-		Collections.sort(pages);
-		
-		Person p = Person.get(UserAPI.email());
-		
-		req.setAttribute("production", true);
-		req.setAttribute("lastEditorEmail", p.email);
-		req.setAttribute("lastEditorName", p.nickname);
-		req.setAttribute("lastEditorDate", DateUtil.now());
-		req.setAttribute("pages", pages);
-		
-		String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/directory.jsp", req, resp);
-		
-		String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", DateUtil.now(), p.email);
-		
-		GithubAPI.createOrUpdateFile("directory/index.html", commitMessage, completeHtml);
-		
-		Log.info(commitMessage);
 	}
 }

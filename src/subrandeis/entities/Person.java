@@ -1,6 +1,5 @@
 package subrandeis.entities;
 
-import java.util.Date;
 import java.util.List;
 
 import subrandeis.api.Log;
@@ -36,94 +35,80 @@ public class Person {
 	 * Makes the Person a candidate (DOES SAVE)
 	 * @return whether or not save was done.
 	 */
-	public boolean makeCandidate(){
-		Person personMakingRequest = get(UserAPI.email());
-		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
-			return false;
+	public void makeCandidate(){
+		if (UserAPI.isOwner()){
+			this.candidate = true;
+			ofy.save().entity(this).now();
+			Log.INFO("PersonAPI: Made [%s] a candidate.", email);
 		}
-		Log.info(String.format("MADE CANDIDATE: UserAPI [%s] made user [%s] a candidate on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.candidate = true;
-		ofy.save().entity(this).now();
-		return true;
 	}
 	
 	/**
 	 * Makes the Person NOT a candidate (DOES SAVE)
 	 * @return whether or not save was done.
 	 */
-	public boolean makeNotCandidate(){
-		Person personMakingRequest = get(UserAPI.email());
-		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
-			return false;
+	public void makeNotCandidate(){
+		if (UserAPI.isOwner()){
+			this.candidate = false;
+			ofy.save().entity(this).now();
+			Log.INFO("PersonAPI: Removed [%s] as candidate.", email);
 		}
-		Log.info(String.format("REMOVED CANDIDATE: UserAPI [%s] removed user [%s] as a candidate on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.candidate = false;
-		ofy.save().entity(this).now();
-		return true;
 	}
 	
 	/**
 	 * Makes the Person an administrator (DOES SAVE)
 	 * @return whether or not save was done.
 	 */
-	public boolean makeAdmin(){
-		Person personMakingRequest = get(UserAPI.email());
-		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
-			return false;
+	public void makeAdmin(){
+		if (UserAPI.isOwner()){
+			this.admin = true;
+			ofy.save().entity(this).now();
+			Log.INFO("PersonAPI: Made [%s] an admin.", email);
 		}
-		Log.info(String.format("MADE ADMIN: UserAPI [%s] made user [%s] an admin on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.admin = true;
-		ofy.save().entity(this).now();
-		return true;
 	}
 	
 	/**
 	 * Makes the Person NOT an administrator (DOES SAVE) (also disqualifies them from ownership)
 	 * @return whether or not save was done.
 	 */
-	public boolean makeNotAdmin(){
-		Person personMakingRequest = get(UserAPI.email());
-		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
-			return false;
+	public void makeNotAdmin(){
+		if (UserAPI.isOwner()){
+			this.admin = false;
+			this.owner = false;
+			ofy.save().entity(this).now();
+			Log.INFO("PersonAPI: Removed [%s] as admin.", email);
 		}
-		Log.info(String.format("REMOVED ADMIN: UserAPI [%s] removed user [%s] as an admin on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.admin = false;
-		this.owner = false;
-		ofy.save().entity(this).now();
-		return true;
 	}
 	
 	/**
 	 * Makes the Person an Owner (DOES SAVE)
 	 * @return whether or not save was done.
 	 */
-	public boolean makeOwner(){
-		Person personMakingRequest = get(UserAPI.email());
-		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
-			return false;
+	public void makeOwner(){
+		if (UserAPI.isOwner()){
+			this.admin = true;
+			this.owner = true;
+			ofy.save().entity(this).now();
+			Log.WARN("PersonAPI: Made [%s] an owner.", email);
 		}
-		Log.info(String.format("MADE OWNER: UserAPI [%s] made user [%s] an owner on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.admin = true;
-		this.owner = true;
-		ofy.save().entity(this).now();
-		return true;
 	}
 
 	/**
 	 * Makes the Person NOT an Owner (DOES SAVE)
 	 * @return whether or not save was done.
 	 */
-	public boolean makeNotOwner(){
-		Person personMakingRequest = get(UserAPI.email());
-		if (!personMakingRequest.owner && !UserAPI.isGoogleAdmin()){
-			return false;
+	public void makeNotOwner(){
+		if (UserAPI.isOwner()){
+			this.owner = false;
+			ofy.save().entity(this).now();
+			Log.WARN("PersonAPI: Removed [%s] as owner.", email);
 		}
-		Log.info(String.format("REMOVED OWNER: UserAPI [%s] removed user [%s] as an owner on [%s]\n", personMakingRequest.email, email, (new Date()).toString()));
-		this.owner = false;
-		ofy.save().entity(this).now();
-		return true;
 	}
 	
+	public static Person get() {
+		return get(UserAPI.email());
+	}
+
 	/**
 	 * Gets the person described by their email. Creates a new person if nobody is known with that email (DOES NOT SAVE in this case)
 	 * @return whether or not save was done.
@@ -227,10 +212,6 @@ public class Person {
 	 */
 	public boolean isBrandeisStudent(){
 		return email.contains("@brandeis.edu") || UserAPI.isGoogleAdmin();
-	}
-
-	public static Person get() {
-		return get(UserAPI.email());
 	}
 	
 }

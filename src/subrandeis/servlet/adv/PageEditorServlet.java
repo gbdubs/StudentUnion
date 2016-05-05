@@ -2,7 +2,9 @@ package subrandeis.servlet.adv;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -154,7 +156,7 @@ public class PageEditorServlet extends HttpServlet {
 							GithubAPI.deleteFile(SecretsAPI.GithubProductionRepo, Page.makeFilePath(path), commitMessage);
 							Log.info(commitMessage);
 						}
-						Page.updateDirectoryPage(this, req, resp);
+						PageEditorServlet.updateDirectoryPage(this, req, resp);
 					} else {
 						resp.getWriter().println("The following characters were not accepted: "+badChars+" they are not okay as part of a url.");
 						return;
@@ -203,5 +205,31 @@ public class PageEditorServlet extends HttpServlet {
 				}
 			}
 		}
+	}
+
+	public static void updateDirectoryPage(HttpServletRequest req, HttpServletResponse resp) {
+	
+			List<String> pages = Page.getAllPages();
+			pages.add("/petitions");
+			pages.add("/login-admin");
+			pages.add("/login");
+			Collections.sort(pages);
+			
+			Person p = Person.get(UserAPI.email());
+			
+			req.setAttribute("production", true);
+			req.setAttribute("lastEditorEmail", p.email);
+			req.setAttribute("lastEditorName", p.nickname);
+			req.setAttribute("lastEditorDate", DateUtil.now());
+			req.setAttribute("pages", pages);
+			
+			String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/directory.jsp", req, resp);
+			
+			String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", DateUtil.now(), p.email);
+			
+			GithubAPI.createOrUpdateFile("directory/index.html", commitMessage, completeHtml);
+			
+		
+		
 	}
 }

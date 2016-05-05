@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 
 import com.googlecode.objectify.Objectify;
@@ -48,6 +49,7 @@ public class Petition {
 			ps.personEmail = personEmail;
 			ps.vote = vote;
 			ps.timestamp = (new Date()).toString();
+			Log.INFO("Voted [%s] to petition [%s].", ""+vote, petitionId);
 			ofy.save().entity(ps).now();
 		}
 
@@ -76,7 +78,6 @@ public class Petition {
 	public static void sign(String petitionId, String personEmail, int vote){
 		PetitionSignature.castVote(petitionId, personEmail, vote);
 	}
-	
 	
 	public List<String> getFor(){
 		return PetitionSignature.getEmails(this.petitionId, 1);

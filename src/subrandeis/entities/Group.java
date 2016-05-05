@@ -12,7 +12,6 @@ import java.util.UUID;
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
-import subrandeis.servlet.adv.PageEditorServlet;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -66,6 +65,16 @@ public class Group implements Comparable<Group>{
 	}
 	
 	/**
+	 * Gets all current groups, and arranges them in alphabetical order according to their names.
+	 * @return
+	 */
+	public static List<Group> getAllGroups(){
+		List<Group> groups = ofy.load().type(Group.class).list();
+		Collections.sort(groups);
+		return groups;
+	}
+
+	/**
 	 * Creates a new group with a given name. Assigns it a UUID. (DOES NOT SAVE)
 	 * @param name The name of the new group
 	 * @return A new group entity.
@@ -77,6 +86,7 @@ public class Group implements Comparable<Group>{
 		g.leaders = new ArrayList<String>();
 		g.members = new ArrayList<String>();
 		g.pageUrl = "/no/page/url/defined";
+		Log.INFO("Created a new group with name [%s] and uuid [%s].", g.name, g.id);
 		return g;
 	}
 	
@@ -85,7 +95,13 @@ public class Group implements Comparable<Group>{
 	 * @param uuid The UUID of the group to be deleted.
 	 */
 	public static void deleteGroup(String uuid){
-		ofy.delete().type(Group.class).id(uuid).now();
+		Group g = ofy.load().type(Group.class).id(uuid).now();
+		if (g != null){
+			ofy.delete().entity(g).now();
+			Log.WARN("Deleted a group with name [%s] and uuid [%s].", g.name, g.id);
+		} else {
+			Log.ERROR("Attempt to delete non-existent group with uuid [%s].", uuid);
+		}
 	}
 	
 	/**
@@ -101,12 +117,13 @@ public class Group implements Comparable<Group>{
 			if (newMembers.size() != members.size()){
 				this.members = newMembers;
 				ofy.save().entity(this);
-				Log.INFO(String.format("UserAPI: Added [%s] as members to group [%s].\n", toAddEmails.toString(), this.name));
+				Log.INFO("UserAPI: Added [%s] as members to group [%s].", toAddEmails.toString(), this.name);
 				return true;
 			}
 			return false;
 		}
-		Log.WARN(String.format("UserAPI: Attempt to add [%s] as members to group [%s] but was prevented.", UserAPI.email(), toAddEmails.toString(), this.name));
+		Log.WARN("UserAPI: Attempt to add [%s] as members to group [%s] but was prevented.", toAddEmails.toString(), this.name);
+		return false;
 	}
 	
 	/**
@@ -115,24 +132,21 @@ public class Group implements Comparable<Group>{
 	 * @return Whether any changes were made to the group.
 	 */
 	public boolean removeMembers(List<String> toRemoveEmails){
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p != null && (p.owner || UserAPI.isGoogleAdmin() || leaders.contains(p.email))){
-				Set<String> emails = new HashSet<String>(this.members);
-				emails.removeAll(toRemoveEmails);
-				List<String> newMembers = new ArrayList<String>(emails);
-				if (newMembers.size() != members.size()){
-					this.members = newMembers;
-					ofy.save().entity(this);
-					Log.info(String.format("UserAPI [%s] removed [%s] as members from group [%s].\n", p.email, toRemoveEmails.toString(), this.name));
-					return true;
-				}
-				return false;
+		if (isLeader()){
+			Set<String> emails = new HashSet<String>(this.members);
+			emails.removeAll(toRemoveEmails);
+			List<String> newMembers = new ArrayList<String>(emails);
+			if (newMembers.size() != members.size()){
+				this.members = newMembers;
+				ofy.save().entity(this);
+				Log.WARN("UserAPI: removed [%s] as members from group [%s].",  toRemoveEmails.toString(), this.name);
+				return true;
 			}
-			Log.warn(String.format("UserAPI [%s] attempted to remove [%s] as members of group [%s] but was prevented because they didn't have sufficent permissions.", p.email, toRemoveEmails.toString(), this.name));
 			return false;
 		}
+		Log.WARN(String.format("UserAPI: Attempted to remove [%s] as members of group [%s] was halted because of permissions.", toRemoveEmails.toString(), this.name));
 		return false;
+		
 	}
 	
 	/**
@@ -141,23 +155,19 @@ public class Group implements Comparable<Group>{
 	 * @return Whether or not any changes were made.
 	 */
 	public boolean addLeaders(List<String> toAddEmails){
-		
-			Person p = Person.get(UserAPI.email());
-			if (p != null && (p.owner || UserAPI.isGoogleAdmin() || leaders.contains(p.email))){
-				Set<String> emails = new HashSet<String>(this.leaders);
-				emails.addAll(toAddEmails);
-				List<String> newLeaders = new ArrayList<String>(emails);
-				if (newLeaders.size() != leaders.size()){
-					this.leaders = newLeaders;
-					ofy.save().entity(this);
-					Log.INFO(String.format("User API: Added [%s] as leaders to group [%s].", newLeaders.toString(), this.name));
-					return true;
-				}
-				return false;
+		if (isLeader()){
+			Set<String> emails = new HashSet<String>(this.leaders);
+			emails.addAll(toAddEmails);
+			List<String> newLeaders = new ArrayList<String>(emails);
+			if (newLeaders.size() != leaders.size()){
+				this.leaders = newLeaders;
+				ofy.save().entity(this);
+				Log.INFO("User API: Added [%s] as leaders to group [%s].", newLeaders.toString(), this.name);
+				return true;
 			}
-			Log.WARN(String.format("UserAPI: Unauthorized attempt to add [%s] as leaders to group [%s] but was prevented.", toAddEmails.toString(), this.name));
 			return false;
 		}
+		Log.WARN("UserAPI: Unauthorized attempt to add [%s] as leaders to group [%s] but was prevented.", toAddEmails.toString(), this.name);
 		return false;
 	}
 	
@@ -167,35 +177,23 @@ public class Group implements Comparable<Group>{
 	 * @return Whether any changes were made to the group.
 	 */
 	public boolean removeLeaders(List<String> toRemoveEmails){
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p != null && (p.owner || UserAPI.isGoogleAdmin() || leaders.contains(p.email))){
-				Set<String> emails = new HashSet<String>(this.leaders);
-				emails.removeAll(toRemoveEmails);
-				List<String> newLeaders = new ArrayList<String>(emails);
-				if (newLeaders.size() != leaders.size()){
-					this.leaders = newLeaders;
-					ofy.save().entity(this);
-					Log.info(String.format("UserAPI [%s] removed [%s] as leaders from group [%s].\n", p.email, toRemoveEmails.toString(), this.name));
-					return true;
-				}
-				return false;
+		if (isLeader()){
+			Set<String> emails = new HashSet<String>(this.leaders);
+			emails.removeAll(toRemoveEmails);
+			List<String> newLeaders = new ArrayList<String>(emails);
+			if (newLeaders.size() != leaders.size()){
+				this.leaders = newLeaders;
+				ofy.save().entity(this);
+				Log.WARN("UserAPI: removed [%s] as leaders from group [%s].",  toRemoveEmails.toString(), this.name);
+				return true;
 			}
-			Log.warn(String.format("UserAPI [%s] attempted to remove [%s] as leaders of group [%s] but was prevented because they didn't have sufficent permissions.", p.email, toRemoveEmails.toString(), this.name));
 			return false;
 		}
+		Log.WARN("UserAPI: Attempt to remove [%s] as leaders of group [%s] was prevented because of insufficent permissions.", toRemoveEmails.toString(), this.name);
 		return false;
 	}
 	
-	/**
-	 * Gets all current groups, and arranges them in alphabetical order according to their names.
-	 * @return
-	 */
-	public static List<Group> getAllGroups(){
-		List<Group> groups = ofy.load().type(Group.class).list();
-		Collections.sort(groups);
-		return groups;
-	}
+	
 	
 	// Getters, need to exist for proper JSP rendering.
 	

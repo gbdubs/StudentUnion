@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.util.DateUtil;
@@ -55,6 +56,8 @@ public class Story implements Comparable<Story> {
 		s.lastEditorName = s.authorName;
 		s.lastEditorEmail = s.authorEmail;
 		
+		Log.INFO("NewsAPI: Story Created with title [%s] and UUID [%s].", title, s.storyId); 
+		
 		ofy.save().entity(s).now();
 	}
 	
@@ -69,10 +72,13 @@ public class Story implements Comparable<Story> {
 		this.lastEditorName = p.nickname;
 		this.lastEditorEmail = p.email;
 		
+		Log.INFO("NewsAPI: Story Updated with title [%s] and UUID [%s].", title, storyId); 
+		
 		ofy.save().entity(this).now();
 	}
 	
 	public static void delete(String storyId){
+		Log.INFO("NewsAPI: Story Deleted with UUID [%s].", storyId); 
 		ofy.delete().type(Story.class).id(storyId).now();
 	}
 	
