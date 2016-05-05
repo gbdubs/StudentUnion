@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ServletUtil {
 
+	private static String pagePath = "/WEB-INF/pages/";
+	
 	public static void jsp(String jspFilePath, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		resp.setContentType("text/html");
-		RequestDispatcher jsp = req.getRequestDispatcher(jspFilePath);
+		RequestDispatcher jsp = req.getRequestDispatcher(pagePath + jspFilePath);
 		jsp.forward(req, resp);	
 	}
 	

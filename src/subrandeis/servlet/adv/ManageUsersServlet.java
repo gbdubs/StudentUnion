@@ -29,7 +29,7 @@ public class ManageUsersServlet extends HttpServlet {
 			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 			req.setAttribute("currentUser", currentUser);
 			
-			ServletUtil.jsp("/WEB-INF/pages/user-management.jsp", req, resp);
+			ServletUtil.jsp("user-management.jsp", req, resp);
 		} else {
 			resp.sendRedirect(UserAPI.loginAdminPageUrl("/users", "Candidate, Administrator and Owner Management Page"));
 		}

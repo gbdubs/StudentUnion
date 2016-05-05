@@ -25,13 +25,13 @@ public class NewsServlet extends HttpServlet{
 			if (story != null){
 				req.setAttribute("story", story);
 			}
-			ServletUtil.jsp("/WEB-INF/pages/news-editor.jsp", req, resp);	
+			ServletUtil.jsp("news-editor.jsp", req, resp);	
 		} else {
 			req.setAttribute("isAdmin", UserAPI.isAdmin());
 			req.setAttribute("stories", Story.getAll());
 			req.setAttribute("production", false);
 			
-			ServletUtil.jsp("/WEB-INF/pages/news.jsp", req, resp);
+			ServletUtil.jsp("news.jsp", req, resp);
 		}
 		
 	}

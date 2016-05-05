@@ -27,7 +27,7 @@ public class GroupCreationServlet extends HttpServlet {
 			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 			req.setAttribute("groups", Group.getAllGroups());
 				
-			ServletUtil.jsp("/WEB-INF/pages/group-creation.jsp", req, resp);
+			ServletUtil.jsp("group-creation.jsp", req, resp);
 		} else {
 			resp.sendRedirect(UserAPI.loginAdminPageUrl("/group-creation", "Group Creation and Deletion"));
 		}		
