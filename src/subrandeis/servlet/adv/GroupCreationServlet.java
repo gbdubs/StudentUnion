@@ -2,7 +2,6 @@ package subrandeis.servlet.adv;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +12,7 @@ import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Group;
 import subrandeis.entities.Person;
+import subrandeis.util.ServletUtil;
 
 import com.googlecode.objectify.Objectify;
 
@@ -22,78 +22,40 @@ public class GroupCreationServlet extends HttpServlet {
 	static Objectify ofy = ObjectifyAPI.ofy();
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p.owner || UserAPI.isGoogleAdmin()){
+		if (UserAPI.isOwner()){
+			req.setAttribute("currentUser", Person.get());
+			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
+			req.setAttribute("groups", Group.getAllGroups());
 				
-				// Sets the atributes that are rendered.
-				req.setAttribute("currentUser", p);
-				req.setAttribute("logoutUrl", UserAPI.logoutUrl());
-				req.setAttribute("groups", Group.getAllGroups());
-				
-				// Finishes up, sends to the console page.
-				resp.setContentType("text/html");
-				RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/group-creation.jsp");
-				jsp.forward(req, resp);	
-				return;
-			}
-			String error = "In rendering the group creation manager, the UserAPI was [%s] and they did not have sufficent permissions.";
-			error = String.format(error, p.email);
-			Log.warn(error);
-			resp.getWriter().println(error);
-			return;
-		}
-		resp.sendRedirect("/login-admin?goto=%2Fgroup-creation");
+			ServletUtil.jsp("/WEB-INF/pages/group-creation.jsp", req, resp);
+		} else {
+			resp.sendRedirect(UserAPI.loginAdminPageUrl("/group-creation", "Group Creation and Deletion"));
+		}		
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			if (p.owner || UserAPI.isGoogleAdmin()){
-				String createOrDelete = req.getParameter("createOrDelete");
-				if ("create".equals(createOrDelete)){
-					String newGroupName = req.getParameter("groupName");
-					if (newGroupName == null){
-						newGroupName = "[Unnamed Group]";
-					}
-					Group g = Group.createNewGroup(newGroupName);
-					ofy.save().entity(g).now();
-					GroupManagerServlet.updateMembershipPage(g, req, resp);
-					String success = String.format("UserAPI [%s] successfully created group with name [%s] and id [%s].", p.email, g.name, g.id);
-					Log.info(success);
-					resp.sendRedirect("/group-editor?groupId="+g.id);
-					return;
-				} else if ("delete".equals(createOrDelete)){
-					String groupId = req.getParameter("groupId");
-					Group g = Group.get(groupId);
-					if (groupId == null || g == null){
-						String error = String.format("UserAPI [%s] provided an incorrect API call to delete a group.", p.email);
-						resp.getWriter().println(error);
-						Log.warn(error);
-						return;
-					} else {
-						String groupName = g.name;
-						ofy.delete().entity(g).now();
-						String success = String.format("UserAPI [%s] successfully deleted group [%s][%s].\n", p.email, groupName, groupId);
-						Log.info(success);
-						resp.sendRedirect("/group-creation");
-						return;
-					}
+		if(UserAPI.isOwner()){
+			String action = req.getParameter("createOrDelete");
+			if ("create".equals(action)){
+				String newGroupName = req.getParameter("groupName");
+				newGroupName = newGroupName == null ? "[Unnamed Group" : newGroupName;
+				Group g = Group.createNewGroup(newGroupName);
+				GroupManagerServlet.updateMembershipPage(g, req, resp);
+				resp.sendRedirect("/group-editor?groupId="+g.id);
+				
+			} else if ("delete".equals(action)){
+				Group g = Group.get(req.getParameter("groupId"));
+				if (g == null){
+					String error = "GroupCreationServlet: Incorrect GroupID For Deletion Request.";
+					resp.getWriter().println(error);
+					Log.WARN(error);
 				} else {
-					String error = "Incorrect API call for group creation servlet.";
-				    Log.warn(error);
-				    resp.getWriter().println(error);
-				    return;
+					Group.deleteGroup(g.id);
+					resp.sendRedirect("/group-creation");
 				}
-			} else {
-				String error = "UserAPI [%s] does not have sufficent permissions to edit group existence.";
-				error = String.format(error, p.email);
-				resp.getWriter().println(error);
-				Log.warn(error);
-				return;
 			}
 		} else {
-			resp.sendRedirect("/login-admin?goto=%2Fgroup-creation");
+			resp.sendRedirect(UserAPI.loginAdminPageUrl("/group-creation", "Group Creation and Deletion"));
 		}
 	}
 }

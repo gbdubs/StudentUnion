@@ -1,6 +1,7 @@
 package subrandeis.api;
 
 import subrandeis.entities.Person;
+import subrandeis.util.Encoding;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -80,6 +81,12 @@ public class UserAPI {
 		return false;
 	}
 
+	public static String loginAdminPageUrl(String returnTo, String pageName){
+		returnTo = Encoding.percent(returnTo);
+		pageName = Encoding.percent(pageName);
+		return String.format("/login-admin?goto=%s&pagename=%s", returnTo, pageName);
+	}
+	
 	/**
 	 * Creates a login URL, which will first visit the login-callback servlet, then go to the location of your choice.
 	 * @param returnTo Where to go after the login and login-callback procedures (null defaults to the console)

@@ -32,10 +32,8 @@ public class GroupManagerServlet extends HttpServlet{
 	static Objectify ofy = ObjectifyAPI.ofy();
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
-		if (UserAPI.loggedIn()){
-			Person p = Person.get(UserAPI.email());
-			Group g = Group.get(req.getParameter("groupId"));
-			boolean hasPermission = p.owner || UserAPI.isGoogleAdmin();
+		Group g = Group.get(req.getParameter("groupId"));
+			boolean hasPermission = isGroupLeader(g);
 			if (g != null){
 				hasPermission = hasPermission || g.leaders.contains(p.email);
 				if (hasPermission){
@@ -51,7 +49,7 @@ public class GroupManagerServlet extends HttpServlet{
 					return;
 				}
 			} else {
-				hasPermission = hasPermission || p.admin;
+				hasPermission = hasPermission || UserAPI.isAdmin();
 				if (hasPermission){
 					req.setAttribute("groups", Group.getAllGroups());
 					req.setAttribute("currentUser", p);
@@ -289,6 +287,21 @@ public class GroupManagerServlet extends HttpServlet{
 		} catch (IOException ioe){
 			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));
 		}
+		
+		
 	}
-
+	
+	private static boolean isGroupLeader(Group g){
+		if (g == null){
+			return false;
+		}
+		if (UserAPI.isOwner()){
+			return true;
+		}
+		String userEmail = UserAPI.email();
+		if (userEmail != null && g.leaders.contains(userEmail)){
+			return true;
+		}
+		return false;
+	}
 }

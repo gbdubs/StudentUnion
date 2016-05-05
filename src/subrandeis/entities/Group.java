@@ -86,6 +86,7 @@ public class Group implements Comparable<Group>{
 		g.leaders = new ArrayList<String>();
 		g.members = new ArrayList<String>();
 		g.pageUrl = "/no/page/url/defined";
+		ofy.save().entity(g).now();
 		Log.INFO("Created a new group with name [%s] and uuid [%s].", g.name, g.id);
 		return g;
 	}
