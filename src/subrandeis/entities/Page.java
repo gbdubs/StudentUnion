@@ -1,10 +1,8 @@
 package subrandeis.entities;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -18,6 +16,7 @@ import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.servlet.basic.JSPRenderServlet;
+import subrandeis.util.DateUtil;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -126,15 +125,14 @@ public class Page {
 		req.setAttribute("production", true);
 		req.setAttribute("lastEditorEmail", p.email);
 		req.setAttribute("lastEditorName", p.nickname);
-		String now = (new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a")).format(new Date());
-		req.setAttribute("lastEditorDate", now);
+		req.setAttribute("lastEditorDate", DateUtil.now());
 		req.setAttribute("pages", pages);
 		
 		String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/directory.jsp", req, resp);
 		
-		String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", now, p.email);
+		String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", DateUtil.now(), p.email);
 		
-		GithubAPI.updateFile(SecretsAPI.GithubRepo, "directory/index.html", commitMessage, completeHtml);
+		GithubAPI.createOrUpdateFile("directory/index.html", commitMessage, completeHtml);
 		
 		Log.info(commitMessage);
 	}

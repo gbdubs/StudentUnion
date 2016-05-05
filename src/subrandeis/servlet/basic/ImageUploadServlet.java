@@ -19,8 +19,8 @@ public class ImageUploadServlet extends HttpServlet {
 
 	private String absoluteURLForImageUploads = String.format("https://raw.githubusercontent.com/%s/%s/%s/",
 			SecretsAPI.GithubUsername,
-			SecretsAPI.GithubRepo,
-			SecretsAPI.GithubBranch
+			SecretsAPI.GithubProductionRepo,
+			SecretsAPI.GithubProductionBranch
 	);
 			
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException { 
@@ -34,7 +34,7 @@ public class ImageUploadServlet extends HttpServlet {
 				String message = String.format("Image [%s] uploaded by user [%s] on [%s].", newBlobId, p.email, (new Date()).toString());
 				Log.info("STARTED: " + message);
 				try {
-					GithubAPI.createNewFileAlreadyEncoded(SecretsAPI.GithubRepo, path, message, encodedData);
+					GithubAPI.createRawEncodedFile(SecretsAPI.GithubProductionRepo, path, message, encodedData);
 				} catch (java.net.SocketTimeoutException ste){
 					Log.warn("TIMEOUT: " + message);
 				}

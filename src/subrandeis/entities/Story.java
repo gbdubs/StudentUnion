@@ -1,14 +1,12 @@
 package subrandeis.entities;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
+import subrandeis.util.DateUtil;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -46,10 +44,8 @@ public class Story implements Comparable<Story> {
 		s.body = body;
 		s.edited = false;
 		
-		Date d = new Date();
-		s.timestamp = (d).getTime();
-		DateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a");
-		s.postedAt = df.format(d);
+		s.timestamp = DateUtil.timestamp();
+		s.postedAt = DateUtil.now();
 		s.editedAt = s.postedAt;
 		
 		Person p = Person.get(UserAPI.email());
@@ -67,9 +63,7 @@ public class Story implements Comparable<Story> {
 		this.body = body;
 		this.edited = true;
 		
-		Date d = new Date();
-		DateFormat df = new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a");
-		this.editedAt = df.format(d);
+		this.editedAt = DateUtil.now();
 		
 		Person p = Person.get(UserAPI.email());
 		this.lastEditorName = p.nickname;

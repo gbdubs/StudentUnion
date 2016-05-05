@@ -144,12 +144,7 @@ public class NewsServlet extends HttpServlet{
 				(new Date()).toString()
 		);
 		
-		GithubAPI.updateFile(
-				SecretsAPI.GithubRepo,
-				"news/index.html",
-				message,
-				content
-		);
+		GithubAPI.createOrUpdateFile("news/index.html", message, content);
 		
 		Log.info(message);
 		

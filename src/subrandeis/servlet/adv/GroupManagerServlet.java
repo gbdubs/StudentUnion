@@ -1,7 +1,9 @@
 package subrandeis.servlet.adv;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +14,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
+import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Group;
+import subrandeis.entities.Page;
 import subrandeis.entities.Person;
+import subrandeis.servlet.basic.JSPRenderServlet;
 
 import com.googlecode.objectify.Objectify;
 
@@ -93,7 +99,7 @@ public class GroupManagerServlet extends HttpServlet{
 			Person p = Person.get(UserAPI.email());
 			Group g = Group.get(groupId);
 			if (g != null && p != null && (UserAPI.isGoogleAdmin() || p.owner || g.leaders.contains(p.email) || g.members.contains(p.email))){
-				g.updateMembershipPage(this, req, resp);
+				updateMembershipPage(g, req, resp);
 				Log.info(String.format("User [%s] successfully triggered an update of the group [%s][%s].", p.email, g.name, g.id));	
 				resp.sendRedirect("/group-manager?groupId="+groupId);
 				return;
@@ -199,7 +205,7 @@ public class GroupManagerServlet extends HttpServlet{
 				}
 				
 				if (changed){
-					g.updateMembershipPage(this, req, resp);
+					updateMembershipPage(g, req, resp);
 				}
 				
 				resp.sendRedirect("/group-manager");
@@ -217,6 +223,72 @@ public class GroupManagerServlet extends HttpServlet{
 		Log.warn(warning);
 		resp.getWriter().println(warning);
 		
+	}
+
+	/**
+	 * Updates the group membership page for a given group.
+	 * Must be called from a servlet.
+	 * @param caller Servlet that calls this (needed for referencing the HTML templates)
+	 * @throws ServletException 
+	 */
+	public static void updateMembershipPage(Group group, HttpServletRequest req, HttpServletResponse resp) throws ServletException {
+		
+		try {
+			if (!group.pageUrl.equals("/no/page/url/defined")){
+				if (Page.get(group.pageUrl) == null){
+					Page.createPage(group.pageUrl, true);
+				}
+				if (Page.get(group.pageUrl+"/members") == null){
+					Page.createPage(group.pageUrl + "/members", false);
+				}
+				
+				String membershipPageUrl = group.pageUrl + "/members/index.html";
+				while (membershipPageUrl.startsWith("/")){
+					membershipPageUrl = membershipPageUrl.substring(1);
+				}
+			
+				List<String> allPeople = new ArrayList<String>(group.leaders);
+				for (String s : group.members){
+					if (!allPeople.contains(s)){
+						allPeople.add(s);
+					}
+				}
+				
+				Map<String, Person> inDB = Group.ofy.load().type(Person.class).ids(allPeople);
+				List<Person> people = new ArrayList<Person>();
+				
+				for (String s : allPeople){
+					Person p = inDB.get(s);
+					if (p == null){
+						p = Person.get(s);
+					}
+					people.add(p);
+				}
+				
+				Person p = Person.get(UserAPI.email());
+				
+				req.setAttribute("production", true);
+				req.setAttribute("lastEditorEmail", p.email);
+				req.setAttribute("lastEditorName", p.nickname);
+				req.setAttribute("roles", group.roles);
+				String now = (new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a")).format(new Date());
+				req.setAttribute("lastEditorDate", now);
+				req.setAttribute("group", group);
+				req.setAttribute("people", people);
+				
+				String pageHtml = JSPRenderServlet.render("/WEB-INF/pages/group-member-page.jsp", req, resp);
+			
+				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
+				
+				GithubAPI.createOrUpdateFile(membershipPageUrl, commitMessage, pageHtml);
+				
+				Log.info(String.format("Updated membership page for group [%s][%s] successfully", group.name, group.id));
+			} else {
+				Log.warn(String.format("No pageURL defined for group [%s][%s], so it was not updated.", group.id, group.name));
+			}
+		} catch (IOException ioe){
+			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));
+		}
 	}
 
 }

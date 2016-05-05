@@ -17,6 +17,7 @@ import subrandeis.api.UserAPI;
 import subrandeis.entities.Page;
 import subrandeis.entities.Person;
 import subrandeis.servlet.basic.JSPRenderServlet;
+import subrandeis.util.DateUtil;
 
 @SuppressWarnings("serial")
 public class PageEditorServlet extends HttpServlet {
@@ -68,7 +69,7 @@ public class PageEditorServlet extends HttpServlet {
 				
 				String htmlContent;
 				// Tries to get the current page definition, if it exists. Defaults to a template if it doesn't yet exist.
-				String rawHtml = GithubAPI.getFileText(SecretsAPI.GithubRepo, filePath);
+				String rawHtml = GithubAPI.getFileText(SecretsAPI.GithubProductionRepo, filePath);
 				if (rawHtml == null || rawHtml.contains(GithubAPI.deletedPageHint)){
 					htmlContent = getTutorialPage();
 				} else {
@@ -150,7 +151,7 @@ public class PageEditorServlet extends HttpServlet {
 						} else if ("delete".equals(addOrDelete)){
 							Page.deletePage(path);
 							String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
-							GithubAPI.deleteFile(SecretsAPI.GithubRepo, Page.makeFilePath(path), commitMessage);
+							GithubAPI.deleteFile(SecretsAPI.GithubProductionRepo, Page.makeFilePath(path), commitMessage);
 							Log.info(commitMessage);
 						}
 						Page.updateDirectoryPage(this, req, resp);
@@ -185,15 +186,14 @@ public class PageEditorServlet extends HttpServlet {
 				req.setAttribute("production", true);
 				req.setAttribute("lastEditorEmail", p.email);
 				req.setAttribute("lastEditorName", p.nickname);
-				String now = (new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a")).format(new Date());
-				req.setAttribute("lastEditorDate", now);
+				req.setAttribute("lastEditorDate", DateUtil.now());
 				req.setAttribute("htmlContent", content);
 				String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/page-editor.jsp", req, resp);
 				
 				// Creates the file, returns a brief description of success or failure, depending on which it was.
 				resp.setContentType("application/json");
 				try {
-					GithubAPI.createOrUpdateFile(SecretsAPI.GithubRepo, pagePath, "A New Commit at "+(new Date()).toString(), completeHtml);
+					GithubAPI.createOrUpdateFile(SecretsAPI.GithubProductionRepo, pagePath, "A New Commit at "+(new Date()).toString(), completeHtml);
 					
 					resp.setStatus(200);
 					Log.info("           	request to edit ["+pagePath+"] WAS SUCCESSFUL\n");

@@ -32,7 +32,6 @@ public class GithubAPI {
 		ghc.setCredentials(SecretsAPI.GithubUsername, SecretsAPI.GithubPassword);
 	}
 	
-
 	  /* * * * * * * * * * */
 	 /* CREATE A NEW PAGE */
     /* * * * * * * * * * */
@@ -40,46 +39,27 @@ public class GithubAPI {
 
 		String path; String message; String content; String branch; String sha;
 		
-		public static UpdatePageRequest makeAlreadyEncoded(String path, String message, String content, String branch){
-			return makeAlreadyEncoded(path, message, content, branch, "");
-		}
-		
-		public static UpdatePageRequest make(String path, String message, String content, String branch){
-			return make(path, message, content, branch, "");
-		}
-		
 		public static UpdatePageRequest make(String path, String message, String content, String branch, String sha){
 			UpdatePageRequest npr = new UpdatePageRequest();
 			npr.path = path; npr.message = message; npr.branch = branch; npr.sha = sha;
 			npr.content =  DatatypeConverter.printBase64Binary (content.getBytes(StandardCharsets.UTF_8)); 
 			return npr;
 		}
-		
-		public static UpdatePageRequest makeAlreadyEncoded(String path, String message, String content, String branch, String sha){
-			UpdatePageRequest npr = new UpdatePageRequest();
-			npr.path = path; npr.message = message; npr.branch = branch; npr.sha = sha;
-			npr.content = content;
-			return npr;
+	}
+	
+	public static void createRawEncodedFile(String newFilePath, String commitMessage, String encodedBody) {
+		try {
+			String repoName = SecretsAPI.GithubProductionRepo;
+			
+			String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
+			
+			UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, encodedBody, SecretsAPI.GithubProductionBranch, "");
+			data.content = encodedBody;
+			
+			ghc.put(apiURI, data, null);
+		} catch (IOException ioe){
+			
 		}
-	}
-	
-	public static void createNewFile(String repoName, String newFilePath, String commitMessage, String newFileBody) throws IOException {
-		
-		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
-		
-		UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, newFileBody, SecretsAPI.GithubBranch);
-		
-		ghc.put(apiURI, data, null);
-		
-	}
-	
-	public static void createNewFileAlreadyEncoded(String repoName, String newFilePath, String commitMessage, String newFileBody) throws IOException {
-		
-		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+newFilePath;
-		
-		UpdatePageRequest data = UpdatePageRequest.makeAlreadyEncoded(newFilePath, commitMessage, newFileBody, SecretsAPI.GithubBranch);
-		
-		ghc.put(apiURI, data, null);
 		
 	}
 	
@@ -90,7 +70,11 @@ public class GithubAPI {
 		try{
 			ContentsService cs = new ContentsService(ghc);
 		
-			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.GithubBranch);
+			List<RepositoryContents> result = cs.getContents(
+					RepositoryId.create(SecretsAPI.GithubUsername, repoName), 
+					filePath, 
+					SecretsAPI.GithubProductionBranch
+			);
 			for (RepositoryContents rc : result){
 				return rc.getSha();
 			}
@@ -108,7 +92,7 @@ public class GithubAPI {
 		try{
 			ContentsService cs = new ContentsService(ghc);
 		
-			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.GithubBranch);
+			List<RepositoryContents> result = cs.getContents(RepositoryId.create(SecretsAPI.GithubUsername, repoName), filePath, SecretsAPI.GithubProductionBranch);
 			for (RepositoryContents rc : result){
 				String encoded = rc.getContent();
 				byte[] decoded = DatatypeConverter.parseBase64Binary(encoded);
@@ -120,34 +104,22 @@ public class GithubAPI {
 		return null;
 	}
 	
-	
-	  /* * * * * * * * */
-	 /* UPDATE A PAGE */
-	/* * * * * * * * */
-	public static void updateFile(String repoName, String filePath, String commitMessage, String newFileBody) throws IOException {
-
-		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
-
-		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.GithubBranch, getFileSha(repoName, filePath));
-
-		ghc.put(apiURI, data, null);
-
-	}
-	
-	public static void createOrUpdateFile(String repoName, String filePath, String commitMessage, String newFileBody) throws IOException {
-		String sha = getFileSha(repoName, filePath);
+	public static void createOrUpdateFile(String filePath, String commitMessage, String newFileBody) {
+		try {
+			String repoName = SecretsAPI.GithubProductionRepo;
 		
-		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
-		
-		UpdatePageRequest data;
-
-		if (sha != null){
-			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.GithubBranch, sha);
-		} else {
-			data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.GithubBranch);
+			String sha = getFileSha(repoName, filePath);
+			
+			String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
+			
+			sha = sha == null ? "" : sha;
+			
+			UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.GithubProductionBranch, sha);
+			
+			ghc.put(apiURI, data, null);
+		} catch (IOException ioe){
+			
 		}
-		
-		ghc.put(apiURI, data, null);
 	}
 	
 	public static final String deletedPageHint = "THISPAGEHASBEENDELETED893457983475983475";
@@ -155,16 +127,25 @@ public class GithubAPI {
 	  /* * * * * * * * */
      /* DELETE A PAGE */
     /* * * * * * * * */
-	public static void deleteFile(String repoName, String filePath, String commitMessage) throws IOException {
-
-		String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
-
-		String fileSha = getFileSha(repoName, filePath);
-		
-		String notFoundRedirect = "<html><body><div id=\""+deletedPageHint+"\"><script>window.location.replace('/404');</script></div></body></html>";
-		
-		UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, SecretsAPI.GithubBranch, fileSha);
-		
-		ghc.put(apiURI, data, null);
+	public static boolean deleteFile(String filePath, String commitMessage) {
+		Log.info(String.format("Github API: Attempting to delete [%s] (%s)", filePath, commitMessage));
+		try {
+			String repoName = SecretsAPI.GithubProductionRepo;
+			
+			String apiURI = "/repos/"+SecretsAPI.GithubUsername+"/"+repoName+"/contents/"+filePath;
+	
+			String fileSha = getFileSha(repoName, filePath);
+			
+			String notFoundRedirect = "<html><body><div id=\""+deletedPageHint+"\"><script>window.location.replace('/404');</script></div></body></html>";
+			
+			UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, SecretsAPI.GithubProductionBranch, fileSha);
+			
+			ghc.put(apiURI, data, null);
+			Log.info(String.format("... Github API Page Deletion was successful! [%s] (%s)", filePath, commitMessage));
+			return true;
+		} catch (IOException ioe){
+			Log.warn(String.format("... Github API Page Deletion failed with error! [%s] [%s] [%s]", filePath, commitMessage, ioe.getMessage()));
+			return false;
+		}
 	}	
 }

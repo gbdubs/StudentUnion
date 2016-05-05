@@ -21,20 +21,22 @@ public class Petition {
 		
 		@Id public String petitionIdPlusEmail;
 		@Index public String petitionId;
+		
 		// 1 corresponds to YES
 		// -1 corresponds to NO
 		// 0 corresponds to UNDO
-		public int vote;
+		@Index public int vote;
 		public String personEmail;
 		public String timestamp;
 		
 		private static List<String> getEmails(String petitionId, int vote){
-			List<PetitionSignature> signatures = ofy.load().type(PetitionSignature.class).filter("petitionId", petitionId).list();
+			List<PetitionSignature> signatures = ofy.load().
+					type(PetitionSignature.class).
+					filter("petitionId", petitionId).
+					filter("vote", vote).list();
 			List<String> emails = new ArrayList<String>();
 			for (PetitionSignature ps : signatures){
-				if (ps.vote == vote){
-					emails.add(ps.personEmail);
-				}
+				emails.add(ps.personEmail);
 			}
 			return emails;
 		}

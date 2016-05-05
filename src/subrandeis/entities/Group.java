@@ -1,9 +1,7 @@
 package subrandeis.entities;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,18 +9,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
-import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.servlet.adv.PageEditorServlet;
-import subrandeis.servlet.basic.JSPRenderServlet;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -30,18 +20,27 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
-public class Group {
+public class Group implements Comparable<Group>{
 
-	public @Id String id; 
+	// Randomly assigned UUID
+	public @Id String id;
+	
 	public String name;
 	public List<String> leaders;
 	public List<String> members;
-	public Map<String, String> roles;
-	public String pageUrl;
 	public String description;
 	
-	static Objectify ofy = ObjectifyAPI.ofy();
+	// Map from Email to User Defined Role
+	public Map<String, String> roles;
 	
+	// Page Base URL, Memberpage URL will be /pageUrl/members
+	public String pageUrl;
+	
+	public static Objectify ofy = ObjectifyAPI.ofy();
+	
+	/*
+	 * A test on the load of the Group which  
+	 */
 	@OnLoad void checkForNulls() { 
 		if (leaders == null){
 			leaders = new ArrayList<String>();
@@ -194,73 +193,16 @@ public class Group {
 	}
 	
 	/**
-	 * Updates the group membership page for a given group.
-	 * Must be called from a servlet.
-	 * @param caller Servlet that calls this (needed for referencing the HTML templates)
-	 * @throws ServletException 
+	 * Gets all current groups, and arranges them in alphabetical order according to their names.
+	 * @return
 	 */
-	public void updateMembershipPage(HttpServlet caller, HttpServletRequest req, HttpServletResponse resp) throws ServletException {
-		try {
-			if (!this.pageUrl.equals("/no/page/url/defined")){
-				if (Page.get(pageUrl) == null){
-					Page.createPage(pageUrl, true);
-				}
-				if (Page.get(pageUrl+"/members") == null){
-					Page.createPage(pageUrl + "/members", false);
-				}
-				
-				String membershipPageUrl = this.pageUrl + "/members/index.html";
-				while (membershipPageUrl.startsWith("/")){
-					membershipPageUrl = membershipPageUrl.substring(1);
-				}
-			
-				List<String> allPeople = new ArrayList<String>(leaders);
-				for (String s : members){
-					if (!allPeople.contains(s)){
-						allPeople.add(s);
-					}
-				}
-				
-				Map<String, Person> inDB = ofy.load().type(Person.class).ids(allPeople);
-				List<Person> people = new ArrayList<Person>();
-				
-				for (String s : allPeople){
-					Person p = inDB.get(s);
-					if (p == null){
-						p = Person.get(s);
-					}
-					people.add(p);
-				}
-				
-				Person p = Person.get(UserAPI.email());
-				
-				req.setAttribute("production", true);
-				req.setAttribute("lastEditorEmail", p.email);
-				req.setAttribute("lastEditorName", p.nickname);
-				req.setAttribute("roles", roles);
-				String now = (new SimpleDateFormat("EEEE, MMMM dd, yyyy 'at' hh:mm a")).format(new Date());
-				req.setAttribute("lastEditorDate", now);
-				req.setAttribute("group", this);
-				req.setAttribute("people", people);
-				
-				String pageHtml = JSPRenderServlet.render("/WEB-INF/pages/group-member-page.jsp", req, resp);
-			
-				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
-				
-				GithubAPI.updateFile(SecretsAPI.GithubRepo, membershipPageUrl, commitMessage, pageHtml);
-				
-				Log.info(String.format("Updated membership page for group [%s][%s] successfully", this.name, this.id));
-			} else {
-				Log.warn(String.format("No pageURL defined for group [%s][%s], so it was not updated.", this.id, this.name));
-			}
-		} catch (IOException ioe){
-			Log.error(String.format("Error in updating membership page: [%s]", ioe.getMessage()));
-		}
+	public static List<Group> getAllGroups(){
+		List<Group> groups = ofy.load().type(Group.class).list();
+		Collections.sort(groups);
+		return groups;
 	}
 	
-	public static List<Group> getAllGroups(){
-		return ofy.load().type(Group.class).list();
-	}
+	// Getters, need to exist for proper JSP rendering.
 	
 	public String getId(){
 		return this.id;
@@ -288,6 +230,12 @@ public class Group {
 	
 	public Map<String, String> getRoles(){
 		return this.roles;
+	}
+
+	// Compare two groups based on their name, lexicographically.
+	@Override
+	public int compareTo(Group other) {
+		return name.compareTo(other.name);
 	}
 	
 }
