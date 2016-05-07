@@ -31,16 +31,16 @@ public class ImageUploadServlet extends HttpServlet {
 				String path = "static/img/"+newBlobId+"."+suffix;
 				GithubAPI.createRawEncodedFile(
 						path, 
-						Log.INFO("ImageUpload: Image [%s] started upload.", newBlobId), 
+						Log.INFO("ImageUploadServlet: Image [%s] started upload.", newBlobId), 
 						encodedData
 				);
 				String whereAt = absoluteURLForImageUploads + path;
 				resp.getWriter().println(whereAt);
 			} else {
-				resp.getWriter().println(Log.WARN("ImageUpload: Suffix and/or Encoded data undefined."));
+				resp.getWriter().println(Log.WARN("ImageUploadServlet: Suffix and/or Encoded data undefined."));
 			}
 		} else {
-			resp.getWriter().println(Log.WARN("ImageUpload: Cannot upload an image without being logged in."));
+			resp.getWriter().println(Log.WARN("ImageUploadServlet: Cannot upload an image without being logged in."));
 		}
 	}
 	

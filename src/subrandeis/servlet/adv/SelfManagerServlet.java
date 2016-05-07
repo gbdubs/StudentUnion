@@ -50,7 +50,7 @@ public class SelfManagerServlet extends HttpServlet {
 			q.classYear = personClassYear;
 				
 			ofy.save().entity(q);
-			Log.INFO("UserAPI: updated personal information for user [%s].", q.email);
+			Log.INFO("SelfManagerServlet: updated personal information for user [%s].", q.email);
 			resp.sendRedirect("/console");
 		} else {
 			resp.sendRedirect(UserAPI.loginAdminPageUrl("/self-manager", "Biography and Personal Details Page"));

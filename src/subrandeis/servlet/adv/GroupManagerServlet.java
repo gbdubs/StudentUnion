@@ -47,7 +47,7 @@ public class GroupManagerServlet extends HttpServlet{
 			
 			ServletUtil.jsp("group-manager-list.jsp", req, resp);
 		} else {
-			resp.getWriter().println(Log.WARN("There was an error in rendering the group manager for the group requested with id [%s].", req.getParameter("groupId")));
+			resp.getWriter().println(Log.WARN("GroupManagerServlet: There was an error in rendering the group manager for the group requested with id [%s].", req.getParameter("groupId")));
 		}
 	}
 	
@@ -75,7 +75,7 @@ public class GroupManagerServlet extends HttpServlet{
 			updateMembershipPage(g, req, resp);
 			resp.sendRedirect("/group-manager?groupId="+g.id);
 		} else {	
-			resp.getWriter().println(Log.WARN("Insufficent permissions to refresh membership page in group [%s][%s].", g.id, g.name));
+			resp.getWriter().println(Log.WARN("GroupManagerServlet: Insufficent permissions to refresh membership page in group [%s][%s].", g.id, g.name));
 		}
 	}
 
@@ -94,10 +94,10 @@ public class GroupManagerServlet extends HttpServlet{
 			g.description = description;
 			ofy.save().entity(g);
 			
-			Log.INFO("Updated the name and page URL and description of group [%s] to [%s], [%s] and [%s] respectively.", g.id, g.name, g.pageUrl, g.description);	
+			Log.INFO("GroupManagerServlet: Updated the name and page URL and description of group [%s] to [%s], [%s] and [%s] respectively.", g.id, g.name, g.pageUrl, g.description);	
 			resp.sendRedirect("/group-manager?groupId="+g.id);
 		} else { 
-			resp.getWriter().println(Log.WARN("Insufficent permissions to update gropu information for group [%s][%s].", g.id, g.name));
+			resp.getWriter().println(Log.WARN("GroupManagerServlet: Insufficent permissions to update gropu information for group [%s][%s].", g.id, g.name));
 		}
 	}
 	
@@ -114,10 +114,10 @@ public class GroupManagerServlet extends HttpServlet{
 			}
 			g.roles = roles;
 			ofy.save().entity(g);
-			Log.INFO("Updated the roles for group [%s][%s] to [%s].", g.id, g.name, roles.toString());
+			Log.INFO("GroupManagerServlet: Updated the roles for group [%s][%s] to [%s].", g.id, g.name, roles.toString());
 			resp.sendRedirect("/group-manager");
 		} else {
-			resp.getWriter().println(Log.WARN("Insufficent permissions to update roles in group [%s][%s].", g.id, g.name));
+			resp.getWriter().println(Log.WARN("GroupManagerServlet: Insufficent permissions to update roles in group [%s][%s].", g.id, g.name));
 		}
 	}
 	
@@ -152,7 +152,7 @@ public class GroupManagerServlet extends HttpServlet{
 			
 			resp.sendRedirect("/group-manager");
 		} else {
-			resp.getWriter().println(Log.WARN("Insufficent permissions to change member management in group [%s][%s].", g.id, g.name));
+			resp.getWriter().println(Log.WARN("GroupManagerServlet: Insufficent permissions to change member management in group [%s][%s].", g.id, g.name));
 		}		
 	}
 
@@ -196,18 +196,18 @@ public class GroupManagerServlet extends HttpServlet{
 				req.setAttribute("group", group);
 				req.setAttribute("people", people);
 				
-				String pageHtml = JSPRenderServlet.render("/WEB-INF/pages/group-member-page.jsp", req, resp);
+				String pageHtml = JSPRenderServlet.render("group-member-page.jsp", req, resp);
 			
 				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
 				
 				GithubAPI.createOrUpdateFile(membershipPageUrl, commitMessage, pageHtml);
 				
-				Log.INFO("Updated membership page for group [%s][%s] successfully", group.name, group.id);
+				Log.INFO("GroupManagerServlet: Updated membership page for group [%s][%s] successfully", group.name, group.id);
 			} else {
-				w.println(Log.WARN(String.format("No pageURL defined for group [%s][%s], so it was not updated.", group.id, group.name)));
+				w.println(Log.WARN(String.format("GroupManagerServlet: No pageURL defined for group [%s][%s], so it was not updated.", group.id, group.name)));
 			}
 		} catch (IOException | ServletException ioe){
-			w.println(Log.ERROR("Error in updating membership page: [%s]", ioe.getMessage()));
+			w.println(Log.ERROR("GroupManagerServlet: Error in updating membership page: [%s]", ioe.getMessage()));
 		}
 	}
 	

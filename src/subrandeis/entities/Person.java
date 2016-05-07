@@ -41,7 +41,7 @@ public class Person {
 		if (UserAPI.isOwner()){
 			this.candidate = true;
 			ofy.save().entity(this).now();
-			Log.INFO("PersonAPI: Made [%s] a candidate.", email);
+			Log.INFO("Person: Made [%s] a candidate.", email);
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class Person {
 		if (UserAPI.isOwner()){
 			this.candidate = false;
 			ofy.save().entity(this).now();
-			Log.INFO("PersonAPI: Removed [%s] as candidate.", email);
+			Log.INFO("Person: Removed [%s] as candidate.", email);
 		}
 	}
 	
@@ -65,7 +65,7 @@ public class Person {
 		if (UserAPI.isOwner()){
 			this.admin = true;
 			ofy.save().entity(this).now();
-			Log.INFO("PersonAPI: Made [%s] an admin.", email);
+			Log.INFO("Person: Made [%s] an admin.", email);
 		}
 	}
 	
@@ -78,7 +78,7 @@ public class Person {
 			this.admin = false;
 			this.owner = false;
 			ofy.save().entity(this).now();
-			Log.INFO("PersonAPI: Removed [%s] as admin.", email);
+			Log.INFO("Person: Removed [%s] as admin.", email);
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class Person {
 			this.admin = true;
 			this.owner = true;
 			ofy.save().entity(this).now();
-			Log.WARN("PersonAPI: Made [%s] an owner.", email);
+			Log.WARN("Person: Made [%s] an owner.", email);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class Person {
 		if (UserAPI.isOwner()){
 			this.owner = false;
 			ofy.save().entity(this).now();
-			Log.WARN("PersonAPI: Removed [%s] as owner.", email);
+			Log.WARN("Person: Removed [%s] as owner.", email);
 		}
 	}
 	

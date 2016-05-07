@@ -6,7 +6,6 @@ import java.util.List;
 
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
-import subrandeis.api.SecretsAPI;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.annotation.Entity;
@@ -26,17 +25,17 @@ public class Page {
 		p.url = modifyPath(url);
 		p.editable = canEdit;
 		ofy.save().entity(p).now();
-		Log.INFO("Created page with URL [%s] modified to [%s].", url, p.url);
+		Log.INFO("Page: Created page with URL [%s] modified to [%s].", url, p.url);
 	}
 	
 	public static void deletePage(String url){
 		String modifiedPath = modifyPath(url);
 		Page p = ofy.load().type(Page.class).id(modifiedPath).now();
 		if (p == null){
-			Log.WARN("Attempt to delete non-existent page with URL [%s] modified to [%s].", url, modifiedPath);
+			Log.WARN("Page: Attempt to delete non-existent page with URL [%s] modified to [%s].", url, modifiedPath);
 		} else {
 			ofy.delete().entity(p).now();
-			Log.INFO("Deleted page with URL [%s] modified to [%s].", url, modifiedPath);
+			Log.INFO("Page: Deleted page with URL [%s] modified to [%s].", url, modifiedPath);
 		}
 	}
 	

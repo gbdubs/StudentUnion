@@ -27,7 +27,7 @@ public class ConsoleServlet extends HttpServlet {
 			
 			ServletUtil.jsp("console.jsp", req, resp);
 		} else {
-			Log.WARN("Attempt to access console without permission.");
+			Log.WARN("ConsoleServlet: Attempt to access console without permission.");
 			resp.sendRedirect(UserAPI.loginAdminPageUrl("/login-admin", "Website Manager Console"));
 		}
 		

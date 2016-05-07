@@ -1,7 +1,7 @@
 package subrandeis.api;
 
 import subrandeis.entities.Person;
-import subrandeis.util.Encoding;
+import subrandeis.util.EncodingUtil;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -82,8 +82,8 @@ public class UserAPI {
 	}
 
 	public static String loginAdminPageUrl(String returnTo, String pageName){
-		returnTo = Encoding.percent(returnTo);
-		pageName = Encoding.percent(pageName);
+		returnTo = EncodingUtil.percent(returnTo);
+		pageName = EncodingUtil.percent(pageName);
 		return String.format("/login-admin?goto=%s&pagename=%s", returnTo, pageName);
 	}
 	
@@ -143,8 +143,8 @@ public class UserAPI {
 	}
 
 	public static String loginPageUrl(String returnTo, String pageName){
-		returnTo = Encoding.percent(returnTo);
-		pageName = Encoding.percent(pageName);
+		returnTo = EncodingUtil.percent(returnTo);
+		pageName = EncodingUtil.percent(pageName);
 		return String.format("/login?goto=%s&pagename=%s", returnTo, pageName);
 	}
 

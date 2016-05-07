@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import subrandeis.util.ServletUtil;
+
 @SuppressWarnings("serial")
 public class JSPRenderServlet extends HttpServlet {
 	
@@ -47,7 +49,7 @@ public class JSPRenderServlet extends HttpServlet {
 	}
 
 	public static String render(String jspFileName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		req.setAttribute(requestFileKey, jspFileName);
+		req.setAttribute(requestFileKey, ServletUtil.jspRootDirectory + jspFileName);
 		
 		req.getRequestDispatcher("/jsp-render-servlet").forward(req, resp);
 		

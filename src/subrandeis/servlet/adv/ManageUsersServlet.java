@@ -41,7 +41,7 @@ public class ManageUsersServlet extends HttpServlet {
 		String emails = req.getParameter("emails");
 		
 		if (emails == null || addOrRemove == null || adminOrOwnerOrCandidate == null){
-			resp.getWriter().println(Log.WARN("One or more parameters not specified. Check your API calls. (ManageUsersServlet)"));
+			resp.getWriter().println(Log.WARN("ManageUsersServlet: One or more parameters not specified. Check your API calls. (ManageUsersServlet)"));
 		} else {
 			List<String> validEmails = EmailUtil.cleanInputListOfEmails(emails);
 			List<Person> correspondingPeople = Person.get(validEmails);

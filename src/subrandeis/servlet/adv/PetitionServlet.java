@@ -173,15 +173,15 @@ public class PetitionServlet extends HttpServlet {
 		if (UserAPI.isAdmin()){
 			Petition petition = Petition.get(petitionId);
 			if (petition == null){
-				resp.getWriter().println(Log.WARN("Petition with ID [%s] couldn't be found.", petitionId));
+				resp.getWriter().println(Log.WARN("PetitionServlet: Petition with ID [%s] couldn't be found.", petitionId));
 			} else {
 				petition.flagged = true;
 				ofy.save().entity(petition).now();
-				Log.INFO("Petition with ID [%s] was flagged.", petitionId);
+				Log.INFO("PetitionServlet: Petition with ID [%s] was flagged.", petitionId);
 				resp.sendRedirect("/petition?petitionId="+petitionId);
 			}
 		} else {
-			resp.getWriter().println(Log.WARN("You do not have sufficent permissions to uflag petition [%s].", petitionId));
+			resp.getWriter().println(Log.WARN("PetitionServlet: You do not have sufficent permissions to uflag petition [%s].", petitionId));
 		}
 	}
 	
@@ -190,15 +190,15 @@ public class PetitionServlet extends HttpServlet {
 		if (UserAPI.isAdmin()){
 			Petition petition = Petition.get(petitionId);
 			if (petition == null){
-				resp.getWriter().println(Log.WARN("Petition with ID [%s] couldn't be found.", petitionId));
+				resp.getWriter().println(Log.WARN("PetitionServlet: Petition with ID [%s] couldn't be found.", petitionId));
 			} else {
 				petition.flagged = false;
 				ofy.save().entity(petition).now();
-				Log.INFO("Petition with ID [%s] was unflagged.", petitionId);
+				Log.INFO("PetitionServlet: Petition with ID [%s] was unflagged.", petitionId);
 				resp.sendRedirect("/petition?petitionId="+petitionId);
 			}
 		} else {
-			resp.getWriter().println(Log.WARN("You do not have sufficent permissions to un-flag petition [%s].", petitionId));
+			resp.getWriter().println(Log.WARN("PetitionServlet: You do not have sufficent permissions to un-flag petition [%s].", petitionId));
 		}
 	}
 	
@@ -207,16 +207,16 @@ public class PetitionServlet extends HttpServlet {
 		if (UserAPI.isOwner()){
 			Petition petition = Petition.get(petitionId);
 			if (petition == null){
-				resp.getWriter().println(Log.WARN("Petition with ID [%s] couldn't be found.", petitionId));
+				resp.getWriter().println(Log.WARN("PetitionServlet: Petition with ID [%s] couldn't be found.", petitionId));
 			} else {
 				petition.flagged = true;
 				petition.deleted = true;
 				ofy.save().entity(petition).now();
-				Log.INFO("Petition with ID [%s] was deleted.", petitionId);
+				Log.INFO("PetitionServlet: Petition with ID [%s] was deleted.", petitionId);
 				resp.sendRedirect("/petitions");
 			}
 		} else {
-			resp.getWriter().println(Log.WARN("You do not have sufficent permissions to delete petition [%s].", petitionId));
+			resp.getWriter().println(Log.WARN("PetitionServlet: You do not have sufficent permissions to delete petition [%s].", petitionId));
 		}
 	}
 	
@@ -252,10 +252,10 @@ public class PetitionServlet extends HttpServlet {
 			petition.deleted = false;
 			
 			ofy.save().entity(petition).now();
-			Log.INFO("Created a new petition with name [%s] and uuid [%s].", petition.name, petition.petitionId);
+			Log.INFO("PetitionServlet: Created a new petition with name [%s] and uuid [%s].", petition.name, petition.petitionId);
 			resp.sendRedirect("/petitions?petitionId="+petition.petitionId);
 		} else {
-			resp.getWriter().println(Log.WARN("Log in with a Brandeis Email Account to create a petition."));
+			resp.getWriter().println(Log.WARN("PetitionServlet: Log in with a Brandeis Email Account to create a petition."));
 		}
 	}
 	
@@ -263,18 +263,18 @@ public class PetitionServlet extends HttpServlet {
 		if (UserAPI.loggedIn()){
 			Person p = Person.get(UserAPI.email());
 			if (p.blocked){
-				resp.getWriter().println(Log.WARN("You have been banned from voting on petitions. To appeal this, talk to a site owner."));
+				resp.getWriter().println(Log.WARN("PetitionServlet: You have been banned from voting on petitions. To appeal this, talk to a site owner."));
 				return;
 			}
 			if (!p.isBrandeisStudent()){
 				resp.getWriter().println("Our records show that you are not a Brandeis Student. Please let our site administrators know if this is in error.");
-				Log.WARN("Non-Brandeis Student Tried to vote on petition.");
+				Log.WARN("PetitionServlet: Non-Brandeis Student Tried to vote on petition.");
 				return;
 			}
 			String petitionId = req.getParameter("petitionId");
 			Petition petition = Petition.get(petitionId);
 			if (petitionId == null || petition == null){
-				resp.getWriter().println(Log.WARN("Unacceptable value for petitionId given in API call."));
+				resp.getWriter().println(Log.WARN("PetitionServlet: Unacceptable value for petitionId given in API call."));
 				return;
 			}
 			

@@ -101,9 +101,9 @@ public class NewsServlet extends HttpServlet{
 		req.setAttribute("production", true);
 		req.setAttribute("stories", stories);
 		
-		String content = JSPRenderServlet.render("/WEB-INF/pages/news.jsp", req, resp);
+		String content = JSPRenderServlet.render("news.jsp", req, resp);
 		
-		String message = Log.INFO("News auto generated.");
+		String message = Log.INFO("NewsServlet: News auto generated.");
 		
 		GithubAPI.createOrUpdateFile("news/index.html", message, content);
 		

@@ -1,7 +1,6 @@
 package subrandeis.api;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
@@ -10,6 +9,8 @@ import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
+
+import subrandeis.util.EncodingUtil;
 
 /**
  * Basic Github Operations, via a number of methodologies.
@@ -42,7 +43,7 @@ public class GithubAPI {
 		public static UpdatePageRequest make(String path, String message, String content, String branch, String sha){
 			UpdatePageRequest npr = new UpdatePageRequest();
 			npr.path = path; npr.message = message; npr.branch = branch; npr.sha = sha;
-			npr.content =  DatatypeConverter.printBase64Binary (content.getBytes(StandardCharsets.UTF_8)); 
+			npr.content = EncodingUtil.base64Bin(content); 
 			return npr;
 		}
 	}

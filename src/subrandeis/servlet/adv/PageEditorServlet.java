@@ -1,12 +1,9 @@
 package subrandeis.servlet.adv;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +17,7 @@ import subrandeis.entities.Page;
 import subrandeis.entities.Person;
 import subrandeis.servlet.basic.JSPRenderServlet;
 import subrandeis.util.DateUtil;
+import subrandeis.util.ServletUtil;
 
 @SuppressWarnings("serial")
 public class PageEditorServlet extends HttpServlet {
@@ -50,11 +48,8 @@ public class PageEditorServlet extends HttpServlet {
 					req.setAttribute("currentUser", p);
 					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 					req.setAttribute("isOwner", p.owner || UserAPI.isGoogleAdmin());
-					
-					// Finishes up, sends to the console page.
-					resp.setContentType("text/html");
-					RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/page-manager-list.jsp");
-					jsp.forward(req, resp);	
+				
+					ServletUtil.jsp("page-manager-list.jsp", req, resp);
 					return;
 				}
 			
@@ -63,9 +58,7 @@ public class PageEditorServlet extends HttpServlet {
 				if (page == null || !page.editable){
 					req.setAttribute("currentUser", p);
 					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
-					resp.setContentType("text/html");
-					RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/page-doesnt-exist.jsp");
-					jsp.forward(req, resp);	
+					ServletUtil.jsp("page-doesnt-exist.jsp", req, resp);
 					return;
 				}
 				
@@ -82,17 +75,11 @@ public class PageEditorServlet extends HttpServlet {
 					htmlContent = rawHtml.substring(startIndex, endIndex);
 				}
 				
-				// Places in a script which will instantiate an editor at the end of the body.
 				req.setAttribute("javascriptContent", getPageEditorJavascript());
 				req.setAttribute("cssContent", getPageEditorCss());
 				req.setAttribute("htmlContent", htmlContent);
 
-				// Finishes up, sends to the console page.
-				resp.setContentType("text/html");
-				RequestDispatcher jsp = req.getRequestDispatcher("/WEB-INF/pages/page-editor.jsp");
-				jsp.forward(req, resp);	
-				return;
-				
+				ServletUtil.jsp("page-editor.jsp", req, resp);
 			} else {
 				resp.getWriter().println("You do not have sufficent permissions to edit this page. Sorry!");
 			}
@@ -135,101 +122,97 @@ public class PageEditorServlet extends HttpServlet {
 	}
 
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		Person p = Person.get(UserAPI.email());
+		boolean admin = UserAPI.isAdmin(p);
+		boolean owner = UserAPI.isOwner(p);
 		
-		if (UserAPI.loggedIn()){
+		if (!admin){
 		
-			Person p = Person.get(UserAPI.email());
 			
-			if (req.getRequestURI().contains("/page-manager")){
-				if (p.owner || UserAPI.isGoogleAdmin()){
-					String path = req.getParameter("path");
-					String addOrDelete = req.getParameter("addOrDelete");
-					
-					String badChars = path.replaceAll("[A-Za-z0-9\\/\\-]", "");
-					
-					if (badChars.length() == 0){
-						if ("add".equals(addOrDelete)){
-							Page.createPage(path, true);
-						} else if ("delete".equals(addOrDelete)){
-							Page.deletePage(path);
-							String commitMessage = String.format("Page [%s] deleted by user [%s].", path, p.email);
-							GithubAPI.deleteFile(SecretsAPI.GithubProductionRepo, Page.makeFilePath(path), commitMessage);
-							Log.info(commitMessage);
-						}
-						PageEditorServlet.updateDirectoryPage(this, req, resp);
-					} else {
-						resp.getWriter().println("The following characters were not accepted: "+badChars+" they are not okay as part of a url.");
-						return;
+			return;
+		}
+		
+		if (req.getRequestURI().contains("/page-manager")){
+			if (owner){
+				String path = req.getParameter("path");
+				String addOrDelete = req.getParameter("addOrDelete");
+				
+				String badChars = path.replaceAll("[A-Za-z0-9\\/\\-]", "");
+				
+				if (badChars.length() == 0){
+					if ("add".equals(addOrDelete)){
+						Page.createPage(path, true);
+					} else if ("delete".equals(addOrDelete)){
+						Page.deletePage(path);
+						GithubAPI.deleteFile(Page.makeFilePath(path), String.format("Page [%s] deleted by user [%s].", path, p.email));
 					}
+					PageEditorServlet.updateDirectoryPage(req, resp);
+					resp.sendRedirect("/page-manager");
+				} else {
+					resp.getWriter().println(Log.WARN("PageEditorServlet: The following characters were not accepted: %s they are not okay as part of a url.", badChars));
 				}
-				resp.sendRedirect("/page-manager");
+			} else {
+				resp.getWriter().println(Log.WARN("PageEditorServlet: You are not a page Owner, so you cannot create or delete a page."));
+			}
+			
+		} else {
+			
+			String pagePath = req.getParameter("path");
+			String content = req.getParameter("content");
+				
+			Log.INFO("PageEditorServlet: Request to edit ["+pagePath+"].");
+				
+			// Verifies that this page can exist
+			Page page = Page.get(pagePath);
+			if (page == null || !page.editable){
+				resp.setStatus(400);
+				resp.getWriter().println("{\"success\":0,\"message\":\""+"This page has not been approved to exist by a site owner, or it is already existing and is not editable."+"\"}");
+				Log.ERROR("... PageEditorServlet: request to edit [%s] FAILED!: This page has not been approved to exist by a site owner, or it is already existing and is not editable.",  pagePath);
 				return;
 			}
 			
-			if (p.admin || p.owner || UserAPI.isGoogleAdmin()){
-			
-				// Gets the path and content as passed from the form.
-				String pagePath = req.getParameter("path");
-				String content = req.getParameter("content");
+			req.setAttribute("production", true);
+			req.setAttribute("lastEditorEmail", p.email);
+			req.setAttribute("lastEditorName", p.nickname);
+			req.setAttribute("lastEditorDate", DateUtil.now());
+			req.setAttribute("htmlContent", content);
+			String completeHtml = JSPRenderServlet.render("page-editor.jsp", req, resp);
 				
-				// Logs the request
-				Log.info("Recieved a request to edit ["+pagePath+"] from user ["+p.email+"]\n");
-				
-				// Verifies that this page can exist!
-				Page page = Page.get(pagePath);
-				if (page == null || !page.editable){
-					resp.setStatus(400);
-					resp.getWriter().println("{\"success\":0,\"message\":\""+"This page has not been approved to exist by a site owner, or it is already existing and is not editable."+"\"}");
-					Log.error("           	request to edit ["+pagePath+"] FAILED!: " + "This page has not been approved to exist by a site owner, or it is already existing and is not editable.");
-					return;
-				}
-				
-				// Renders the complete HTML given the content.
-				req.setAttribute("production", true);
-				req.setAttribute("lastEditorEmail", p.email);
-				req.setAttribute("lastEditorName", p.nickname);
-				req.setAttribute("lastEditorDate", DateUtil.now());
-				req.setAttribute("htmlContent", content);
-				String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/page-editor.jsp", req, resp);
-				
-				// Creates the file, returns a brief description of success or failure, depending on which it was.
-				resp.setContentType("application/json");
-				try {
-					GithubAPI.createOrUpdateFile(SecretsAPI.GithubProductionRepo, pagePath, "A New Commit at "+(new Date()).toString(), completeHtml);
-					
-					resp.setStatus(200);
-					Log.info("           	request to edit ["+pagePath+"] WAS SUCCESSFUL\n");
-				} catch (IOException ex){
-					resp.setStatus(400);
-					Log.error("           	request to edit ["+pagePath+"] FAILED!: " + ex.getMessage());
-				}
+			boolean successful = GithubAPI.createOrUpdateFile(pagePath, String.format("Updated By %s at %s", p.email, DateUtil.now()), completeHtml);
+			if (successful){
+				resp.setStatus(200);
+				Log.INFO("... PageEditorServlet: Request to edit ["+pagePath+"] SUCCEEDED.");
+			} else {	
+				resp.setStatus(400);
+				Log.ERROR("... PageEditorServlet: Request to edit ["+pagePath+"] FAILED.");
 			}
 		}
 	}
 
 	public static void updateDirectoryPage(HttpServletRequest req, HttpServletResponse resp) {
 	
-			List<String> pages = Page.getAllPages();
-			pages.add("/petitions");
-			pages.add("/login-admin");
-			pages.add("/login");
-			Collections.sort(pages);
+		List<String> pages = Page.getAllPages();
+		pages.add("/petitions");
+		pages.add("/login-admin");
+		pages.add("/login");
+		Collections.sort(pages);
 			
-			Person p = Person.get(UserAPI.email());
+		Person p = Person.get(UserAPI.email());
 			
-			req.setAttribute("production", true);
-			req.setAttribute("lastEditorEmail", p.email);
-			req.setAttribute("lastEditorName", p.nickname);
-			req.setAttribute("lastEditorDate", DateUtil.now());
-			req.setAttribute("pages", pages);
+		req.setAttribute("production", true);
+		req.setAttribute("lastEditorEmail", p.email);
+		req.setAttribute("lastEditorName", p.nickname);
+		req.setAttribute("lastEditorDate", DateUtil.now());
+		req.setAttribute("pages", pages);
 			
-			String completeHtml = JSPRenderServlet.render("/WEB-INF/pages/directory.jsp", req, resp);
-			
+		String completeHtml;
+		try {
+			completeHtml = JSPRenderServlet.render("directory.jsp", req, resp);
 			String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", DateUtil.now(), p.email);
-			
 			GithubAPI.createOrUpdateFile("directory/index.html", commitMessage, completeHtml);
-			
-		
-		
+			Log.INFO("PageEditorServlet: Updated Directory Page.");
+		} catch (ServletException | IOException e) {
+			Log.INFO("PageEditorServlet: Unexpected exception in rendering JSP: [%s],", e.getMessage());
+		}
 	}
 }

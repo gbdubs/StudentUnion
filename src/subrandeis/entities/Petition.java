@@ -49,7 +49,7 @@ public class Petition {
 			ps.personEmail = personEmail;
 			ps.vote = vote;
 			ps.timestamp = (new Date()).toString();
-			Log.INFO("Voted [%s] to petition [%s].", ""+vote, petitionId);
+			Log.INFO("Petition(PetitionSignature): Voted [%s] to petition [%s].", ""+vote, petitionId);
 			ofy.save().entity(ps).now();
 		}
 

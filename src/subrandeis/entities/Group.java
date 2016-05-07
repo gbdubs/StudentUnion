@@ -88,7 +88,7 @@ public class Group implements Comparable<Group>{
 		g.members = new ArrayList<String>();
 		g.pageUrl = undefinedPageUrl;
 		ofy.save().entity(g).now();
-		Log.INFO("Created a new group with name [%s] and uuid [%s].", g.name, g.id);
+		Log.INFO("Group: Created a new group with name [%s] and uuid [%s].", g.name, g.id);
 		return g;
 	}
 	
@@ -100,9 +100,9 @@ public class Group implements Comparable<Group>{
 		Group g = ofy.load().type(Group.class).id(uuid).now();
 		if (g != null){
 			ofy.delete().entity(g).now();
-			Log.WARN("Deleted a group with name [%s] and uuid [%s].", g.name, g.id);
+			Log.WARN("Group: Deleted a group with name [%s] and uuid [%s].", g.name, g.id);
 		} else {
-			Log.ERROR("Attempt to delete non-existent group with uuid [%s].", uuid);
+			Log.ERROR("Group: Attempt to delete non-existent group with uuid [%s].", uuid);
 		}
 	}
 	
@@ -119,12 +119,12 @@ public class Group implements Comparable<Group>{
 			if (newMembers.size() != members.size()){
 				this.members = newMembers;
 				ofy.save().entity(this);
-				Log.INFO("UserAPI: Added [%s] as members to group [%s].", toAddEmails.toString(), this.name);
+				Log.INFO("Group: Added [%s] as members to group [%s].", toAddEmails.toString(), this.name);
 				return true;
 			}
 			return false;
 		}
-		Log.WARN("UserAPI: Attempt to add [%s] as members to group [%s] but was prevented.", toAddEmails.toString(), this.name);
+		Log.WARN("Group: Attempt to add [%s] as members to group [%s] but was prevented.", toAddEmails.toString(), this.name);
 		return false;
 	}
 	
@@ -141,12 +141,12 @@ public class Group implements Comparable<Group>{
 			if (newMembers.size() != members.size()){
 				this.members = newMembers;
 				ofy.save().entity(this);
-				Log.WARN("UserAPI: removed [%s] as members from group [%s].",  toRemoveEmails.toString(), this.name);
+				Log.WARN("Group: removed [%s] as members from group [%s].",  toRemoveEmails.toString(), this.name);
 				return true;
 			}
 			return false;
 		}
-		Log.WARN(String.format("UserAPI: Attempted to remove [%s] as members of group [%s] was halted because of permissions.", toRemoveEmails.toString(), this.name));
+		Log.WARN(String.format("Group: Attempted to remove [%s] as members of group [%s] was halted because of permissions.", toRemoveEmails.toString(), this.name));
 		return false;
 		
 	}
@@ -164,12 +164,12 @@ public class Group implements Comparable<Group>{
 			if (newLeaders.size() != leaders.size()){
 				this.leaders = newLeaders;
 				ofy.save().entity(this);
-				Log.INFO("User API: Added [%s] as leaders to group [%s].", newLeaders.toString(), this.name);
+				Log.INFO("Group: Added [%s] as leaders to group [%s].", newLeaders.toString(), this.name);
 				return true;
 			}
 			return false;
 		}
-		Log.WARN("UserAPI: Unauthorized attempt to add [%s] as leaders to group [%s] but was prevented.", toAddEmails.toString(), this.name);
+		Log.WARN("Group: Unauthorized attempt to add [%s] as leaders to group [%s] but was prevented.", toAddEmails.toString(), this.name);
 		return false;
 	}
 	
@@ -186,12 +186,12 @@ public class Group implements Comparable<Group>{
 			if (newLeaders.size() != leaders.size()){
 				this.leaders = newLeaders;
 				ofy.save().entity(this);
-				Log.WARN("UserAPI: removed [%s] as leaders from group [%s].",  toRemoveEmails.toString(), this.name);
+				Log.WARN("Group: removed [%s] as leaders from group [%s].",  toRemoveEmails.toString(), this.name);
 				return true;
 			}
 			return false;
 		}
-		Log.WARN("UserAPI: Attempt to remove [%s] as leaders of group [%s] was prevented because of insufficent permissions.", toRemoveEmails.toString(), this.name);
+		Log.WARN("Group: Attempt to remove [%s] as leaders of group [%s] was prevented because of insufficent permissions.", toRemoveEmails.toString(), this.name);
 		return false;
 	}
 	
