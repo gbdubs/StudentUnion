@@ -50,8 +50,9 @@
 				what do you want to accomplish in the student union, what are the best ways to contact you.
 				Please keep your biography to 500 words or less, otherwise it may be truncated from the website.
 			</p>
-			<textarea style="min-height: 150px" name="biography" placeholder="Type your brief biography here">${person.biography}</textarea>
-			
+			<div class="input-field">
+				<textarea class="materialize-textarea" name="biography" placeholder="Type your brief biography here">${person.biography}</textarea>
+			</div>
 			<br>
 			<br>
 			
@@ -69,21 +70,28 @@
 			<br>
 			<br>
 	
-			<h2>Image URL</h2>
+			<h2>Profile Picture</h2>
 			<p>
-				Images must be uploaded on another site, then linked to here.
+				Shown below is your current profile picture.
 				On any membership page, your biography and photo will be visible. 
 				It is recommended to chose a photo that is square (as all will be squashed to be square and do you
 				want it to be all squashed?).
+				To upload a new photo, or change your photo, just press the "select" button below.
+				Note that it can take up to 20 seconds for your photo to upload, just be patient.
+				Once your photo is uploaded you will still need to save the changes on the page (light blue button) to ensure that your change to your picture is saved.
 			</p>
-			<p>
-				A good way to upload one of your own photos is to go to <a href="http://www.imgur.com">imgur.com</a>
-				upload your photo however you would like, then once it is uploaded, click on the link on the side that says
-				<b>Direct Link</b>. If the URL you are trying to upload doesn't start with http:// and end with an image
-				extension (.jpg, .png, etc.), then your image will NOT BE DISPLAYED.
-			</p>
-			<input name="imageUrl" type="text" placeholder="Image URL Here" value="${person.imageUrl}"/>
-	
+			<input id="imageUrl" name="imageUrl" type="hidden" placeholder="Image URL Here" value="${person.imageUrl}"/>
+			<img style="height:300px; width: 300px;" id="imageDisplay" src="${person.imageUrl}"/>
+			
+			<div class="file-field input-field">
+		      <div id="imageUploadBtn" class="btn bg-brandeis-blue-1">
+		        <span>Select</span>
+		        <input id="imageUploadInput" type="file">
+		      </div>
+		      <div class="file-path-wrapper">
+		        <input class="file-path validate" type="text">
+		      </div>
+		    </div>
 	
 			<br>
 			<br>
@@ -91,9 +99,89 @@
 			<br>
 			<br>
 	
-			<button class="btn bg-brandeis-blue-2">Save All Changes On Page</button>
+			<button class="btn btn-large bg-brandeis-blue-2">Save All Changes On Page</button>
+
+			<br>
+			<br>
 	
 		</form>
 
 	</jsp:attribute>
+	
+	<jsp:attribute name="js">
+		<script>
+			$(function(){
+				var imDisp = $("#imageDisplay");
+				var imInput = $("#imageUploadInput");
+				var imUrl = $("#imageUrl");
+				var imButton = $("#imageUploadBtn");
+				var imMessage = $("span", imButton).first();
+
+				function imageExists(imageUrl) {
+					var http = new XMLHttpRequest();
+					http.open('HEAD', imageUrl, false);
+					http.send();
+					return http.status != 404;
+				}
+
+				$(imInput).change(function (){
+					$(imMessage).text("Uploading...");
+					$(imButton).addClass("disabled");
+					var file = imInput[0].files[0];
+					var suffix = file.name.substring(file.name.lastIndexOf('.') + 1);
+					var reader = new FileReader();
+
+					reader.onload = (function(readerEvent) {
+						var binaryString = readerEvent.target.result;
+						var inBase64 = btoa(binaryString);
+						console.log("Encoding complete.");
+						console.log("Upload started.");
+						$.ajax({
+							url: '/image-upload',
+							type: 'POST',
+							data: {
+								'imageData': inBase64,
+								'suffix': suffix
+							},
+							success: function(imageLink) {
+								$(imMessage).text("Waiting for Github...");
+								var trial = 1;
+								var imageExistsInterval = setInterval(function() {
+									if (imageExists(imageLink)) {
+										clearInterval(imageExistsInterval);
+										var image = new Image();
+										image.src = imageLink;
+										image.onload = function(){
+											var dims = [image.width, image.height];
+											finalImageUrl = imageLink;
+											finalImageDims = dims;
+											$(imDisp).attr('src', finalImageUrl);
+											$(imInput).val(null);
+											$(imUrl).val(finalImageUrl);
+											$(imMessage).text("Select");
+											$(imButton).removeClass("disabled");
+										}
+									}
+									console.log("Image exists trial... " + trial++);
+								}, 700);
+							}
+						});
+						
+					});
+
+					reader.readAsBinaryString(file);
+     			});
+
+				$(imButton).click(function(ev){
+					if (imInput[0].files[0]){
+						
+					} else {
+						$(imMessage).text("Selecting");
+					}
+				});
+				
+			});
+		</script>
+	</jsp:attribute>
+	
 </t:page>

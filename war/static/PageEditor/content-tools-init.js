@@ -91,9 +91,6 @@ window.addEventListener('load', function() {
 	editor.addEventListener('saved', function(ev) {
 
 		$("*[data-editingonly]").remove();
-		//$(".ce-element").removeClass("ce-element");
-		//$(".ce-element--type-text").removeClass("ce-element--type-text");
-		//$(".ce-element--focused").removeClass("ce-element--focused");
 		$(".hiddendiv.common").remove();
 		$(".drag-target").remove();
 		$(".ct-app").remove();

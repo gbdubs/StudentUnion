@@ -22,6 +22,8 @@ import subrandeis.util.EncodingUtil;
  *
  */
 public class GithubAPI {
+	
+	private static final boolean production = true;
     
 	  /* * * * * * * * * * * * * * * * * * * */
 	 /* CONNECTION/CLIENT GITHUB UTILITIES  */
@@ -62,7 +64,9 @@ public class GithubAPI {
 			
 			UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, newFileBody, SecretsAPI.GithubProductionBranch, sha);
 			
-			ghc.put(apiURI, data, null);
+			if (production){
+				ghc.put(apiURI, data, null);
+			}
 			
 			Log.INFO("... Github API: Page Creation/Update Successful [%s]", filePath);
 			return true;
@@ -82,7 +86,9 @@ public class GithubAPI {
 			UpdatePageRequest data = UpdatePageRequest.make(newFilePath, commitMessage, encodedBody, SecretsAPI.GithubProductionBranch, "");
 			data.content = encodedBody;
 			
-			ghc.put(apiURI, data, null);
+			if (production){
+				ghc.put(apiURI, data, null);
+			}
 			
 			Log.INFO("... Github API: Successfully saved new raw file for [%s]", newFilePath);
 			return true;
@@ -153,7 +159,10 @@ public class GithubAPI {
 			
 			UpdatePageRequest data = UpdatePageRequest.make(filePath, commitMessage, notFoundRedirect, SecretsAPI.GithubProductionBranch, fileSha);
 			
-			ghc.put(apiURI, data, null);
+			if (production){
+				ghc.put(apiURI, data, null);
+			}
+			
 			Log.INFO("... Github API: Page Deletion was successful! [%s]", filePath);
 			return true;
 		} catch (IOException ioe){

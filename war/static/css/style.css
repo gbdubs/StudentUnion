@@ -906,3 +906,8 @@ textarea.petition-input{
 .petition-body {
 	white-space: pre-wrap;
 }
+
+.file-field input.file-path {
+    margin-left: 130px;
+    width: calc(100% - 130px);
+}
