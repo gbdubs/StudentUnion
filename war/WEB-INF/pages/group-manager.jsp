@@ -53,7 +53,9 @@
 			<h4 class="light">PageURL</h4>
 			<input type="text" value="${group.pageUrl}" name="pageUrl"/>
 			<h4 class="light">Description</h4>
-			<textarea style="min-height: 150px" name="description">${group.description}</textarea>
+			<div class="input-field">
+				<textarea class="materialize-textarea" name="description">${group.description}</textarea>
+			</div>
 			<br>
 			<br>
 			<button class="btn bg-brandeis-blue-2">Save All Values for Basic Properties</button>
@@ -192,6 +194,9 @@
 			</ul>
 			<button class="btn bg-brandeis-blue-2">Update Roles</button>
 		</form>
+
+		<br>
+		<br>
 
 	</jsp:attribute>
 </t:page>

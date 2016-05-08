@@ -150,7 +150,7 @@ public class GroupManagerServlet extends HttpServlet{
 				updateMembershipPage(g, req, resp);
 			}
 			
-			resp.sendRedirect("/group-manager");
+			resp.sendRedirect("/group-manager?groupId="+g.id);
 		} else {
 			resp.getWriter().println(Log.WARN("GroupManagerServlet: Insufficent permissions to change member management in group [%s][%s].", g.id, g.name));
 		}		

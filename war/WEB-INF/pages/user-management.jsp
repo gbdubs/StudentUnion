@@ -36,7 +36,7 @@
 					</h5>
 					<c:if test="${isOwner}">
 						<form action="/users" method="POST">
-							<input type="hidden" name="email" value="${owner.email}">
+							<input type="hidden" name="emails" value="${owner.email}">
 							<input type="hidden" name="addOrRemove" value="remove">
 							<input type="hidden" name="adminOrOwnerOrCandidate" value="owner">
 							<button class="btn bg-brandeis-yellow txt-brandeis-black">Remove As Owner (But Not as Administrator)</button>
@@ -50,13 +50,13 @@
 			<br>
 			<h5>Add Owner</h5>
 			<p>
-				Add the email of the Owner (NO WHITESPACES, NO MULTIPLE EMAILS) to the field below, and click submit.
-				Note that changes can take up to a minute to be reflected on this page. 
-				If prompted, do not send the form again, rather, reload the page without using the back buttons.
-				Note that the email <b>must end in @brandeis.edu or @gmail.com</b>. No Exceptions.
+				Add the email of the new Owner (or multiple emails, separated by commas) to the field below, and click submit.
+				Note that changes can take up to a minute to be reflected on this page.
+				All emails <b>must end in @brandeis.edu or @gmail.com</b>;
+				any which do not fit this criteria will just be ignored.
 			</p>
 			<form action="/users" method="POST">
-				<input type="text" name="email" placeholder="emailaddress@brandeis.edu">
+				<input type="text" name="emails" placeholder="emailaddress@brandeis.edu">
 				<input type="hidden" name="addOrRemove" value="add">
 				<input type="hidden" name="adminOrOwnerOrCandidate" value="owner">
 				<button class="btn bg-brandeis-blue-2">Add Owner By Email</button>
@@ -87,7 +87,7 @@
 					</h5>
 					<c:if test="${isOwner}">
 						<form action="/users" method="POST">
-							<input type="hidden" name="email" value="${admin.email}">
+							<input type="hidden" name="emails" value="${admin.email}">
 							<input type="hidden" name="addOrRemove" value="remove">
 							<input type="hidden" name="adminOrOwnerOrCandidate" value="admin">
 							<button class="btn bg-brandeis-yellow txt-brandeis-black">Remove As Administrator</button>
@@ -101,13 +101,13 @@
 			<br>
 			<h5>Add Administrator</h5>
 			<p>
-				Add the email of the Administrator (NO WHITESPACES, NO MULTIPLE EMAILS) to the field below, and click submit.
-				Note that changes can take up to a minute to be reflected on this page. 
-				If prompted, do not send the form again, rather, reload the page without using the back buttons.
-				Note that the email <b>must end in @brandeis.edu or @gmail.com</b>. No Exceptions.
+				Add the email of the new administrator(s) (or multiple emails, separated by commas) to the field below, and click submit.
+				Note that changes can take up to a minute to be reflected on this page.
+				All emails <b>must end in @brandeis.edu or @gmail.com</b>;
+				any which do not fit this criteria will just be ignored.
 			</p>
 			<form action="/users" method="POST">
-				<input type="text" name="email" placeholder="emailaddress@brandeis.edu">
+				<input type="text" name="emails" placeholder="emailaddress@brandeis.edu">
 				<input type="hidden" name="addOrRemove" value="add">
 				<input type="hidden" name="adminOrOwnerOrCandidate" value="admin">
 				<button class="btn bg-brandeis-blue-2">Add Administrator By Email</button>
@@ -139,7 +139,7 @@
 					</h5>
 					<c:if test="${isOwner}">
 						<form action="/users" method="POST">
-							<input type="hidden" name="email" value="${candidate.email}">
+							<input type="hidden" name="emails" value="${candidate.email}">
 							<input type="hidden" name="addOrRemove" value="remove">
 							<input type="hidden" name="adminOrOwnerOrCandidate" value="candidate">
 							<button class="btn bg-brandeis-yellow txt-brandeis-black">Remove as Candidate</button>
@@ -153,18 +153,21 @@
 			<br>
 			<h5>Add Candidate</h5>
 			<p>
-				Add the email of the Candidate (NO WHITESPACES, NO MULTIPLE EMAILS) to the field below, and click submit.
-				Note that changes can take up to a minute to be reflected on this page. 
-				If prompted, do not send the form again, rather, reload the page without using the back buttons.
-				Note that the email <b>must end in @brandeis.edu or @gmail.com</b>. No Exceptions.
+				Add the email of the new candidates(s) (or multiple emails, separated by commas) to the field below, and click submit.
+				Note that changes can take up to a minute to be reflected on this page.
+				All emails <b>must end in @brandeis.edu or @gmail.com</b>;
+				any which do not fit this criteria will just be ignored.
 			</p>
 			<form action="/users" method="POST">
-				<input type="text" name="email" placeholder="emailaddress@brandeis.edu">
+				<input type="text" name="emails" placeholder="emailaddress@brandeis.edu">
 				<input type="hidden" name="addOrRemove" value="add">
 				<input type="hidden" name="adminOrOwnerOrCandidate" value="candidate">
 				<button class="btn bg-brandeis-blue-2">Add Candidate By Email</button>
 			</form>
 		</c:if>
-
+		<br>
+		<br>
+		<br>
+		
 	</jsp:attribute>
 </t:page>
