@@ -2,60 +2,72 @@ package subrandeis.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import subrandeis.util.ServletUtil;
 
-@SuppressWarnings("serial")
-public class JSPRenderServlet extends HttpServlet {
-	
-	private static final String requestFileKey = "jsp-file";
-	public static final String responseContentKey = "jsp-response";
-	
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+public class JSPRenderServlet {
 
-		String jspFilePath = req.getAttribute(requestFileKey).toString();
+	public static String render(String jspFileName, HttpServletRequest req) throws ServletException, IOException{
+		DummyHttpServletResponse dhsr = new DummyHttpServletResponse();
 		
+		req.getRequestDispatcher(ServletUtil.jspRootDirectory + jspFileName).include(req, dhsr);
 		
-		HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(resp) {
-			private final StringWriter sw = new StringWriter();
-
-			@Override
-			public PrintWriter getWriter() throws IOException {
-				return new PrintWriter(sw);
-			}
-
-			@Override
-			public String toString() {
-				return sw.toString();
-			}
-		};
+		String content = dhsr.toString();
 		
-		req.getRequestDispatcher(jspFilePath).include(req, responseWrapper);
-		
-		String content = responseWrapper.toString();
-		
-		req.setAttribute(responseContentKey, content);
+		return content;
 	}
 	
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		doGet(req, resp);
-	}
-
-	public static String render(String jspFileName, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		req.setAttribute(requestFileKey, ServletUtil.jspRootDirectory + jspFileName);
-		
-		req.getRequestDispatcher("/jsp-render-servlet").forward(req, resp);
-		
-		return (String) req.getAttribute(JSPRenderServlet.responseContentKey);
-	}
 	
+	private static class DummyHttpServletResponse implements HttpServletResponse {
+		private final StringWriter sw = new StringWriter();
+
+		@Override
+		public PrintWriter getWriter() throws IOException {
+			return new PrintWriter(sw);
+		}
+
+		@Override
+		public String toString() {
+			return sw.toString();
+		}
+
+		public void flushBuffer() throws IOException {}
+		public int getBufferSize() {return 0;}
+		public String getCharacterEncoding() {return null;}
+		public String getContentType() {return null;}
+		public Locale getLocale() {return null;}
+		public ServletOutputStream getOutputStream() throws IOException {return null;}
+		public boolean isCommitted() {return false;}
+		public void reset() {}
+		public void resetBuffer() {}
+		public void setBufferSize(int arg0) {}
+		public void setCharacterEncoding(String arg0) {}
+		public void setContentLength(int arg0) {}
+		public void setContentType(String arg0) {}
+		public void setLocale(Locale arg0) {}
+		public void addCookie(Cookie arg0) {}
+		public void addDateHeader(String arg0, long arg1) {}
+		public void addHeader(String arg0, String arg1) {}
+		public void addIntHeader(String arg0, int arg1) {}
+		public boolean containsHeader(String arg0) {return false;}
+		public String encodeRedirectURL(String arg0) {return null;}
+		public String encodeRedirectUrl(String arg0) {return null;}
+		public String encodeURL(String arg0) {return null;}
+		public String encodeUrl(String arg0) {return null;}
+		public void sendError(int arg0) throws IOException {}
+		public void sendError(int arg0, String arg1) throws IOException {}
+		public void sendRedirect(String arg0) throws IOException {}
+		public void setDateHeader(String arg0, long arg1) {}
+		public void setHeader(String arg0, String arg1) {}
+		public void setIntHeader(String arg0, int arg1) {}
+		public void setStatus(int arg0) {}
+		public void setStatus(int arg0, String arg1) {}
+	}
 }
-
-

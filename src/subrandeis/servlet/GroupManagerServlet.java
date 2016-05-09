@@ -1,7 +1,6 @@
 package subrandeis.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -153,9 +152,7 @@ public class GroupManagerServlet extends HttpServlet{
 	}
 
 	public static void updateMembershipPage(Group group, HttpServletRequest req, HttpServletResponse resp){
-		PrintWriter w = null;
 		try {
-			w = resp.getWriter();
 			if (!group.pageUrl.equals(Group.undefinedPageUrl)){
 				if (Page.get(group.pageUrl) == null){
 					Page.createPage(group.pageUrl, true);
@@ -192,18 +189,26 @@ public class GroupManagerServlet extends HttpServlet{
 				req.setAttribute("group", group);
 				req.setAttribute("people", people);
 				
-				String pageHtml = JSPRenderServlet.render("group-member-page.jsp", req, resp);
+				System.out.println("IS COMMITTED? "+resp.isCommitted());
+				
+				String pageHtml = JSPRenderServlet.render("group-member-page.jsp", req);
 			
+				System.out.println("IS COMMITTED? "+resp.isCommitted());
+				
 				String commitMessage = String.format("Membership page updated at %s.", (new Date()).toString());
 				
 				GithubAPI.createOrUpdateFile(membershipPageUrl, commitMessage, pageHtml);
 				
 				Log.INFO("GroupManagerServlet: Updated membership page for group [%s][%s] successfully", group.name, group.id);
 			} else {
-				w.println(Log.WARN(String.format("GroupManagerServlet: No pageURL defined for group [%s][%s], so it was not updated.", group.id, group.name)));
+				resp.getWriter().println(Log.WARN(String.format("GroupManagerServlet: No pageURL defined for group [%s][%s], so it was not updated.", group.id, group.name)));
 			}
 		} catch (IOException | ServletException ioe){
-			w.println(Log.ERROR("GroupManagerServlet: Error in updating membership page: [%s]", ioe.getMessage()));
+			try {
+				resp.getWriter().println(Log.ERROR("GroupManagerServlet: Error in updating membership page: [%s]", ioe.getMessage()));
+			} catch (IOException e) {
+				Log.ERROR("GroupManagerServlet: Error Getting Print Writer. This is severe.");
+			}
 		}
 	}
 	

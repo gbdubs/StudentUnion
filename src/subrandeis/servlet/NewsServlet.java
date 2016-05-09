@@ -100,7 +100,7 @@ public class NewsServlet extends HttpServlet{
 		req.setAttribute("production", true);
 		req.setAttribute("stories", stories);
 		
-		String content = JSPRenderServlet.render("news.jsp", req, resp);
+		String content = JSPRenderServlet.render("news.jsp", req);
 		
 		String message = Log.INFO("NewsServlet: News auto generated.");
 		

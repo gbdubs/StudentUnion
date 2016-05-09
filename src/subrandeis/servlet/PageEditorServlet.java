@@ -171,7 +171,7 @@ public class PageEditorServlet extends HttpServlet {
 			req.setAttribute("lastEditorName", p.nickname);
 			req.setAttribute("lastEditorDate", DateUtil.now());
 			req.setAttribute("htmlContent", content);
-			String completeHtml = JSPRenderServlet.render("page-editor.jsp", req, resp);
+			String completeHtml = JSPRenderServlet.render("page-editor.jsp", req);
 				
 			boolean successful = GithubAPI.createOrUpdateFile(pagePath, String.format("Updated By %s at %s", p.email, DateUtil.now()), completeHtml);
 			if (successful){
@@ -202,7 +202,7 @@ public class PageEditorServlet extends HttpServlet {
 			
 		String completeHtml;
 		try {
-			completeHtml = JSPRenderServlet.render("directory.jsp", req, resp);
+			completeHtml = JSPRenderServlet.render("directory.jsp", req);
 			String commitMessage = String.format("Directory page updated at [%s] by the user [%s].", DateUtil.now(), p.email);
 			GithubAPI.createOrUpdateFile("directory/index.html", commitMessage, completeHtml);
 			Log.INFO("PageEditorServlet: Updated Directory Page.");

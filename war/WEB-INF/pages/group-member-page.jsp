@@ -31,9 +31,6 @@
 				<div class="profile-email bg-brandeis-blue-2 txt-brandeis-white">
 					<h6 class="light">${person.email}</h6>
 				</div>
-				<p class="profile-job-description">
-					asdfasdfasdfasdfas
-				</p>
 				<p class="personal-statement">
 					${person.biography}
 				</p>

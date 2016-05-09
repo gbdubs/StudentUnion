@@ -43,8 +43,8 @@ public class GroupCreationServlet extends HttpServlet {
 				newGroupName = newGroupName == null ? "[Unnamed Group" : newGroupName;
 				Group g = Group.createNewGroup(newGroupName);
 				GroupManagerServlet.updateMembershipPage(g, req, resp);
+				doUpdateGroupsPage(req, resp);
 				resp.sendRedirect("/group-editor?groupId="+g.id);
-				
 			} else if ("delete".equals(action)){
 				Group g = Group.get(req.getParameter("groupId"));
 				if (g == null){
@@ -53,10 +53,10 @@ public class GroupCreationServlet extends HttpServlet {
 					Log.WARN(error);
 				} else {
 					Group.deleteGroup(g.id);
+					doUpdateGroupsPage(req, resp);
 					resp.sendRedirect("/group-creation");
 				}
 			}
-			doUpdateGroupsPage(req, resp);
 		} else {
 			resp.sendRedirect(UserAPI.loginAdminPageUrl("/group-creation", "Group Creation and Deletion"));
 		}
@@ -68,7 +68,7 @@ public class GroupCreationServlet extends HttpServlet {
 		req.setAttribute("production", true);
 		req.setAttribute("groups", groups);
 		
-		String content = JSPRenderServlet.render("group-list.jsp", req, resp);
+		String content = JSPRenderServlet.render("group-list.jsp", req);
 		
 		String message = Log.INFO("GroupCreationServlet: Group List Auto Generated.");
 		
