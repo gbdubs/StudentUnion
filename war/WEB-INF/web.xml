@@ -5,7 +5,6 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
-
 	<servlet>
 		<servlet-name>PageEditor</servlet-name>
 		<servlet-class>subrandeis.servlet.PageEditorServlet</servlet-class>
@@ -138,16 +137,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>NewsServlet</servlet-name>
 		<url-pattern>/news</url-pattern>
-	</servlet-mapping>
-	
-	
-	<servlet>
-		<servlet-name>JSPRenderServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.JSPRenderServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>JSPRenderServlet</servlet-name>
-		<url-pattern>/jsp-render-servlet</url-pattern>
 	</servlet-mapping>
 	
 	

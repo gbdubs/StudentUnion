@@ -7,6 +7,7 @@ import subrandeis.util.DateUtil;
 public class Log {
 	
 	private static final Logger theLog = Logger.getLogger("StudentUnion");
+	private static final boolean production = true;
 
 	private static String format(String format, String... strArgs){
 		Object[] args = (Object[]) strArgs;
@@ -36,17 +37,17 @@ public class Log {
 	}
 	
 	private static void error(String s){
-		System.err.println(s);
+		if (!production) System.err.println(s);
 		theLog.severe(s);
 	}
 	
 	private static void warn(String s){
-		System.out.println(s);
+		if (!production) System.out.println(s);
 		theLog.warning(s);
 	}
 	
 	private static void info(String s){
-		System.out.println(s);
+		if (!production) System.out.println(s);
 		theLog.info(s);
 	}
 	

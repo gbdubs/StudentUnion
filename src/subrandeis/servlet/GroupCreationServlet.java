@@ -68,7 +68,7 @@ public class GroupCreationServlet extends HttpServlet {
 		req.setAttribute("production", true);
 		req.setAttribute("groups", groups);
 		
-		String content = JSPRenderServlet.render("group-list.jsp", req);
+		String content = ServletUtil.renderJSPandReturn("group-list.jsp", req);
 		
 		String message = Log.INFO("GroupCreationServlet: Group List Auto Generated.");
 		

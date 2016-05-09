@@ -191,7 +191,7 @@ public class GroupManagerServlet extends HttpServlet{
 				
 				System.out.println("IS COMMITTED? "+resp.isCommitted());
 				
-				String pageHtml = JSPRenderServlet.render("group-member-page.jsp", req);
+				String pageHtml = ServletUtil.renderJSPandReturn("group-member-page.jsp", req);
 			
 				System.out.println("IS COMMITTED? "+resp.isCommitted());
 				
