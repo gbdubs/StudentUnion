@@ -34,7 +34,7 @@ public class Group implements Comparable<Group>{
 	// Map from Email to User Defined Role
 	public Map<String, String> roles;
 	
-	// Page Base URL, Memberpage URL will be /pageUrl/members
+	// Page Base URL, MemberPage URL will be /pageUrl/members
 	public String pageUrl;
 	
 	public static Objectify ofy = ObjectifyAPI.ofy();

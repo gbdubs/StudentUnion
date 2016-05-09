@@ -53,6 +53,7 @@ public class GroupManagerServlet extends HttpServlet{
 			resp.getWriter().println("Missing parameter [manage].\n");
 		} else if ("nameOrPageUrlOrDescription".equals(manage)){
 			doNamePageUrlDescriptionManagement(req, resp);
+			GroupCreationServlet.doUpdateGroupsPage(req, resp);
 		} else if ("roles".equals(manage)){
 			doRoleManagement(req, resp);
 		} else if ("members".equals(manage)){

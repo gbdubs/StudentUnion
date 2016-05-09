@@ -1,12 +1,14 @@
 package subrandeis.servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
@@ -54,8 +56,22 @@ public class GroupCreationServlet extends HttpServlet {
 					resp.sendRedirect("/group-creation");
 				}
 			}
+			doUpdateGroupsPage(req, resp);
 		} else {
 			resp.sendRedirect(UserAPI.loginAdminPageUrl("/group-creation", "Group Creation and Deletion"));
 		}
+	}
+	
+	public static void doUpdateGroupsPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		List<Group> groups = Group.getAllGroups();
+		
+		req.setAttribute("production", true);
+		req.setAttribute("groups", groups);
+		
+		String content = JSPRenderServlet.render("group-list.jsp", req, resp);
+		
+		String message = Log.INFO("GroupCreationServlet: Group List Auto Generated.");
+		
+		GithubAPI.createOrUpdateFile("groups/index.html", message, content);
 	}
 }
