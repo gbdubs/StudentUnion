@@ -1,4 +1,4 @@
-package subrandeis.servlet.adv;
+package subrandeis.servlet;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +12,6 @@ import subrandeis.api.GithubAPI;
 import subrandeis.api.Log;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Story;
-import subrandeis.servlet.basic.JSPRenderServlet;
 import subrandeis.util.ServletUtil;
 
 @SuppressWarnings("serial")

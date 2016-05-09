@@ -1,4 +1,4 @@
-package subrandeis.servlet.adv;
+package subrandeis.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,7 +20,6 @@ import subrandeis.api.UserAPI;
 import subrandeis.entities.Group;
 import subrandeis.entities.Page;
 import subrandeis.entities.Person;
-import subrandeis.servlet.basic.JSPRenderServlet;
 import subrandeis.util.DateUtil;
 import subrandeis.util.EmailUtil;
 import subrandeis.util.ServletUtil;

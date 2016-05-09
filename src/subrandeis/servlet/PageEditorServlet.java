@@ -1,4 +1,4 @@
-package subrandeis.servlet.adv;
+package subrandeis.servlet;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -15,7 +15,6 @@ import subrandeis.api.SecretsAPI;
 import subrandeis.api.UserAPI;
 import subrandeis.entities.Page;
 import subrandeis.entities.Person;
-import subrandeis.servlet.basic.JSPRenderServlet;
 import subrandeis.util.DateUtil;
 import subrandeis.util.ServletUtil;
 

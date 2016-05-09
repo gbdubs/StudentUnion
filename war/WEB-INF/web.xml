@@ -8,7 +8,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
 		<servlet-name>PageEditor</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.PageEditorServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.PageEditorServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PageEditor</servlet-name>
@@ -22,7 +22,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
 	<servlet>
 		<servlet-name>GroupCreationServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.GroupCreationServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.GroupCreationServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GroupCreationServlet</servlet-name>
@@ -31,7 +31,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>GroupManagerServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.GroupManagerServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.GroupManagerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GroupManagerServlet</servlet-name>
@@ -42,7 +42,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>LoginCallbackServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.basic.LoginCallbackServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.LoginCallbackServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginCallbackServlet</servlet-name>
@@ -52,7 +52,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>LoginServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.basic.LoginServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.LoginServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>LoginServlet</servlet-name>
@@ -66,7 +66,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>WaitingForPageUpdateServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.WaitingForPageUpdateServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.WaitingForPageUpdateServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>WaitingForPageUpdateServlet</servlet-name>
@@ -76,7 +76,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>ImageUploadServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.basic.ImageUploadServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.ImageUploadServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ImageUploadServlet</servlet-name>
@@ -86,7 +86,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>ManageUsersServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.ManageUsersServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.ManageUsersServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ManageUsersServlet</servlet-name>
@@ -96,7 +96,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>ConsoleServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.basic.ConsoleServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.ConsoleServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ConsoleServlet</servlet-name>
@@ -110,7 +110,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>SelfManagerServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.SelfManagerServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.SelfManagerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SelfManagerServlet</servlet-name>
@@ -119,7 +119,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>PetitionServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.PetitionServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.PetitionServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>PetitionServlet</servlet-name>
@@ -133,7 +133,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>NewsServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.adv.NewsServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.NewsServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>NewsServlet</servlet-name>
@@ -143,7 +143,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	
 	<servlet>
 		<servlet-name>JSPRenderServlet</servlet-name>
-		<servlet-class>subrandeis.servlet.basic.JSPRenderServlet</servlet-class>
+		<servlet-class>subrandeis.servlet.JSPRenderServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>JSPRenderServlet</servlet-name>
