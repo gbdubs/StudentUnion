@@ -4,16 +4,24 @@
 
 <t:page>
 	<jsp:attribute name="content">
-		
+		<br>
+		<br>
 		<h1>Waiting for the Github Server to Update...</h1>
-		<h4>
+		<br>
+		<br>
+		<br>
+		<h5 class="light">
 			This can take anywhere from 10 seconds to 1 minute.
 			After 1 minute, just try to go to the page manually by clicking 
 			<a href="${urlToGoTo}">this link</a>.
-		</h4>
+		</h5>
 
 		<div style="display:none;" id="sub-page"></div>
-				
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>		
 	</jsp:attribute>
 	
 	<jsp:attribute name="js">

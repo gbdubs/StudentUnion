@@ -23,7 +23,6 @@ public class SelfManagerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{
 		if (UserAPI.isCandidate()){
 			req.setAttribute("currentUser", Person.get(UserAPI.email()));
-			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 			
 			//TODO The person whose stuff is going to be edited (might change this to allow owners to edit anyone)
 			req.setAttribute("person", Person.get(UserAPI.email()));

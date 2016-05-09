@@ -14,11 +14,13 @@ import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
 
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.OnLoad;
 
 @Entity
+@Cache
 public class Group implements Comparable<Group>{
 
 	// Randomly assigned UUID

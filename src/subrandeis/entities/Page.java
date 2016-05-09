@@ -8,10 +8,12 @@ import subrandeis.api.Log;
 import subrandeis.api.ObjectifyAPI;
 
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
 @Entity
+@Cache
 public class Page {
 	
 	static String landingPageToken = "<<<LANDING>>>";

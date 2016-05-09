@@ -44,8 +44,6 @@ public class PageEditorServlet extends HttpServlet {
 				if (url.contains("/page-manager")){
 					req.setAttribute("editablePages", Page.getAllEditablePages());
 					req.setAttribute("pages", Page.getAllPages());
-					req.setAttribute("currentUser", p);
-					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 					req.setAttribute("isOwner", p.owner || UserAPI.isGoogleAdmin());
 				
 					ServletUtil.jsp("page-manager-list.jsp", req, resp);
@@ -55,8 +53,6 @@ public class PageEditorServlet extends HttpServlet {
 				// Tests to see if a page has been defined at this editor address.
 				Page page = Page.get(filePath);
 				if (page == null || !page.editable){
-					req.setAttribute("currentUser", p);
-					req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 					ServletUtil.jsp("page-doesnt-exist.jsp", req, resp);
 					return;
 				}

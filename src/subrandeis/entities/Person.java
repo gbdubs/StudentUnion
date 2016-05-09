@@ -1,6 +1,7 @@
 package subrandeis.entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +10,13 @@ import subrandeis.api.ObjectifyAPI;
 import subrandeis.api.UserAPI;
 
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
+@Cache
 public class Person {
 	static Objectify ofy = ObjectifyAPI.ofy();
 	
@@ -164,6 +167,23 @@ public class Person {
 	public static List<Person> getCandidates() {
 		List<Person> candidates = ofy.load().type(Person.class).filter("candidate", true).list();
 		return candidates;
+	}
+	
+	public static Map<String, List<Person>> getPeople(){
+		List<Person> people = ofy.load().type(Person.class).list();
+		List<Person> admins = new ArrayList<Person>();
+		List<Person> owners = new ArrayList<Person>();
+		List<Person> candidates = new ArrayList<Person>();
+		for (Person p : people){
+			if (p.candidate) candidates.add(p);
+			if (p.admin) admins.add(p);
+			if (p.owner) owners.add(p);
+		}
+		Map<String, List<Person>> result = new HashMap<String, List<Person>>();
+		result.put("candidates", candidates);
+		result.put("admins", admins);
+		result.put("owners", owners);
+		return result;
 	}
 	
 	public String getEmail(){

@@ -35,14 +35,10 @@ public class GroupManagerServlet extends HttpServlet{
 		Group g = Group.get(req.getParameter("groupId"));
 		if (g != null && isGroupLeader(g)){
 			req.setAttribute("group", g);
-			req.setAttribute("currentUser", Person.get());
-			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 			
 			ServletUtil.jsp("group-manager.jsp", req, resp);
 		} else if (UserAPI.isAdmin()) {
 			req.setAttribute("groups", Group.getAllGroups());
-			req.setAttribute("currentUser", Person.get());
-			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 			
 			ServletUtil.jsp("group-manager-list.jsp", req, resp);
 		} else {

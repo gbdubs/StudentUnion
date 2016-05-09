@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
 			goToNext = goToNext == null ? "/console" : goToNext;
 			
 			req.setAttribute("loginUrl", UserAPI.loginUrl(goToNext));
+			
 			req.setAttribute("owners", Person.getOwners());
 			req.setAttribute("admins", Person.getAdmins());
 			req.setAttribute("candidates", Person.getCandidates());

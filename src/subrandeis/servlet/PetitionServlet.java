@@ -97,7 +97,6 @@ public class PetitionServlet extends HttpServlet {
 		req.setAttribute("petition", petition);
 		
 		if (loggedInBrandeisStudent){
-			req.setAttribute("logoutUrl", UserAPI.logoutUrl("/petitions"));
 			
 			req.setAttribute("person", person);
 			req.setAttribute("peopleFor", peopleFor);
@@ -110,11 +109,9 @@ public class PetitionServlet extends HttpServlet {
 			ServletUtil.jsp("petition-logged-in.jsp", req, resp);
 		} else {
 			req.setAttribute("loginUrl", UserAPI.loginUrl(req.getRequestURI()));
-			req.setAttribute("logoutUrl", UserAPI.logoutUrl("/petitions"));
 			
 			ServletUtil.jsp("petition-logged-out.jsp", req, resp);
 		}
-		
 	}
 	
 	public void doRenderPetitionList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{

@@ -10,11 +10,13 @@ import subrandeis.api.UserAPI;
 import subrandeis.util.DateUtil;
 
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
+@Cache
 public class Story implements Comparable<Story> {
 
 	static Objectify ofy = ObjectifyAPI.ofy();

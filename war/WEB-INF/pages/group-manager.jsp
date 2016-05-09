@@ -119,11 +119,11 @@
 			You can have as many members as you would like.
 		</p>
 		<h4 class="light">Current Group Members</h4>
-		<ul class="no-bullet-list">
+		<ol class="no-bullet-list">
 			<c:forEach items="${group.members}" var="member">
 				<li>${member}</li>
 			</c:forEach>
-		</ul>
+		</ol>
 		<h4 class="light">Add New Members</h4>
 		<p>
 			To add new members, insert their email addresses, separated by commas.

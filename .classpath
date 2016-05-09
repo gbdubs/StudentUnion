@@ -6,6 +6,7 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-19.0.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-5.1.12.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/org.eclipse.egit.github.core-2.1.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-labs-1.9.36.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

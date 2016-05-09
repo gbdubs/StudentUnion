@@ -2,6 +2,7 @@ package subrandeis.servlet;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,11 +23,11 @@ public class ManageUsersServlet extends HttpServlet {
 			Person currentUser = Person.get(UserAPI.email());
 		
 			req.setAttribute("isOwner", UserAPI.isOwner(currentUser));
-			req.setAttribute("owners", Person.getOwners());
-			req.setAttribute("admins", Person.getAdmins());
-			req.setAttribute("candidates", Person.getCandidates());
+			Map<String, List<Person>> people = Person.getPeople();
+			req.setAttribute("owners", people.get("owners"));
+			req.setAttribute("admins", people.get("admins"));
+			req.setAttribute("candidates", people.get("candidates"));
 			
-			req.setAttribute("logoutUrl", UserAPI.logoutUrl());
 			req.setAttribute("currentUser", currentUser);
 			
 			ServletUtil.jsp("user-management.jsp", req, resp);
